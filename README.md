@@ -204,28 +204,6 @@ Trackify_360/
 - Slack integration capabilities
 - Notification preferences
 
-## 🧪 Testing
-
-### Backend Tests
-```bash
-cd backend
-# Run unit tests
-npm run test
-
-# Run tests with coverage
-npm run test:cov
-
-# Run E2E tests
-npm run test:e2e
-```
-
-### Frontend Tests
-```bash
-cd frontend
-# Run linting
-npm run lint
-```
-
 ## 📦 Build & Deployment
 
 ### Backend Production Build
