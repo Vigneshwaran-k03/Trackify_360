@@ -12,6 +12,7 @@ import logoImg from "../../assets/logo.png";
 import bgVideo from "../../assets/bgvideo.mp4";
 import { CheckCircle } from "lucide-react";
 import whychoseImg from "../../assets/whychose.png";
+import { LogIn } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -121,7 +122,7 @@ export default function Login() {
         <img src={logoImg} alt="Logo" className="absolute top-4 left-4 w-36  md:w-44 h-auto" />
         <form
           onSubmit={handleLogin}
-          className="relative w-full text-black max-w-md mx-auto bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg rounded-2xl p-8 text-white z-10"
+          className="relative w-full text-black max-w-md mx-auto bg-white/5 backdrop-blur-sm border border-white/20 shadow-lg rounded-2xl p-8 text-white z-10"
         >
           <h2 className="text-3xl text-center text-black font-bold mb-6">Welcome Buddy</h2>
 
@@ -146,12 +147,12 @@ export default function Login() {
           <div className="mb-4 text-right">
             <a href="/forgot" className="text-sm font-semibold text-black hover:underline">Forgot Password?</a>
           </div>
-
           <button
             type="submit"
-            className="w-full bg-indigo-500 text-white py-2.5 rounded-md hover:bg-green-600 transition"
+            className="w-full bg-indigo-500 text-white py-2.5 rounded-md hover:bg-green-600 transition flex items-center justify-center gap-2"
           >
-            Sign in
+            <LogIn className="w-5 h-5" />
+            <span>Login</span>
           </button>
         </form>
       </div>

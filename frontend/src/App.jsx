@@ -86,6 +86,7 @@ function App() {
     const [isReady, setIsReady] = useState(false);
     const token = getToken();
     const role = getRole();
+    const location = useLocation();
     
     useEffect(() => {
       // Add a small delay to ensure auth state is properly set
@@ -94,7 +95,7 @@ function App() {
       }, 100);
       
       return () => clearTimeout(timer);
-    }, []);
+    }, [location.pathname]); // Re-run when path changes
     
     // Show loading state while checking auth
     if (!isReady) {
@@ -103,13 +104,13 @@ function App() {
     
     // If no token, redirect to login
     if (!token) {
-      return <Navigate to="/login" replace />;
+      return <Navigate to="/login" state={{ from: location }} replace />;
     }
     
     // If token exists but no role, something's wrong - clear auth and redirect to login
     if (!role) {
       clearAuth();
-      return <Navigate to="/login" replace />;
+      return <Navigate to="/login" state={{ from: location }} replace />;
     }
     
     return <Layout />;
