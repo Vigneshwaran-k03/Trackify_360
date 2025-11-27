@@ -33,21 +33,54 @@ import {
   Home as HomeIcon,
 } from "lucide-react";
 
+/* -----------------------------------------------------------
+   FIXED TOOLTIP (NO SCROLL, FLOATS OUTSIDE SIDEBAR)
+----------------------------------------------------------- */
+function Tooltip({ label, children, show }) {
+  return (
+    <div className="relative group">
+      {children}
+
+      {show && (
+        <div
+          className="
+            absolute 
+            left-full 
+            top-1/2 
+            -translate-y-1/2
+            ml-2
+            whitespace-nowrap
+            z-[9999]
+            px-2 py-1 rounded-lg text-xs
+            bg-black/90 text-white shadow-xl
+            opacity-0 group-hover:opacity-100 
+            transition-opacity duration-200
+          "
+        >
+          {label}
+          <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-l-4 border-transparent border-l-black/90"></div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Layout() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState("");
   const [userName, setUserName] = useState("");
   const [isMobile, setIsMobile] = useState(false);
 
-  // sidebar states
-  const [showSidebar, setShowSidebar] = useState(false); // mobile slide in/out
-  const [isCollapsed, setIsCollapsed] = useState(false); // desktop collapse
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const [avatar, setAvatar] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
-  // INITIAL SETUP
+  /* -----------------------------------------------------------
+     INITIAL SETUP
+  ----------------------------------------------------------- */
   useEffect(() => {
     const token = getToken();
     const role = getRole();
@@ -82,40 +115,36 @@ export default function Layout() {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-
-      // mobile default = closed
       setShowSidebar(!mobile);
     };
 
     handleResize();
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [navigate]);
 
-  // LOGOUT
+  /* -----------------------------------------------------------
+     LOGOUT
+  ----------------------------------------------------------- */
   const handleLogout = () => {
-    // Clear notification flag first
     try {
       localStorage.removeItem("notif_popup_shown");
-    } catch (error) {
-      console.error("Error clearing notification flag:", error);
-    }
-    
-    // Clear auth state
+    } catch (error) {}
     clearAuth();
-    
-    // Use window.location to force a full page reload and reset all React state
-    window.location.href = '/login';
+    window.location.href = "/login";
   };
 
-  // BURGER BUTTON ACTION
+  /* -----------------------------------------------------------
+     TOGGLE SIDEBAR
+  ----------------------------------------------------------- */
   const handleSidebarToggle = () => {
-    if (isMobile) setShowSidebar((prev) => !prev);
-    else setIsCollapsed((prev) => !prev);
+    if (isMobile) setShowSidebar(prev => !prev);
+    else setIsCollapsed(prev => !prev);
   };
 
-  // PAGE TITLES
+  /* -----------------------------------------------------------
+     PAGE TITLE
+  ----------------------------------------------------------- */
   const getPageTitle = () => {
     const path = location.pathname;
     switch (path) {
@@ -139,7 +168,9 @@ export default function Layout() {
     }
   };
 
-  // NAVIGATION ITEMS
+  /* -----------------------------------------------------------
+     NAVIGATION ITEMS
+  ----------------------------------------------------------- */
   const getNavigationItems = () => {
     const roleLower = (userRole || "").toLowerCase();
 
@@ -177,6 +208,9 @@ export default function Layout() {
     ];
   };
 
+  /* -----------------------------------------------------------
+     AVATAR
+  ----------------------------------------------------------- */
   const resolveAvatar = (val) => {
     const map = {
       male1,
@@ -202,27 +236,24 @@ export default function Layout() {
   const isManager = roleLower === "manager";
   const isEmployee = roleLower === "employee";
 
-const headerToggleButtonClass = isManager
-  ? 'inline-flex items-center justify-center w-10 h-10 rounded-xl border border-indigo-300/60 bg-indigo-700/80 hover:bg-indigo-500 shadow-md shadow-indigo-900/50'
-  : isEmployee
-    ? 'inline-flex items-center justify-center w-10 h-10 rounded-xl border border-fuchsia-300/60 bg-purple-700/80 hover:bg-fuchsia-600 shadow-md shadow-fuchsia-900/50'
-    : 'inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-400/40 bg-teal-700/80 hover:bg-teal-500 shadow-md shadow-teal-900/50';
+  const headerToggleButtonClass = isManager
+    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-indigo-300/60 bg-indigo-700/80 hover:bg-indigo-500 shadow-md shadow-indigo-900/50"
+    : isEmployee
+    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-fuchsia-300/60 bg-purple-700/80 hover:bg-fuchsia-600 shadow-md shadow-fuchsia-900/50"
+    : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-400/40 bg-teal-700/80 hover:bg-teal-500 shadow-md shadow-teal-900/50";
 
-const headerHomeButtonClass = isManager
-  ? 'inline-flex items-center justify-center w-10 h-10 rounded-xl border border-indigo-300/60 bg-indigo-800/80 hover:bg-indigo-600 shadow-md shadow-indigo-900/40'
-  : isEmployee
-    ? 'inline-flex items-center justify-center w-10 h-10 rounded-xl border border-fuchsia-300/60 bg-purple-800/90 hover:bg-fuchsia-600 shadow-md shadow-fuchsia-900/40'
-    : 'inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-400/40 bg-teal-800/90 hover:bg-teal-600 shadow-md shadow-teal-900/40';
+  const headerHomeButtonClass = isManager
+    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-indigo-300/60 bg-indigo-800/80 hover:bg-indigo-600 shadow-md shadow-indigo-900/40"
+    : isEmployee
+    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-fuchsia-300/60 bg-purple-800/90 hover:bg-fuchsia-600 shadow-md shadow-fuchsia-900/40"
+    : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-400/40 bg-teal-800/90 hover:bg-teal-600 shadow-md shadow-teal-900/40";
 
-
-  // BACKGROUND
   const rootBgClass = isManager
     ? "bg-gradient-to-br from-indigo-800 via-indigo-700 to-[#0D1226]"
     : isEmployee
     ? "bg-gradient-to-br from-purple-800 via-fuchsia-800 to-[#2C003E]"
     : "bg-gradient-to-br from-teal-900 via-emerald-800 to-teal-950";
 
-  // SIDEBAR
   const sidebarBaseClass = isManager
     ? "bg-[#0B0F29]/95 text-white border-r border-indigo-500/40"
     : isEmployee
@@ -231,12 +262,14 @@ const headerHomeButtonClass = isManager
 
   const desktopSidebarWidth = isCollapsed ? "w-20" : "w-64";
 
-  const headerClass = "p-4 bg-black/30 backdrop-blur-xl flex items-center gap-4";
+  const headerClass =
+    "p-4 bg-black/30 backdrop-blur-xl flex items-center gap-4";
 
+  /* -----------------------------------------------------------
+     RETURN UI
+  ----------------------------------------------------------- */
   return (
     <div className={`flex h-screen w-screen text-white ${rootBgClass}`}>
-
-      {/* MOBILE OVERLAY */}
       {isMobile && showSidebar && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[998]"
@@ -270,19 +303,32 @@ const headerHomeButtonClass = isManager
           />
         </div>
 
-        {/* NAV */}
-        <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
-          {getNavigationItems().map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="flex items-center gap-3 bg-white/10 py-3 px-4 rounded-xl hover:bg-white/20 transition"
-              onClick={() => isMobile && setShowSidebar(false)}
-            >
-              <item.Icon className="w-5 h-5" />
-              {(isMobile || !isCollapsed) && item.label}
-            </Link>
-          ))}
+        {/* NO SCROLL NAVIGATION */}
+        <nav className="flex-1 px-4 space-y-4 overflow-visible">
+          {getNavigationItems().map((item) => {
+            const isActive = location.pathname === item.path;
+
+            return (
+              <Tooltip
+                key={item.path}
+                label={item.label}
+                show={!isMobile && isCollapsed}
+              >
+                <Link
+                  to={item.path}
+                  className={`flex items-center gap-3 py-3 px-4 rounded-xl transition ${
+                    isActive
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
+                      : "bg-white/10 text-white hover:bg-white/20"
+                  }`}
+                  onClick={() => isMobile && setShowSidebar(false)}
+                >
+                  <item.Icon className="w-5 h-5" />
+                  {(isMobile || !isCollapsed) && item.label}
+                </Link>
+              </Tooltip>
+            );
+          })}
         </nav>
 
         {/* LOGOUT */}
@@ -306,7 +352,9 @@ const headerHomeButtonClass = isManager
             <MenuIcon />
           </button>
 
-          <h1 className="text-xl text-teal-50 font-semibold tracking-wide flex-1 ml-2">{getPageTitle()}</h1>
+          <h1 className="text-xl text-teal-50 font-semibold tracking-wide flex-1 ml-2">
+            {getPageTitle()}
+          </h1>
 
           <div className="flex items-center gap-3">
             <Link to="/dashboard" className={headerHomeButtonClass}>
