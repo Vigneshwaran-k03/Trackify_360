@@ -914,8 +914,11 @@ export default function ManagerDashboard() {
       <div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
           <h3 className="text-xl font-semibold text-white mb-2 sm:mb-0">Overview</h3>
-          <div className="relative">
+          <div className="relative group">
             <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"onClick={()=>setExpAllOpen(v=>!v)}><Download className='w-4 h-4'/> </button>
+            <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                  Download
+                </span>
             {expAllOpen && (
               <div className="absolute right-0 mt-1 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
                 <button className="block w-full text-left px-3 py-2 text-white hover:bg-gray-700" onClick={()=>{ setExpAllOpen(false); exportAllCharts('pdf'); }}>PDF</button>
@@ -926,14 +929,14 @@ export default function ManagerDashboard() {
           </div>
         </div>
         {/* Manager Trend Analysis (first in overview) */}
-        <div id="manager-trend-analysis" className="bg-white/10 backdrop-blur-md rounded-lg p-4 md:p-5 shadow-lg border border-white/20 relative overflow-hidden mb-6">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(1000px 400px at 20% -10%, rgba(0,255,255,0.10), transparent), radial-gradient(800px 300px at 120% 20%, rgba(0,128,255,0.12), transparent), radial-gradient(1000px 500px at 50% 120%, rgba(0,255,128,0.08), transparent)' }} />
-          <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
+        <div id="manager-trend-analysis" className="bg-white/10 backdrop-blur-md rounded-lg p-4 md:p-5 shadow-lg border border-white/20 relative overflow-visible">
+          <div className="absolute inset-0 pointer-events-none"/>
+          <div className="relative flex items-center justify-between mb-3">
             <div>
               <div className="text-sm text-cyan-200">Trend Analysis</div>
               <div className="text-white text-lg font-semibold">My Performance — {trendYear}</div>
             </div>
-            <div className="flex items-center gap-3 mt-2 sm:mt-0">
+            <div className="flex items-center gap-2">
               <div className={`text-sm font-semibold ${mgrTrendDelta >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{mgrTrendDelta >= 0 ? '▲' : '▼'} {Math.abs(mgrTrendDelta)}</div>
               <button 
                 type='button' 

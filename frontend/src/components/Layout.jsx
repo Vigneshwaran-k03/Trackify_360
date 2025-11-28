@@ -335,7 +335,7 @@ export default function Layout() {
         <div className="p-4">
           <button
             onClick={handleLogout}
-            className="w-full bg-red-600 hover:bg-red-500 py-2 rounded-xl flex justify-center"
+            className="w-full bg-red-500 hover:bg-red-600 py-2 rounded-xl flex justify-center"
           >
             {isMobile || !isCollapsed ? "Logout" : <Power />}
           </button>

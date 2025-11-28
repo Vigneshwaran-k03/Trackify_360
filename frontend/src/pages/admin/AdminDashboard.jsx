@@ -778,7 +778,7 @@ export default function AdminDashboard() {
         </div>
         {/* Company Trend Analysis (first in overview) */}
         <div id="company-trend-analysis" className="bg-white/10 backdrop-blur-md rounded-lg p-4 md:p-5 shadow-lg border border-white/20 relative overflow-visible">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(1200px 400px at 20% -10%, rgba(0,255,255,0.10), transparent), radial-gradient(800px 300px at 120% 20%, rgba(0,128,255,0.12), transparent), radial-gradient(1000px 500px at 50% 120%, rgba(0,255,128,0.08), transparent)' }} />
+          <div className="absolute inset-0 pointer-events-none"/>
           <div className="relative flex items-center justify-between mb-3">
             <div>
               <div className="text-sm text-cyan-200">Trend Analysis</div>
