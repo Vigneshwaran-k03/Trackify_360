@@ -162,10 +162,12 @@ export default function AdminKpiLog() {
         
         {/* Filter Bar Card */}
         <div className="bg-white/20 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 mb-4">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-4">
-            <h1 className="text-2xl text-white font-semibold">KPI Log</h1>
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <h1 className="text-2xl text-white font-semibold">KPI Log</h1>
+            </div>
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-center gap-2">
                 <button 
                   className={`px-3 py-1 rounded-md border border-white/50 text-white/90 transition-colors ${mode==='manager'?'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`} 
                   onClick={()=>{ setMode('manager'); setEmployee(''); }}>Manager
@@ -174,8 +176,10 @@ export default function AdminKpiLog() {
                   className={`px-3 py-1 rounded border border-white/50 text-white/90 transition-colors ${mode==='employee'?'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`} 
                   onClick={()=> setMode('employee')}>Employee
                 </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                 <select 
-                  className="border border-white/30 text-white rounded-md px-3 py-1 w-full" 
+                  className="border border-white/30 text-white rounded-md px-3 py-2 w-full min-w-0" 
                   value={dept} 
                   onChange={(e)=>{ setDept(e.target.value); setManager(''); setEmployee(''); }}>
                   <option value="" className="text-black">Select dept</option>
@@ -184,7 +188,7 @@ export default function AdminKpiLog() {
                   ))}
                 </select>
                 <select 
-                  className="border border-white/50 rounded px-2 py-1 text-white" 
+                  className="border border-white/50 rounded px-3 py-2 text-white w-full min-w-0" 
                   value={manager} 
                   onChange={(e)=>{ setManager(e.target.value); if (mode==='manager') setEmployee(''); }}>
                   <option value="" className="text-black">Select manager (optional)</option>
@@ -194,7 +198,7 @@ export default function AdminKpiLog() {
                 </select>
                 {mode === 'employee' && (
                   <select 
-                    className="border border-white/50 rounded px-2 py-1 text-white" 
+                    className="border border-white/50 rounded px-3 py-2 text-white w-full min-w-0" 
                     value={employee} 
                     onChange={(e)=>setEmployee(e.target.value)}>
                     <option value="" className="text-black">Select employee (required)</option>
@@ -203,24 +207,19 @@ export default function AdminKpiLog() {
                     ))}
                   </select>
                 )}
-                
+                <div className="flex items-center gap-2">
+                  <label className="text-white/90 whitespace-nowrap">KRA</label>
+                  <select 
+                    className="bg-white/10 border border-white/30 text-white rounded-md px-3 py-2 w-full min-w-0" 
+                    value={kraFilter} 
+                    onChange={(e)=>setKraFilter(e.target.value)}>
+                    <option value="" className="text-black">All</option>
+                    {kraOptions.map(name => (<option key={name} value={name} className="text-black">{name}</option>))}
+                  </select>
+                </div>
               </div>
-              
             </div>
-            
           </div>
-           <div className="flex items-center justify-end w-full">
-          <div className="flex items-end justify-end gap-2 w-full sm:w-auto">
-              <label className="text-white/90 whitespace-nowrap py-1">KRA</label>
-              <select 
-                className="bg-white/10 border border-white/30 text-white rounded-md px-2 py-1 w-full sm:w-auto min-w-0" 
-                value={kraFilter} 
-                onChange={(e)=>setKraFilter(e.target.value)}>
-                <option value="" className="text-black">All</option>
-                {kraOptions.map(name => (<option key={name} value={name} className="text-black">{name}</option>))}
-              </select>
-            </div>
-            </div>
                       
 
         {/* Status Messages */}
@@ -259,8 +258,8 @@ export default function AdminKpiLog() {
 
       {/* Modal Popup */}
       {modalOpen && modalKpiId !== null && (
-        <div className="fixed inset-0 flex items-center text-white justify-center z-50 p-4">
-          <div className="bg-gray-800 backdrop-blur-2xl border border-white/20 w-full max-w-2xl rounded-lg shadow-2xl max-h-[90vh]">
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 backdrop-blur-2xl border border-white/20 w-full max-w-2xl rounded-lg shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
             <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
               <h3 className="text-lg font-semibold text-white">KPI Change History</h3>
               <button 
@@ -269,7 +268,7 @@ export default function AdminKpiLog() {
                 ✕
               </button>
             </div>
-            <div className="p-4 sm:p-6 space-y-3 overflow-y-auto text-white max-h-[calc(90vh-81px)]">
+            <div className="p-4 sm:p-6 space-y-3 overflow-y-auto flex-1 text-white">
               {(grouped.find(g=> g.kpi_id===modalKpiId)?.entries || []).map((log) => (
                 <div key={`log-${log.kpi_id}-${log.version}-${log.updated_at}`} className="bg-white/10 border border-white/20 rounded-lg p-3">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
