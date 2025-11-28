@@ -15,7 +15,7 @@ export default function AdminKraLog() {
   const [managers, setManagers] = useState([]);
   const [employees, setEmployees] = useState([]);
 
-//ffffffff
+
   useEffect(() => {
     const loadDepts = async () => {
       try {
