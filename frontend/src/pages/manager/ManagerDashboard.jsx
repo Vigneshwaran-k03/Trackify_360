@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Line, Bar, Pie, Doughnut } from 'react-chartjs-2';
+import { Line, Bar, Pie} from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,7 +19,7 @@ import html2canvas from 'html2canvas';
 import { exportChartFromRef, exportSectionById, exportTableToCSV, exportTableToExcel } from '../../utils/exportUtils';
 import axios from 'axios';
 import { getToken, getRole, getUserName } from '../../utils/authStorage';
-import { Download, FunnelPlus, ChartCandlestick } from 'lucide-react';
+import { Download, FunnelPlus,CircleFadingPlus } from 'lucide-react';
 export default function ManagerDashboard() {
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
   const [userName, setUserName] = useState('');
@@ -437,9 +437,9 @@ export default function ManagerDashboard() {
   const getKpiStatus = (progress, target) => {
     const tgt = typeof target === 'number' && target > 0 ? target : 100;
     const pctOfTarget = (Number(progress || 0) / tgt) * 100;
-    if (pctOfTarget >= 100) return { label: 'Completed', color: 'bg-green-500/30 text-green-200' };
-    if (pctOfTarget < 70) return { label: 'Pending', color: 'bg-yellow-500/30 text-yellow-200' };
-    return { label: 'Achieved', color: 'bg-emerald-500/30 text-emerald-200' };
+    if (pctOfTarget >= 100) return { label: 'Completed', color: 'bg-green-100 text-green-800 text-center font-semibold' };
+    if (pctOfTarget < 70) return { label: 'Pending', color: 'bg-red-100 text-red-800 text-center font-semibold' };
+    return { label: 'Achieved', color: 'bg-blue-100 text-blue-800  text-center font-semibold' };
   };
 
   const fetchTeamMembers = async () => {
@@ -861,9 +861,9 @@ export default function ManagerDashboard() {
     // Loading state with background
     return (
       <div
-        className="min-h-screen w-full bg-cover bg-center bg-fixed text-white"
+        className="max-w-7xl mx-auto py-8 px-4"
       >
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex gap-1 sm:gap-2 mb-8 overflow-x-auto border-b border-white/30 whitespace-nowrap">
           <div className="text-2xl font-semibold">Loading...</div>
         </div>
       </div>
@@ -911,25 +911,22 @@ export default function ManagerDashboard() {
   };
   const sections = {
     overview: (
-      <div>
+      <div className='space-y-6'>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
           <h3 className="text-xl font-semibold text-white mb-2 sm:mb-0">Overview</h3>
           <div className="relative group">
             <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"onClick={()=>setExpAllOpen(v=>!v)}><Download className='w-4 h-4'/> </button>
-            <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Download
-                </span>
             {expAllOpen && (
-              <div className="absolute right-0 mt-1 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                <button className="block w-full text-left px-3 py-2 text-white hover:bg-gray-700" onClick={()=>{ setExpAllOpen(false); exportAllCharts('pdf'); }}>PDF</button>
-                <button className="block w-full text-left px-3 py-2 text-white hover:bg-gray-700" onClick={()=>{ setExpAllOpen(false); exportAllCharts('png'); }}>PNG</button>
-                <button className="block w-full text-left px-3 py-2 text-white hover:bg-gray-700" onClick={()=>{ setExpAllOpen(false); exportAllCharts('jpg'); }}>JPG</button>
+              <div className="absolute right-0 mt-1 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
+                <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>{ setExpAllOpen(false); exportAllCharts('pdf'); }}>PDF</button>
+                <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>{ setExpAllOpen(false); exportAllCharts('png'); }}>PNG</button>
+                <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>{ setExpAllOpen(false); exportAllCharts('jpg'); }}>JPG</button>
               </div>
             )}
           </div>
         </div>
         {/* Manager Trend Analysis (first in overview) */}
-        <div id="manager-trend-analysis" className="bg-white/10 backdrop-blur-md rounded-lg p-4 md:p-5 shadow-lg border border-white/20 relative overflow-visible">
+        <div id="manager-trend-analysis" className="bg-white/10 backdrop-blur-md rounded-lg p-4 md:p-5 shadow-lg border border-white/20 relative overflow-visible mb-6">
           <div className="absolute inset-0 pointer-events-none"/>
           <div className="relative flex items-center justify-between mb-3">
             <div>
@@ -937,7 +934,8 @@ export default function ManagerDashboard() {
               <div className="text-white text-lg font-semibold">My Performance — {trendYear}</div>
             </div>
             <div className="flex items-center gap-2">
-              <div className={`text-sm font-semibold ${mgrTrendDelta >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{mgrTrendDelta >= 0 ? '▲' : '▼'} {Math.abs(mgrTrendDelta)}</div>
+              <div className={`text-sm font-semibold ${mgrTrendDelta >= 0 ? 'text-teal-200' : 'text-red-400'}`}>{mgrTrendDelta >= 0 ? '▲' : '▼'} {Math.abs(mgrTrendDelta)}</div>
+              <div className='relative group'>
               <button 
                 type='button' 
                 className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" 
@@ -950,7 +948,8 @@ export default function ManagerDashboard() {
               >
                 <FunnelPlus className='w-4 h-4'/>
               </button>
-              <div className="relative">
+              </div>
+              <div className="relative group">
                 <button
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
                   onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
@@ -985,10 +984,10 @@ export default function ManagerDashboard() {
                       segment: {
                         borderColor: ctx => {
                           const a = ctx?.p0?.parsed?.y; const b = ctx?.p1?.parsed?.y; if (typeof a !== 'number' || typeof b !== 'number') return '#60a5fa';
-                          return b >= a ? '#22c55e' : '#ef4444';
+                          return b >= a ? '#14B8A6' : '#ef4444';
                         },
                         backgroundColor: ctx => {
-                          const a = ctx?.p0?.parsed?.y; const b = ctx?.p1?.parsed?.y; const base = b >= a ? 'rgba(34,197,94,0.18)' : 'rgba(239,68,68,0.14)';
+                          const a = ctx?.p0?.parsed?.y; const b = ctx?.p1?.parsed?.y; const base = b >= a ? '#44c902ff' : 'rgba(193, 2, 2, 0.14)';
                           return base;
                         }
                       },
@@ -1011,15 +1010,26 @@ export default function ManagerDashboard() {
         </div>
 
         {/* Manager KRA Performance (Reviews) */}
-        <div id="manager-kra-performance" className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg mb-6">
+        <div id="manager-kra-performance" className="bg-white/10 backdrop-blur-sm border border-white/30 p-6 rounded-lg shadow-lg mb-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
             <h4 className="font-medium text-white mb-2 sm:mb-0">Manager KRA Performance (Reviews)</h4>
             <div className="flex items-center gap-2">
-              <input type="number" className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 w-24" value={perfFilter.year} onChange={(e)=>setPerfFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
-              <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={perfFilter.month} onChange={(e)=>setPerfFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-                {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
-              </select>
-              <div className="relative">
+              <div className='relative group'>
+                <button 
+                  type='button' 
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" 
+                  onClick={() => setFilterModal({ 
+                    open: true, 
+                    section: 'performance', 
+                    year: perfFilter.year,
+                    month: perfFilter.month,
+                    onApply: (year, month) => setPerfFilter({ year, month })
+                  })}
+                >
+                  <FunnelPlus className='w-4 h-4'/>
+                </button>
+              </div>
+              <div className="relative group">
                 <button
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
                   onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
@@ -1049,27 +1059,29 @@ export default function ManagerDashboard() {
           )}
         </div>
 
-
+        {/* Charts Grid Container */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Chart 1: KRA score (assigned to manager) overall from active KPIs created by manager; default Bar */}
-          <div id="mgr-kras-wrap" className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg">
+          <div id="mgr-kras-wrap" className="bg-white/10 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
-              <h4 className="font-medium text-white mb-2 sm:mb-0">KRA Scores (Assigned to Me)</h4>
+              <h4 className="font-medium text-white mb-2 sm:mb-0">KRA-Scores</h4>
               <div className="flex items-center gap-2 relative">
 
-                <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 text-sm" value={ovB1Type} onChange={(e)=>setOvB1Type(e.target.value)}>
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
-                  <option value="pie">Pie</option>
+                <select className="p-2 border border-white/50 rounded text-white text-sm" value={ovB1Type} onChange={(e)=>setOvB1Type(e.target.value)}>
+                  <option className='text-black' value="bar">Bar</option>
+                  <option className='text-black' value="line">Line</option>
+                  <option className='text-black' value="pie">Pie</option>
                 </select>
+                <div className='relative group'>
                 <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExp1Open((v)=>!v)}>
                   <Download className='w-4 h-4'/>
                 </button>
+                </div>
                 {exp1Open && (
-                  <div className="absolute right-0 top-10 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp1Open(false); exportChartFromRef(ovB1Ref,'kra_assigned','png'); }}>PNG</button>
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp1Open(false); exportChartFromRef(ovB1Ref,'kra_assigned','jpg'); }}>JPG</button>
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp1Open(false); exportChartFromRef(ovB1Ref,'kra_assigned','pdf'); }}>PDF</button>
+                  <div className="absolute right-0 top-10 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
+                    <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExp1Open(false); exportChartFromRef(ovB1Ref,'kra_assigned','png'); }}>PNG</button>
+                    <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExp1Open(false); exportChartFromRef(ovB1Ref,'kra_assigned','jpg'); }}>JPG</button>
+                    <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExp1Open(false); exportChartFromRef(ovB1Ref,'kra_assigned','pdf'); }}>PDF</button>
                   </div>
                 )}
               </div>
@@ -1101,32 +1113,32 @@ export default function ManagerDashboard() {
           </div>
 
           {/* Chart 2: KPI scores for selected KRA (active only); default Pie */}
-          <div className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg">
+          <div className="bg-white/10 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
-              <h4 className="font-medium text-white mb-2 sm:mb-0">KPI Scores (Selected KRA)</h4>
+              <h4 className="font-medium text-white mb-2 sm:mb-0">KPI-Scores</h4>
               <div className="flex items-center gap-2 flex-wrap">
-                <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 text-sm" value={ovB2KraId} onChange={(e)=>setOvB2KraId(e.target.value)}>
-                  <option value="">All (Assigned KRAs)</option>
+                <select className="p-2 border border-white/50 rounded text-white text-sm" value={ovB2KraId} onChange={(e)=>setOvB2KraId(e.target.value)}>
+                  <option value="">KRAs</option>
                   {(() => {
                     const byManager = (departmentKRAs||[]).filter(k=> String(k.manager_name||'').toLowerCase()===String(userName||'').toLowerCase());
                     const source = byManager.length ? byManager : (myKras?.length ? myKras : departmentKRAs);
                     return (source||[]).map(k=> (
-                    <option key={k.kra_id} value={k.kra_id}>{k.name}</option>
+                    <option className='text-black' key={k.kra_id} value={k.kra_id}>{k.name}</option>
                     ));
                   })()}
                 </select>
-                <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 text-sm" value={ovB2Type} onChange={(e)=>setOvB2Type(e.target.value)}>
-                  <option value="pie">Pie</option>
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
+                <select className="p-2 border border-white/50 rounded text-white text-sm" value={ovB2Type} onChange={(e)=>setOvB2Type(e.target.value)}>
+                  <option className='text-black' value="pie">Pie</option>
+                  <option className='text-black' value="bar">Bar</option>
+                  <option className='text-black' value="line">Line</option>
                 </select>
                 <div className="relative">
                   <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExp2Open(v=>!v)}><Download className='w-4 h-4'/></button>
                   {exp2Open && (
-                    <div className="absolute right-0 top-10 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                      <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp2Open(false); exportChartFromRef(ovB2Ref,'kpi_selected_kra','png'); }}>PNG</button>
-                      <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp2Open(false); exportChartFromRef(ovB2Ref,'kpi_selected_kra','jpg'); }}>JPG</button>
-                      <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp2Open(false); exportChartFromRef(ovB2Ref,'kpi_selected_kra','pdf'); }}>PDF</button>
+                    <div className="absolute right-0 top-10 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
+                      <button className="block px-3 py-2 text-blcak hover:bg-gray-50 w-full text-left" onClick={()=>{ setExp2Open(false); exportChartFromRef(ovB2Ref,'kpi_selected_kra','png'); }}>PNG</button>
+                      <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExp2Open(false); exportChartFromRef(ovB2Ref,'kpi_selected_kra','jpg'); }}>JPG</button>
+                      <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExp2Open(false); exportChartFromRef(ovB2Ref,'kpi_selected_kra','pdf'); }}>PDF</button>
                     </div>
                   )}
                 </div>
@@ -1153,15 +1165,15 @@ export default function ManagerDashboard() {
           </div>
 
           {/* Chart 3: KRA with frequency filter (manager's KRAs), default Bar */}
-          <div className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg">
+          <div className="bg-white/10 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
-              <h4 className="font-medium text-white mb-2 sm:mb-0">KRA Scores (by Frequency)</h4>
+              <h4 className="font-medium text-white mb-2 sm:mb-0">KRA Scores-(by Frequency)</h4>
               <div className="flex items-center gap-2 relative">
                
-                <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 text-sm" value={ovB3Type} onChange={(e)=>setOvB3Type(e.target.value)}>
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
-                  <option value="pie">Pie</option>
+                <select className="p-2 border border-white/50 rounded text-white text-sm" value={ovB3Type} onChange={(e)=>setOvB3Type(e.target.value)}>
+                  <option className='text-black' value="bar">Bar</option>
+                  <option className='text-black' value="line">Line</option>
+                  <option className='text-black' value="pie">Pie</option>
                 </select>
                  <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setOvB3FilterOpen(true)}><FunnelPlus className='w-4 h-4'/></button>
                 <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExp3Open(v=>!v)}><Download className='w-4 h-4'/></button>
@@ -1206,23 +1218,23 @@ export default function ManagerDashboard() {
           </div>
 
           {/* Chart 4: KPI with frequency filter + basis (created/due/both), default Bar */}
-          <div className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg">
+          <div className="bg-white/10 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
-              <h4 className="font-medium text-white mb-2 sm:mb-0">KPI Scores (by Frequency)</h4>
+              <h4 className="font-medium text-white mb-2 sm:mb-0">KPI Scores-(by Frequency)</h4>
               <div className="flex items-center gap-2 relative">
                
-                <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 text-sm" value={ovB4Type} onChange={(e)=>setOvB4Type(e.target.value)}>
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
-                  <option value="pie">Pie</option>
+                <select className="p-2 border border-white/50 rounded text-white text-sm" value={ovB4Type} onChange={(e)=>setOvB4Type(e.target.value)}>
+                  <option className='text-black' value="bar">Bar</option>
+                  <option className='text-black' value="line">Line</option>
+                  <option className='text-black' value="pie">Pie</option>
                 </select>
-                 <button className="px-3 py-2 rounded bg-indigo-600 text-white text-sm" onClick={()=>setOvB4FilterOpen(true)}>Filter</button>
+                 <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setOvB4FilterOpen(true)}><FunnelPlus className='w-4 h-4'/></button>
                 <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExp4Open(v=>!v)}><Download className='w-4 h-4'/></button>
                 {exp4Open && (
-                  <div className="absolute right-0 top-10 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp4Open(false); exportChartFromRef(ovB4Ref,'kpi_frequency','png'); }}>PNG</button>
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp4Open(false); exportChartFromRef(ovB4Ref,'kpi_frequency','jpg'); }}>JPG</button>
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp4Open(false); exportChartFromRef(ovB4Ref,'kpi_frequency','pdf'); }}>PDF</button>
+                  <div className="absolute right-0 top-10 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
+                    <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp4Open(false); exportChartFromRef(ovB4Ref,'kpi_frequency','png'); }}>PNG</button>
+                    <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp4Open(false); exportChartFromRef(ovB4Ref,'kpi_frequency','jpg'); }}>JPG</button>
+                    <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp4Open(false); exportChartFromRef(ovB4Ref,'kpi_frequency','pdf'); }}>PDF</button>
                   </div>
                 )}
               </div>
@@ -1251,17 +1263,17 @@ export default function ManagerDashboard() {
           </div>
 
           {/* Chart 5: Two charts side-by-side with frequency + basis */}
-          <div className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg lg:col-span-2">
+          <div className="bg-white/10 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg lg:col-span-2">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
               <h4 className="font-medium text-white mb-2 sm:mb-0">KRA and KPI by Frequency</h4>
               <div className="flex items-center gap-2 relative">
                 <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setOvB5FilterOpen(true)}><FunnelPlus className='w-4 h-4'/></button>
                 <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExp5Open(v=>!v)}><Download className='w-4 h-4'/></button>
                 {exp5Open && (
-                  <div className="absolute right-0 top-10 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp5Open(false); exportChartFromRef(ovB5KraRef,'kra_by_frequency','png'); exportChartFromRef(ovB5KpiRef,'kpi_by_frequency','png'); }}>PNG</button>
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp5Open(false); exportChartFromRef(ovB5KraRef,'kra_by_frequency','jpg'); exportChartFromRef(ovB5KpiRef,'kpi_by_frequency','jpg'); }}>JPG</button>
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp5Open(false); const pdf = new jsPDF('p','mm','a4'); const w = pdf.internal.pageSize.getWidth(); const h = w*0.6; const img1 = (ovB5KraRef.current && ovB5KraRef.current.toBase64Image('image/png',1)); if(img1){ pdf.text('kra_by_frequency',10,10); pdf.addImage(img1,'PNG',10,20,w-20,h);} const img2 = (ovB5KpiRef.current && ovB5KpiRef.current.toBase64Image('image/png',1)); if(img2){ pdf.addPage(); pdf.text('kpi_by_frequency',10,10); pdf.addImage(img2,'PNG',10,20,w-20,h);} pdf.save('kra_kpi_by_frequency.pdf'); }}>PDF</button>
+                  <div className="absolute right-0 top-10 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
+                    <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExp5Open(false); exportChartFromRef(ovB5KraRef,'kra_by_frequency','png'); exportChartFromRef(ovB5KpiRef,'kpi_by_frequency','png'); }}>PNG</button>
+                    <button className="block px-3 py-2 text-black hover:bg-gray-500 w-full text-left" onClick={()=>{ setExp5Open(false); exportChartFromRef(ovB5KraRef,'kra_by_frequency','jpg'); exportChartFromRef(ovB5KpiRef,'kpi_by_frequency','jpg'); }}>JPG</button>
+                    <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExp5Open(false); const pdf = new jsPDF('p','mm','a4'); const w = pdf.internal.pageSize.getWidth(); const h = w*0.6; const img1 = (ovB5KraRef.current && ovB5KraRef.current.toBase64Image('image/png',1)); if(img1){ pdf.text('kra_by_frequency',10,10); pdf.addImage(img1,'PNG',10,20,w-20,h);} const img2 = (ovB5KpiRef.current && ovB5KpiRef.current.toBase64Image('image/png',1)); if(img2){ pdf.addPage(); pdf.text('kpi_by_frequency',10,10); pdf.addImage(img2,'PNG',10,20,w-20,h);} pdf.save('kra_kpi_by_frequency.pdf'); }}>PDF</button>
                   </div>
                 )}
               </div>
@@ -1270,10 +1282,10 @@ export default function ManagerDashboard() {
               {/* KRA chart */}
               <div>
                 <div className="flex items-center justify-end mb-2">
-                  <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 text-sm" value={ovB5TypeKra} onChange={(e)=>setOvB5TypeKra(e.target.value)}>
-                    <option value="bar">Bar</option>
-                    <option value="line">Line</option>
-                    <option value="pie">Pie</option>
+                  <select className="p-2 border border-white/50 rounded text-white text-sm" value={ovB5TypeKra} onChange={(e)=>setOvB5TypeKra(e.target.value)}>
+                    <option className='text-black' value="bar">Bar</option>
+                    <option className='text-black' value="line">Line</option>
+                    <option className='text-black' value="pie">Pie</option>
                   </select>
                 </div>
                 {(()=>{
@@ -1308,10 +1320,10 @@ export default function ManagerDashboard() {
               {/* KPI chart */}
               <div>
                 <div className="flex items-center justify-end mb-2">
-                  <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 text-sm" value={ovB5TypeKpi} onChange={(e)=>setOvB5TypeKpi(e.target.value)}>
-                    <option value="bar">Bar</option>
-                    <option value="line">Line</option>
-                    <option value="pie">Pie</option>
+                  <select className="p-2 border border-white/50 rounded text-white text-sm" value={ovB5TypeKpi} onChange={(e)=>setOvB5TypeKpi(e.target.value)}>
+                    <option  className='text-black' value="bar">Bar</option>
+                    <option  className='text-black' value="line">Line</option>
+                    <option  className='text-black' value="pie">Pie</option>
                   </select>
                 </div>
                 {(()=>{
@@ -1342,36 +1354,37 @@ export default function ManagerDashboard() {
       </div>
     ),
     tasks: (
-      <div className="bg-white/20 backdrop-blur-md p-6 rounded-lg shadow-xl mb-8">
+      <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-xl mb-8">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h3 className="text-xl font-semibold text-white">My KPIs</h3>
           <div className="flex items-center gap-3 flex-wrap">
-            <select className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black" value={tasksFilter} onChange={(e)=>setTasksFilter(e.target.value)}>
-              <option value="active">Active</option>
-              <option value="all">All</option>
-              <option value="end">End</option>
+            <select className="p-2 border border-white/30 rounded text-sm text-white" value={tasksFilter} onChange={(e)=>setTasksFilter(e.target.value)}>
+              <option className='text-black' value="active">Active</option>
+              <option className='text-black' value="all">All</option>
+              <option className='text-black' value="end">End</option>
             </select>
             {(() => {
               const sourceKras = (myKras && myKras.length) ? myKras : departmentKRAs;
               return (
-                <select className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black" value={tasksKraFilter} onChange={(e)=>setTasksKraFilter(e.target.value)}>
-                  <option value="">All KRAs</option>
+                <select className="p-2 border border-white/30 rounded text-sm text-white" value={tasksKraFilter} onChange={(e)=>setTasksKraFilter(e.target.value)}>
+                  <option className='text-black' value="">All KRAs</option>
                   {sourceKras.map(k=> (
-                    <option key={k.kra_id} value={k.kra_id}>{k.name}</option>
+                    <option className='text-black' key={k.kra_id} value={k.kra_id}>{k.name}</option>
                   ))}
                 </select>
               );
             })()}
+  
+            <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={() => navigate('/create_kpi')}><CircleFadingPlus className='w-4 h-4' /></button>
             <div className="relative">
-              <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExpTasksOpen(v=>!v)}><Download className='w-4 h-4'/></button>
+            <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExpTasksOpen(v=>!v)}><Download className='w-4 h-4'/></button>
               {expTasksOpen && (
-                <div className="absolute right-0 top-10 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                  <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExpTasksOpen(false); exportTableToExcel('#mgr-tasks-table','manager-tasks.xls'); }}>Excel</button>
-                  <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExpTasksOpen(false); exportTableToCSV('#mgr-tasks-table','manager-tasks.csv'); }}>CSV</button>
+                <div className="absolute right-0 top-10 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
+                  <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExpTasksOpen(false); exportTableToExcel('#mgr-tasks-table','manager-tasks.xls'); }}>Excel</button>
+                  <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExpTasksOpen(false); exportTableToCSV('#mgr-tasks-table','manager-tasks.csv'); }}>CSV</button>
                 </div>
               )}
             </div>
-            <button className="px-4 py-2 rounded bg-indigo-600 text-white" onClick={() => navigate('/create_kpi')}>Create KPI</button>
           </div>
         </div>
         <div id="mgr-tasks-wrap" className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
@@ -1423,9 +1436,9 @@ export default function ManagerDashboard() {
                           <button className="text-red-400 hover:text-red-300 text-sm" onClick={() => removeKpi(kpi.id)}>Remove</button>
                         ) : (
                           <>
-                            <button className="text-blue-400 hover:text-blue-300 text-sm" onClick={() => openScoreModal(kpi)}>View</button>
-                            <button className="text-green-400 hover:text-green-300 text-sm" onClick={() => openEditModal(kpi)}>Edit</button>
-                            <button className="text-red-400 hover:text-red-300 text-sm" onClick={() => removeKpi(kpi.id)}>Remove</button>
+                            <button className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1" onClick={() => openScoreModal(kpi)}>View</button>
+                            <button className="text-white border border-green-600 rounded bg-green-400 hover:bg-green-600 px-1" onClick={() => openEditModal(kpi)}>Edit</button>
+                            <button className="text-white border border-red-600 rounded bg-red-400 hover:bg-red-600 px-1" onClick={() => removeKpi(kpi.id)}>Remove</button>
                           </>
                         )
                       ); })()}
@@ -1444,32 +1457,32 @@ export default function ManagerDashboard() {
       </div>
     ),
     team: (
-      <div className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 md:p-6 rounded-lg shadow-lg mb-8">
+      <div className="bg-white/10 backdrop-blur-sm border border-white/30 p-4 md:p-6 rounded-lg shadow-lg mb-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-white mb-2 sm:mb-0">Team KRAs</h3>
           <div className="flex items-center gap-2">
             <label className="text-sm text-white/80">Employee</label>
-            <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 text-sm" value={teamEmployeeFilter} onChange={(e)=>setTeamEmployeeFilter(e.target.value)}>
-              <option value="all">All</option>
+            <select className="p-2 border border-white/50 rounded text-white" value={teamEmployeeFilter} onChange={(e)=>setTeamEmployeeFilter(e.target.value)}>
+              <option className='text-black' value="all">All</option>
               {Array.from(new Set(departmentKRAs.map(k=>k.employee_name).filter(Boolean))).map(name=> (
-                <option key={name} value={name}>{name}</option>
+                <option className='text-black' key={name} value={name}>{name}</option>
               ))}
             </select>
             <div className="relative">
               <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExpTeamOpen(v=>!v)}><Download className='w-4 h-4'/></button>
               {expTeamOpen && (
-                <div className="absolute right-0 top-10 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                  <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExpTeamOpen(false); exportTableToExcel('#mgr-team-table','manager-team.xls'); }}>Excel</button>
-                  <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExpTeamOpen(false); exportTableToCSV('#mgr-team-table','manager-team.csv'); }}>CSV</button>
+                <div className="absolute right-0 top-10 backdrop-blur-md border border-white/30 bg-white text-black rounded shadow text-sm z-20">
+                  <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExpTeamOpen(false); exportTableToExcel('#mgr-team-table','manager-team.xls'); }}>Excel</button>
+                  <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExpTeamOpen(false); exportTableToCSV('#mgr-team-table','manager-team.csv'); }}>CSV</button>
                 </div>
               )}
             </div>
           </div>
         </div>
-        <div id="mgr-team-wrap" className="overflow-x-auto">
-          <table id="mgr-team-table" className="w-full min-w-[600px]">
+        <div id="mgr-team-wrap" className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
+          <table id="mgr-team-table" className="w-full min-w-[700px]">
             <thead>
-              <tr className="border-b border-white/30 bg-black/20">
+              <tr className="border-b border-white/20 bg-white/20">
                 <th className="text-left p-3 text-white font-semibold">Employee</th>
                 <th className="text-left p-3 text-white font-semibold">KRA</th>
                 <th className="text-left p-3 text-white font-semibold">Score</th>
@@ -1477,7 +1490,7 @@ export default function ManagerDashboard() {
                 <th className="text-left p-3 text-white font-semibold">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-gray-200">
               {(function(){
                 const list = teamEmployeeFilter==='all' ? departmentKRAs : departmentKRAs.filter(k=> String(k.employee_name||'')===String(teamEmployeeFilter));
                 return list;
@@ -1487,15 +1500,15 @@ export default function ManagerDashboard() {
                 const completed = pct >= target;
                 const achieved = !completed && pct >= (0.7 * target);
                 const status = completed ? 'Completed' : achieved ? 'Achieved' : 'Pending';
-                const colorClass = completed ? 'bg-green-100 text-green-800' : achieved ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800';
+                const colorClass = completed ? 'bg-green-100 text-green-800 text-center font-semibold' : achieved ? 'bg-blue-100 text-blue-800 text-center font-semibold' : 'bg-red-100 text-red-800 text-center font-semibold';
                 return (
                   <tr key={kra.kra_id} className="border-b border-white/20">
                     <td className="p-3 font-medium text-white">{kra.employee_name || 'Not Assigned'}</td>
-                    <td className="p-3 text-white/90">{kra.name}</td>
-                    <td className="p-3 text-white/90">{pct}%</td>
+                    <td className="p-3 font-medium text-white/90">{kra.name}</td>
+                    <td className="p-3 font-medium text-white/90">{pct}%</td>
                     <td className="p-3"><span className={`px-2 py-1 rounded text-xs ${colorClass}`}>{status}</span></td>
                     <td className="p-3">
-                      <button onClick={() => openKraModal(kra.kra_id)} className="text-blue-400 hover:text-blue-300 text-sm">View</button>
+                      <button onClick={() => openKraModal(kra.kra_id)} className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1">View</button>
                     </td>
                   </tr>
                 );
@@ -2119,7 +2132,7 @@ export default function ManagerDashboard() {
 
   return (
     <div
-      className="min-h-screen w-full text-white"
+      className="min-h-screen w-full text-white overflow-x-hidden"
     
     >
       <div className="max-w-7xl mx-auto py-8 px-4">
@@ -2198,7 +2211,7 @@ export default function ManagerDashboard() {
         
         {/* Score Modal */}
         {scoreModalOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
             <div className="bg-gray-800 backdrop-blur-md border border-white/30 w-full max-w-lg rounded-lg shadow-xl p-6 text-white">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">{`Score KPI: ${scoreModalKpi?.name || ''}`}</h3>
@@ -2214,7 +2227,7 @@ export default function ManagerDashboard() {
                   <button type="button" onClick={() => openLinkModal('score')} className="text-xs text-cyan-400 underline">Insert Link</button>
                 </div>
                 <textarea
-                  className="w-full p-2 border border-white/50 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
+                  className="w-full p-2 border border-white/10 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
                   rows="3"
                   value={scoreModalComments}
                   onChange={(e) => setScoreModalComments(e.target.value)}
@@ -2230,20 +2243,20 @@ export default function ManagerDashboard() {
 
         {/* Insert Link Modal */}
         {linkModalOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md border border-white/30 w-full max-w-md rounded-lg shadow-xl p-6 text-white">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 w-full max-w-md rounded-lg shadow-xl p-6 text-white">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">Insert Link</h3>
                 <button onClick={closeLinkModal} className="text-white/80 hover:text-white text-2xl font-bold">✕</button>
               </div>
               <div className="grid grid-cols-1 gap-3">
                 <div>
-                  <label className="block text-sm mb-1 text-white/90">Link Name</label>
-                  <input className="w-full p-2 border border-white/50 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" value={linkName} onChange={(e)=>setLinkName(e.target.value)} />
+                  <label className="block text-sm mb-1 text-white">Link Name</label>
+                  <input className="w-full p-2 border border-white/30 rounded bg-white/10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" value={linkName} onChange={(e)=>setLinkName(e.target.value)} />
                 </div>
                 <div>
-                  <label className="block text-sm mb-1 text-white/90">Link URL (https://...)</label>
-                  <input className="w-full p-2 border border-white/50 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" value={linkUrl} onChange={(e)=>setLinkUrl(e.target.value)} placeholder="https://example.com" />
+                  <label className="block text-sm mb-1 text-white">Link URL (https://...)</label>
+                  <input className="w-full p-2 border border-white/50 rounded bg-white/10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" value={linkUrl} onChange={(e)=>setLinkUrl(e.target.value)} placeholder="https://example.com" />
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-4">
@@ -2256,39 +2269,39 @@ export default function ManagerDashboard() {
 
         {/* Edit KPI Modal */}
         {editModalOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md border border-white/30 w-full max-w-lg rounded-lg shadow-xl p-6 text-white">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 w-full max-w-lg rounded-lg shadow-xl p-6 text-white">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-white">Edit KPI</h3>
+                <h3 className="font-semibold text-white">Edit KPI</h3>
                 <button onClick={() => setEditModalOpen(false)} className="text-white/80 hover:text-white text-2xl font-bold">✕</button>
               </div>
               <div className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm mb-1 text-white/90">Name</label>
-                    <input className="w-full p-2 border border-white/50 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" value={editForm.name} onChange={(e)=>setEditForm({...editForm, name:e.target.value})} />
+                    <label className="block text-sm mb-1 text-white">Name</label>
+                    <input className="w-full p-2 border border-white rounded bg-white/10 text-white placeholder-white/70 focus:outline-none" value={editForm.name} onChange={(e)=>setEditForm({...editForm, name:e.target.value})} />
                   </div>
                   <div>
-                    <label className="block text-sm mb-1 text-white/90">Due Date</label>
-                    <input type="date" className="w-full p-2 border border-white/50 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" value={editForm.due_date} onChange={(e)=>setEditForm({...editForm, due_date:e.target.value})} />
+                    <label className="block text-sm mb-1 text-white">Due Date</label>
+                    <input type="date" className="w-full p-2 border border-white/50 rounded bg-white/10 text-white placeholder-white/70" value={editForm.due_date} onChange={(e)=>setEditForm({...editForm, due_date:e.target.value})} />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm mb-1 text-white/90">Definition</label>
-                  <textarea className="w-full p-2 border border-white/50 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" rows="3" value={editForm.def} onChange={(e)=>setEditForm({...editForm, def:e.target.value})} />
+                  <label className="block text-sm mb-1 text-white">Definition</label>
+                  <textarea className="w-full p-2 border border-white/50 rounded bg-white/10 text-white placeholder-white/70" rows="3" value={editForm.def} onChange={(e)=>setEditForm({...editForm, def:e.target.value})} />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm mb-1 text-white/90">Target (0-100)</label>
-                    <input type="number" min="0" max="100" className="w-full p-2 border border-white/50 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" value={editForm.target} onChange={(e)=>setEditForm({...editForm, target:e.target.value})} />
+                    <label className="block text-sm mb-1 text-white">Target (0-100)</label>
+                    <input type="number" min="0" max="100" className="w-full p-2 border border-white/50 rounded bg-white/10 text-white placeholder-white/70" value={editForm.target} onChange={(e)=>setEditForm({...editForm, target:e.target.value})} />
                   </div>
                   <div>
-                    <label className="block text-sm mb-1 text-white/90">Scoring Method</label>
-                    <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={editForm.scoring_method} onChange={(e)=>setEditForm({...editForm, scoring_method:e.target.value})}>
-                      <option value="Percentage">Percentage</option>
-                      <option value="Scale (1-5)">Scale (1-5)</option>
-                      <option value="Scale (1-10)">Scale (1-10)</option>
-                      <option value="Rating">Rating</option>
+                    <label className="block text-sm mb-1 text-white">Scoring Method</label>
+                    <select className="w-full p-2 border border-white/50 rounded bg-white/10 text-white" value={editForm.scoring_method} onChange={(e)=>setEditForm({...editForm, scoring_method:e.target.value})}>
+                      <option className='text-black' value="Percentage">Percentage</option>
+                      <option className='text-black' value="Scale (1-5)">Scale (1-5)</option>
+                      <option className='text-black' value="Scale (1-10)">Scale (1-10)</option>
+                      <option className='text-black' value="Rating">Rating</option>
                     </select>
                   </div>
                 </div>
@@ -2336,8 +2349,8 @@ export default function ManagerDashboard() {
 
         {/* Chart 3 Filter Modal */}
         {ovB3FilterOpen && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md border border-white/30 text-white w-full max-w-lg rounded-lg shadow-xl p-6">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 text-white w-full max-w-lg rounded-lg shadow-xl p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">KRA Frequency Filter</h3>
                 <button onClick={()=>setOvB3FilterOpen(false)} className="text-white/80 hover:text-white text-2xl font-bold">✕</button>
@@ -2345,19 +2358,19 @@ export default function ManagerDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium mb-1 text-white/90">Type</label>
-                  <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB3Filter.kind} onChange={(e)=>setOvB3Filter(prev=>({ ...prev, kind:e.target.value }))}>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="quarterly">Quarterly</option>
-                    <option value="yearly">Yearly</option>
+                  <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB3Filter.kind} onChange={(e)=>setOvB3Filter(prev=>({ ...prev, kind:e.target.value }))}>
+                    <option className='text-black' value="weekly">Weekly</option>
+                    <option className='text-black' value="monthly">Monthly</option>
+                    <option className='text-black' value="quarterly">Quarterly</option>
+                    <option className='text-black' value="yearly">Yearly</option>
                   </select>
                 </div>
                 {ovB3Filter.kind==='weekly' && (
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-1 text-white/90">Month</label>
-                      <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB3Filter.month} onChange={(e)=>setOvB3Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
-                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                      <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB3Filter.month} onChange={(e)=>setOvB3Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
+                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
                       </select>
                     </div>
                     <div>
@@ -2374,8 +2387,8 @@ export default function ManagerDashboard() {
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-1 text-white/90">Month</label>
-                      <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB3Filter.month} onChange={(e)=>setOvB3Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
-                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                      <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB3Filter.month} onChange={(e)=>setOvB3Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
+                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
                       </select>
                     </div>
                     <div>
@@ -2388,11 +2401,11 @@ export default function ManagerDashboard() {
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-1 text-white/90">Quarter</label>
-                      <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB3Filter.quarter} onChange={(e)=>setOvB3Filter(prev=>({ ...prev, quarter:Number(e.target.value) }))}>
-                        <option value={1}>Q1</option>
-                        <option value={2}>Q2</option>
-                        <option value={3}>Q3</option>
-                        <option value={4}>Q4</option>
+                      <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB3Filter.quarter} onChange={(e)=>setOvB3Filter(prev=>({ ...prev, quarter:Number(e.target.value) }))}>
+                        <option className='text-black' value={1}>Q1</option>
+                        <option className='text-black' value={2}>Q2</option>
+                        <option className='text-black' value={3}>Q3</option>
+                        <option className='text-black' value={4}>Q4</option>
                       </select>
                     </div>
                     <div>
@@ -2409,7 +2422,7 @@ export default function ManagerDashboard() {
                 )}
               </div>
               <div className="flex justify-end gap-2 mt-4">
-                <button onClick={()=>setOvB3FilterOpen(false)} className="px-4 py-2 rounded text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">Close</button>
+                <button onClick={()=>setOvB3FilterOpen(false)} className="text-sm px-3 py-2 rounded bg-gray-600 hover:bg-gray-700">Close</button>
               </div>
             </div>
           </div>
@@ -2417,8 +2430,8 @@ export default function ManagerDashboard() {
 
         {/* Chart 4 Filter Modal */}
         {ovB4FilterOpen && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md border border-white/30 text-white w-full max-w-lg rounded-lg shadow-xl p-6">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 text-white w-full max-w-lg rounded-lg shadow-xl p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">KPI Frequency Filter</h3>
                 <button onClick={()=>setOvB4FilterOpen(false)} className="text-white/80 hover:text-white text-2xl font-bold">✕</button>
@@ -2426,19 +2439,19 @@ export default function ManagerDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium mb-1 text-white/90">Type</label>
-                  <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB4Filter.kind} onChange={(e)=>setOvB4Filter(prev=>({ ...prev, kind:e.target.value }))}>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="quarterly">Quarterly</option>
-                    <option value="yearly">Yearly</option>
+                  <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB4Filter.kind} onChange={(e)=>setOvB4Filter(prev=>({ ...prev, kind:e.target.value }))}>
+                    <option className='text-black' value="weekly">Weekly</option>
+                    <option className='text-black' value="monthly">Monthly</option>
+                    <option className='text-black' value="quarterly">Quarterly</option>
+                    <option className='text-black' value="yearly">Yearly</option>
                   </select>
                 </div>
                 {ovB4Filter.kind==='weekly' && (
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-1 text-white/90">Month</label>
-                      <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB4Filter.month} onChange={(e)=>setOvB4Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
-                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                      <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB4Filter.month} onChange={(e)=>setOvB4Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
+                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
                       </select>
                     </div>
                     <div>
@@ -2455,8 +2468,8 @@ export default function ManagerDashboard() {
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-1 text-white/90">Month</label>
-                      <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB4Filter.month} onChange={(e)=>setOvB4Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
-                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                      <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB4Filter.month} onChange={(e)=>setOvB4Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
+                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
                       </select>
                     </div>
                     <div>
@@ -2469,11 +2482,11 @@ export default function ManagerDashboard() {
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-1 text-white/90">Quarter</label>
-                      <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB4Filter.quarter} onChange={(e)=>setOvB4Filter(prev=>({ ...prev, quarter:Number(e.target.value) }))}>
-                        <option value={1}>Q1</option>
-                        <option value={2}>Q2</option>
-                        <option value={3}>Q3</option>
-                        <option value={4}>Q4</option>
+                      <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB4Filter.quarter} onChange={(e)=>setOvB4Filter(prev=>({ ...prev, quarter:Number(e.target.value) }))}>
+                        <option className='text-black' value={1}>Q1</option>
+                        <option className='text-black' value={2}>Q2</option>
+                        <option className='text-black' value={3}>Q3</option>
+                        <option className='text-black' value={4}>Q4</option>
                       </select>
                     </div>
                     <div>
@@ -2490,15 +2503,15 @@ export default function ManagerDashboard() {
                 )}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium mb-1 text-white/90">Basis</label>
-                  <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB4Basis} onChange={(e)=>setOvB4Basis(e.target.value)}>
-                    <option value="created">Created</option>
-                    <option value="due">Due</option>
-                    <option value="both">Both</option>
+                  <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB4Basis} onChange={(e)=>setOvB4Basis(e.target.value)}>
+                    <option className='text-black' value="created">Created</option>
+                    <option className='text-black' value="due">Due</option>
+                    <option className='text-black' value="both">Both</option>
                   </select>
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-4">
-                <button onClick={()=>setOvB4FilterOpen(false)} className="px-4 py-2 rounded text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">Close</button>
+                <button onClick={()=>setOvB4FilterOpen(false)} className="text-sm px-3 py-2 rounded bg-gray-600 hover:bg-gray-700">Close</button>
               </div>
             </div>
           </div>
@@ -2506,8 +2519,8 @@ export default function ManagerDashboard() {
 
         {/* Chart 5 Filter Modal */}
         {ovB5FilterOpen && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md border border-white/30 text-white w-full max-w-lg rounded-lg shadow-xl p-6">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 text-white w-full max-w-lg rounded-lg shadow-xl p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">KRA & KPI Frequency Filter</h3>
                 <button onClick={()=>setOvB5FilterOpen(false)} className="text-white/80 hover:text-white text-2xl font-bold">✕</button>
@@ -2515,19 +2528,19 @@ export default function ManagerDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium mb-1 text-white/90">Type</label>
-                  <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB5Filter.kind} onChange={(e)=>setOvB5Filter(prev=>({ ...prev, kind:e.target.value }))}>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="quarterly">Quarterly</option>
-                    <option value="yearly">Yearly</option>
+                  <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB5Filter.kind} onChange={(e)=>setOvB5Filter(prev=>({ ...prev, kind:e.target.value }))}>
+                    <option className='text-black' value="weekly">Weekly</option>
+                    <option className='text-black' value="monthly">Monthly</option>
+                    <option className='text-black' value="quarterly">Quarterly</option>
+                    <option className='text-black' value="yearly">Yearly</option>
                   </select>
                 </div>
                 {ovB5Filter.kind==='weekly' && (
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-1 text-white/90">Month</label>
-                      <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB5Filter.month} onChange={(e)=>setOvB5Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
-                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                      <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB5Filter.month} onChange={(e)=>setOvB5Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
+                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
                       </select>
                     </div>
                     <div>
@@ -2544,8 +2557,8 @@ export default function ManagerDashboard() {
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-1 text-white/90">Month</label>
-                      <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB5Filter.month} onChange={(e)=>setOvB5Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
-                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                      <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB5Filter.month} onChange={(e)=>setOvB5Filter(prev=>({ ...prev, month:Number(e.target.value) }))}>
+                        {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
                       </select>
                     </div>
                     <div>
@@ -2558,11 +2571,11 @@ export default function ManagerDashboard() {
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-1 text-white/90">Quarter</label>
-                      <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB5Filter.quarter} onChange={(e)=>setOvB5Filter(prev=>({ ...prev, quarter:Number(e.target.value) }))}>
-                        <option value={1}>Q1</option>
-                        <option value={2}>Q2</option>
-                        <option value={3}>Q3</option>
-                        <option value={4}>Q4</option>
+                      <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB5Filter.quarter} onChange={(e)=>setOvB5Filter(prev=>({ ...prev, quarter:Number(e.target.value) }))}>
+                        <option className='text-black' value={1}>Q1</option>
+                        <option className='text-black' value={2}>Q2</option>
+                        <option className='text-black' value={3}>Q3</option>
+                        <option className='text-black' value={4}>Q4</option>
                       </select>
                     </div>
                     <div>
@@ -2579,15 +2592,15 @@ export default function ManagerDashboard() {
                 )}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium mb-1 text-white/90">Basis</label>
-                  <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={ovB5Basis} onChange={(e)=>setOvB5Basis(e.target.value)}>
-                    <option value="created">Created</option>
-                    <option value="due">Due</option>
-                    <option value="both">Both</option>
+                  <select className="w-full p-2 border border-white/50 rounded bg-white/20 text-white" value={ovB5Basis} onChange={(e)=>setOvB5Basis(e.target.value)}>
+                    <option className='text-black' value="created">Created</option>
+                    <option className='text-black' value="due">Due</option>
+                    <option className='text-black' value="both">Both</option>
                   </select>
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-4">
-                <button onClick={()=>setOvB5FilterOpen(false)} className="px-4 py-2 rounded text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">Close</button>
+                <button onClick={()=>setOvB5FilterOpen(false)} className="text-sm px-3 py-2 rounded bg-gray-600 hover:bg-gray-700">Close</button>
               </div>
             </div>
           </div>
@@ -2667,10 +2680,12 @@ export default function ManagerDashboard() {
 
       {/* Filter Modal */}
       {filterModal.open && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50" onClick={() => setFilterModal(prev => ({ ...prev, open: false }))}>
-          <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-lg shadow-xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto text-white" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50" onClick={() => setFilterModal(prev => ({ ...prev, open: false }))}>
+          <div className="bg-gray-800 backdrop-blur-md border border-white/30 rounded-lg shadow-xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto text-white" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Trend Filters</h3>
+              <h3 className="text-lg font-semibold">
+                {filterModal.section === 'performance' ? 'Performance Filters' : 'Trend Filters'}
+              </h3>
               <button 
                 onClick={() => setFilterModal(prev => ({ ...prev, open: false }))}
                 className="text-gray-400 hover:text-white"
@@ -2682,31 +2697,56 @@ export default function ManagerDashboard() {
             </div>
             
             <div className="space-y-4">
-              <label className="block text-sm mb-1">Year</label>
-              <input
-                type="number"
-                className='w-full p-2 rounded bg-white/10 border border-white/30 text-white'
-                value={filterModal.year}
-                onChange={(e) => {
-                  const year = parseInt(e.target.value) || new Date().getFullYear();
-                  setFilterModal(prev => ({ ...prev, year }));
-                  // Don't update the state here, wait for the user to click Apply
-                }}
-              />
+              <div>
+                <label className="block text-sm mb-1">Year</label>
+                <input
+                  type="number"
+                  className='w-full p-2 rounded bg-white/10 border border-white/30 text-white'
+                  value={filterModal.year}
+                  onChange={(e) => {
+                    const year = parseInt(e.target.value) || new Date().getFullYear();
+                    setFilterModal(prev => ({ ...prev, year }));
+                    // Auto-apply when value changes
+                    if (filterModal.onApply) {
+                      if (filterModal.section === 'performance') {
+                        filterModal.onApply(year, filterModal.month);
+                      } else {
+                        filterModal.onApply(year);
+                      }
+                    }
+                  }}
+                />
+              </div>
+              
+              {filterModal.section === 'performance' && (
+                <div>
+                  <label className="block text-sm mb-1">Month</label>
+                  <select
+                    className='w-full p-2 rounded bg-white/10 border border-white/30 text-white'
+                    value={filterModal.month || 1}
+                    onChange={(e) => {
+                      const month = parseInt(e.target.value) || 1;
+                      setFilterModal(prev => ({ ...prev, month }));
+                      // Auto-apply when value changes
+                      if (filterModal.onApply) {
+                        filterModal.onApply(filterModal.year, month);
+                      }
+                    }}
+                  >
+                    {Array.from({length:12},(_,i)=>i+1).map(m=> (
+                      <option className='text-black' key={m} value={m}>{m}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
             
             <div className="mt-6 flex justify-end">
               <button
-                onClick={() => {
-                  // Call the onApply callback with the selected year
-                  if (filterModal.onApply) {
-                    filterModal.onApply(filterModal.year);
-                  }
-                  setFilterModal(prev => ({ ...prev, open: false }));
-                }}
-                className="text-sm px-3 py-2 rounded bg-white/10 hover:bg-white/20"
+                onClick={() => setFilterModal(prev => ({ ...prev, open: false }))}
+                className="text-sm px-3 py-2 rounded bg-gray-600 hover:bg-gray-700"
               >
-                Apply
+                Close
               </button>
             </div>
           </div>

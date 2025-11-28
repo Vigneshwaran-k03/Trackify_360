@@ -757,9 +757,6 @@ export default function AdminDashboard() {
             >
               <Download className="w-4 h-4" />
             </button>
-            <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Download
-                </span>
             <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
               <button
                 className="block w-full text-left px-3 py-2 hover:bg-gray-50"
@@ -794,9 +791,6 @@ export default function AdminDashboard() {
                 >
                   <FunnelPlus className="w-4 h-4" />
                 </button>
-                <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Filter
-                </span>
               </div>
               <div className="relative group">
                 <button
@@ -806,9 +800,6 @@ export default function AdminDashboard() {
                 >
                   <Download className="w-4 h-4" />
                 </button>
-                <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Download
-                </span>
                 <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
                   <button
                     className="block w-full text-left px-3 py-1 hover:bg-gray-50"
@@ -880,9 +871,6 @@ export default function AdminDashboard() {
               >
                 <FunnelPlus className="w-4 h-4" />
               </button>
-              <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Filter
-                </span>
              </div> 
               <div className="relative group">
                 <button
@@ -892,9 +880,6 @@ export default function AdminDashboard() {
                 >
                   <Download className="w-4 h-4" />
                 </button>
-                <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Download
-                </span>
                 <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
                   <button
                     className="block w-full text-left px-3 py-1 hover:bg-gray-50"
@@ -1082,9 +1067,6 @@ export default function AdminDashboard() {
             >
               <FunnelPlus className="w-4 h-4" />
             </button>
-            <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Filter
-                </span>
             </div>
 
             <div className="relative group">
@@ -1095,9 +1077,7 @@ export default function AdminDashboard() {
               >
                 <Download className="w-4 h-4" />
               </button>
-              <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Download
-                </span>
+
               <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
                 <button
                   className="block w-full text-left px-3 py-1 hover:bg-gray-50"
@@ -1278,9 +1258,7 @@ export default function AdminDashboard() {
               <div className="relative group">
               <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>exportSectionById('performance-section','performance','pdf')}>
               <Download className="w-4 h-4" /></button>
-              <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Download
-                </span>
+
               </div>
             </div>   
           </div>
@@ -1473,9 +1451,7 @@ export default function AdminDashboard() {
               >
                 <Download className="w-4 h-4 group" />
               </button>
-              <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Download
-                </span>
+
               <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
                 <button
                   className="block w-full text-left px-3 py-1 hover:bg-gray-50"
@@ -1573,9 +1549,7 @@ export default function AdminDashboard() {
                 onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}>
                 <Download className="w-4 h-4" />
               </button>
-              <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Download
-                </span>
+
               <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 w-32">
                 <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>handleExportReport('csv')}>CSV</button>
                 <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>handleExportReport('excel')}>Excel</button>
@@ -1862,9 +1836,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-xl font-semibold text-white">My Reviews</h3>
             <div className="relative group">
-              <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}><Download className="w-4 h-4" /></button><span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  Download
-                </span>
+              <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}><Download className="w-4 h-4" /></button>
               <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10">
                 <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>exportTableToCSV('#admin-myreviews-table','my-reviews.csv')}>CSV</button>
                 <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>exportTableToExcel('#admin-myreviews-table','my-reviews.xls')}>Excel</button>
@@ -1924,7 +1896,7 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1 text-gray-200">Comment</label>
-                  <textarea className="w-full p-2 border border-white/30 rounded bg-white/5 text-white" rows={3} value={revEditForm.comment} onChange={(e)=>setRevEditForm(prev=>({ ...prev, comment: e.target.value }))} />
+                  <textarea className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" rows={3} value={revEditForm.comment} onChange={(e)=>setRevEditForm(prev=>({ ...prev, comment: e.target.value }))} />
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-4">
