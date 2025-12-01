@@ -150,7 +150,7 @@ export default function AdminKraLog() {
     >
      <div className='p-4 sm:p-6'>
       {/* Content container with padding */}
-       <div className="bg-white/20 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 mb-4">
+       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 mb-4">
         {/* Header/Filter bar with glassmorphism */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -214,16 +214,16 @@ export default function AdminKraLog() {
         {loading && <div className="text-white text-lg p-4 font-semibold text-center">No logs found</div>}
         {error && <div className="bg-red-500/80 text-white font-semibold rounded-lg p-3 mb-3 shadow-lg">{error}</div>}
         {!loading && !error && !groupedFiltered.length && (
-          <div className="text-white/90 text-lg p-4  rounded-lg text-center backdrop-blur-sm">
+          <div className="text-white/90 text-lg p-4 rounded-lg text-center backdrop-blur-sm">
             No logs found matching your criteria.
           </div>
         )}
 
         {/* Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 px-1 p-4 md:grid-cols-2 gap-4">
           {groupedFiltered.map(({ kra_id, latest }) => (
             // Card with glassmorphism
-            <div key={`card-${kra_id}`} className="bg-white/1  backdrop-blur-sm border border-white/30 rounded-lg p-4 shadow-lg text-white">
+            <div key={`card-${kra_id}`} className="bg-white/10  backdrop-blur-sm border border-white/30 rounded-lg p-4 shadow-lg text-white">
               <div className="flex flex-col sm:flex-row items-start justify-between gap-2">
                 <div>
                   <div className="text-xl font-bold text-white">{latest.kra_name}</div>

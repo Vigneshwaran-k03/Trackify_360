@@ -156,12 +156,12 @@ export default function AdminProfile() {
     >
       <div className="max-w-6xl mx-auto py-8 px-4">
         {/* Main Profile Card with glassmorphism */}
-        <div className="bg-white/20 backdrop-blur-sm border border-white/30 p-6 rounded-lg shadow-lg text-white">
+        <div className="bg-white/10 backdrop-blur-sm border border-white/30 p-6 rounded-lg shadow-lg text-white">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
             <h3 className="text-2xl font-semibold text-white mb-2 sm:mb-0">My Profile</h3>
             <button
               onClick={()=>setCpOpen(true)}
-              className="px-3 py-2 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition-colors"
+              className="px-3 py-2 rounded bg-sky-400 hover:bg-sky-500 text-white text-sm transition-colors"
             >
               Change Password
             </button>
@@ -218,7 +218,7 @@ export default function AdminProfile() {
                       type="button"
                       onClick={saveAvatar}
                       disabled={!pendingAvatar}
-                      className="px-3 py-2 rounded bg-indigo-600 text-white text-sm disabled:opacity-60 hover:bg-indigo-700 transition-colors"
+                      className="px-3 py-2 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition-colors"
                     >
                       Change Profile
                     </button>
@@ -241,7 +241,7 @@ export default function AdminProfile() {
             </div>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm mb-1 text-white/90">Email</label>
+                <label className="block text-sm mb-1 text-white">Email</label>
                 <input
                   disabled
                   value={userEmail}

@@ -1613,7 +1613,7 @@ export default function AdminDashboard() {
                       <td className="p-2 font-medium">{kra.manager_name || '-'}</td>
                       <td className="p-2 font-medium">{kra.employee_name || '-'}</td>
                       <td className="p-2 font-medium">
-                        <button onClick={() => openKraModal(kra)} className="text-blue-400 hover:text-blue-300 text-sm">View</button>
+                        <button onClick={() => openKraModal(kra)} className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1">View</button>
                       </td>
                     </tr>
                   ))}
@@ -1687,7 +1687,7 @@ export default function AdminDashboard() {
     ),
     review: (
       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg p-6 border border-white/20 text-white mb-8">
-        <h3 className="text-xl font-semibold mb-4 text-white">Add Manager Review</h3>
+        <h3 className="text-xl font-semibold mb-4 text-white">Add Review to Manager</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium mb-1 text-gray-200">Department</label>
@@ -1844,16 +1844,16 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-          <div className="overflow-x-auto">
-            <table id="admin-myreviews-table" className="w-full">
+          <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
+            <table id="admin-myreviews-table" className="w-full min-w-[700px]">
               <thead>
-                <tr className="border-b border-white/20">
-                  <th className="text-left p-3 text-white">KRA</th>
-                  <th className="text-left p-3 text-white">Manager</th>
-                  <th className="text-left p-3 text-white">Score</th>
-                  <th className="text-left p-3 text-white">Comment</th>
-                  <th className="text-left p-3 text-white">Reviewed At</th>
-                  <th className="text-left p-3 text-white">Actions</th>
+                <tr className="border-b border-white/20 bg-white/20">
+                  <th className="text-left p-3 text-white font-semibold">KRA</th>
+                  <th className="text-left p-3 text-white font-semibold">Manager</th>
+                  <th className="text-left p-3 text-white font-semibold">Score</th>
+                  <th className="text-left p-3 text-white font-semibold">Comment</th>
+                  <th className="text-left p-3 text-white font-semibold">Reviewed At</th>
+                  <th className="text-left p-3 text-white font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody className="text-gray-200">
@@ -1864,7 +1864,7 @@ export default function AdminDashboard() {
                     <td className="p-3">{r.score}</td>
                     <td className="p-3"><span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></td>
                     <td className="p-3">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
-                    <td className="p-3"><button className="text-blue-400 hover:text-blue-300 text-sm" onClick={()=>openEditReview(r)}>Update</button></td>
+                    <td className="p-3"><button className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1" onClick={()=>openEditReview(r)}>Update</button></td>
                   </tr>
                 ))}
                 {myReviews.length===0 && (

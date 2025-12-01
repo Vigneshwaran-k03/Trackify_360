@@ -240,8 +240,8 @@ export default function Create_KPI_Manager() {
       {/* [STYLE CHANGE] Main card with frosted glass effect */}
       <div className="w-full max-w-6xl mx-auto bg-white/10 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl border border-white/20 text-white">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Create & My KPI</h2>
-          <button onClick={()=>setShowModal(true)} className="bg-indigo-600 text-white px-4 py-2 rounded">New KPI</button>
+          <h2 className="text-3xl font-bold">Create & My KPI</h2>
+          <button onClick={()=>setShowModal(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors">New KPI</button>
         </div>
         
         {/* [STYLE CHANGE] High-contrast message */}
@@ -254,7 +254,7 @@ export default function Create_KPI_Manager() {
         <div className="mt-2">
           <h3 className="text-xl font-semibold mb-2">My Created KPIs</h3>
           <div className="mb-3 flex flex-wrap items-center gap-4">
-            <label className="text-sm text-gray-200">Filter:</label>
+            <label className="text-sm text-gray-200">Status:</label>
             {/* [STYLE CHANGE] Styled select */}
             <select 
               className="border border-gray-400 rounded px-2 py-1 bg-transparent text-white" 
@@ -280,36 +280,62 @@ export default function Create_KPI_Manager() {
           
           {!myKpis.length && <div className="text-sm text-gray-300">No KPIs created yet.</div>}
           
-          <ul className="divide-y divide-gray-500">
-            {filteredKpis.map(k => (
-              <li key={k.id} className="py-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-                <div>
-                  <div className="font-medium">{k.name}</div>
-                  {/* [STYLE CHANGE] Light text */}
-                  <div className="text-xs text-gray-300">KRA: {k.kra_name} • Due: {k.due_date ? new Date(k.due_date).toLocaleDateString() : '-'}</div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-xs text-gray-300">Status: {k.kpi_status}</div>
-                  {String(k.kpi_status || '').toLowerCase() !== 'end' && (
-                    <>
-                      {/* [STYLE CHANGE] Styled buttons */}
-                      <button className="px-2 py-1 border border-white/50 text-white/90 rounded hover:bg-white/10" onClick={()=>openChange(k)}>Change</button>
-                      <button className="px-2 py-1 border border-white/50 text-white/90 rounded hover:bg-white/10" onClick={()=>openRemove(k)}>Remove</button>
-                    </>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-x-auto rounded-lg border border-white/30">
+            <table className="min-w-full border border-white/20 text-left">
+              <thead>
+                <tr className="bg-white/20 border-b border-white/30">
+                  <th className="p-3 font-semibold text-white">KPI Name</th>
+                  <th className="p-3 font-semibold text-white">KRA</th>
+                  <th className="p-3 font-semibold text-white">Definition</th>
+                  <th className="p-3 font-semibold text-white">Target</th>
+                  <th className="p-3 font-semibold text-white">Due Date</th>
+                  <th className="p-3 font-semibold text-white">Status</th>
+                  <th className="p-3 font-semibold text-white">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredKpis.map(k => (
+                  <tr key={k.id} className="border-t border-white/20 bg-black/20 transition-colors">
+                    <td className="p-3 text-white ">{k.name}</td>
+                    <td className="p-3 text-white">{k.kra_name}</td>
+                    <td className="p-3 text-white max-w-xs " title={k.def}>{k.def}</td>
+                    <td className="p-3 text-white ">{typeof k.target === 'number' ? `${k.target}%` : '-'}</td>
+                    <td className="p-3 text-white ">{k.due_date ? new Date(k.due_date).toLocaleDateString() : '-'}</td>
+                    <td className="p-3 text-white ">
+                      <span className={`px-2 py-1 rounded text-md font-medium ${
+                        String(k.kpi_status || '').toLowerCase() === 'active' 
+                          ? 'text-green-300' 
+                          : String(k.kpi_status || '').toLowerCase() === 'end'
+                          ? ' text-red-300'
+                          : 'text-gray-300'
+                      }`}>
+                        {k.kpi_status || 'Unknown'}
+                      </span>
+                    </td>
+                    <td className="p-3 text-white">
+                      <div className="flex gap-2">
+                        {String(k.kpi_status || '').toLowerCase() !== 'end' && (
+                          <>
+                            <button className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition-colors" onClick={()=>openChange(k)}>Change</button>
+                            <button className="px-3 py-1 rounded border border-red-600 bg-red-400 hover:bg-red-600 text-white text-sm transition-colors" onClick={()=>openRemove(k)}>Remove</button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       {/* [MODAL 1: EDIT KPI] */}
       {editModal.open && ReactDOM.createPortal(
         (
-          <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4">
+          <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
             {/* [STYLE CHANGE] Frosted glass modal card */}
-            <div className="w-full max-w-2xl bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-6 border border-white/20 text-white">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 w-full max-w-lg rounded-lg shadow-xl p-6 text-white">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Request KPI Change</h3>
                 <button className="text-gray-200" onClick={()=>setEditModal({ open: false, kpi: null })}>✕</button>
@@ -322,26 +348,26 @@ export default function Create_KPI_Manager() {
               
               <form onSubmit={submitRequest} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">KPI Name *</label>
+                  <label className="block text-sm font-medium text-white mb-1">KPI Name *</label>
                   {/* [STYLE CHANGE] Styled input */}
-                  <input className="w-full p-2 border border-gray-400 rounded text-white bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50" placeholder="Enter KPI Name" name="name" value={editForm.name} onChange={handleEditChange} required />
+                  <input className="w-full p-3 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none " placeholder="Enter KPI Name" name="name" value={editForm.name} onChange={handleEditChange} required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">Definition *</label>
-                  <textarea className="w-full p-2 border border-gray-400 rounded text-white bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50" placeholder="Enter Definition" name="def" value={editForm.def} onChange={handleEditChange} rows={4} required />
+                  <label className="block text-sm font-medium text-white mb-1">Definition *</label>
+                  <textarea className="w-full p-3 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none h-15" placeholder="Enter Definition" name="def" value={editForm.def} onChange={handleEditChange} rows={4} required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">Due Date *</label>
+                  <label className="block text-sm font-medium text-white mb-1">Due Date *</label>
                   {/* [STYLE CHANGE] Styled date input */}
-                  <input type="date" className="w-full p-2 border border-gray-400 rounded text-white bg-white/10" name="due_date" value={editForm.due_date} onChange={handleEditChange} required />
+                  <input type="date" className="w-full p-3 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none " name="due_date" value={editForm.due_date} onChange={handleEditChange} required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">Target (0-100)</label>
-                  <input type="number" min="0" max="100" className="w-full p-2 border border-gray-400 rounded text-white bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50" name="target" placeholder="e.g., 100" value={editForm.target} onChange={handleEditChange} />
+                  <label className="block text-sm font-medium text-white mb-1">Target (0-100)</label>
+                  <input type="number" min="0" max="100" className="w-full p-3 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none " name="target" placeholder="e.g., 100" value={editForm.target} onChange={handleEditChange} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">Scoring Method *</label>
-                  <select className="w-full p-2 border border-gray-400 rounded text-white bg-transparent focus:outline-none focus:ring-2 focus:ring-white/50" name="scoring_method" value={editForm.scoring_method} onChange={handleEditChange} required>
+                  <label className="block text-sm font-medium text-white mb-1">Scoring Method *</label>
+                  <select className="w-full p-3 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none " name="scoring_method" value={editForm.scoring_method} onChange={handleEditChange} required>
                     <option className="text-black" value="">Select Scoring Method</option>
                     <option className="text-black" value="Percentage">Percentage</option>
                     <option className="text-black" value="Scale (1-5)">Scale (1-5)</option>
@@ -350,12 +376,12 @@ export default function Create_KPI_Manager() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">Comment</label>
-                  <textarea className="w-full p-2 border border-gray-400 rounded text-white bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50" placeholder="Enter Comment" name="comment" value={editForm.comment} onChange={handleEditChange} rows={4} />
+                  <label className="block text-sm font-medium text-white mb-1">Comment</label>
+                  <textarea className="w-full h-15 p-3 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none " placeholder="Enter Comment" name="comment" value={editForm.comment} onChange={handleEditChange} rows={4} />
                 </div>
                 <div className="flex items-center justify-end gap-2 pt-2">
                   <button type="button" className="px-4 py-2 rounded border border-white/50 text-white/90 hover:bg-white/10" onClick={()=>setEditModal({ open: false, kpi: null })}>Cancel</button>
-                  <button type="submit" disabled={loading} className="bg-indigo-600 text-white px-6 py-2 rounded disabled:opacity-50">
+                  <button type="submit" disabled={loading} className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded disabled:opacity-50">
                     {loading ? 'Submitting...' : 'Submit Request'}
                   </button>
                 </div>
@@ -369,14 +395,13 @@ export default function Create_KPI_Manager() {
       {/* [MODAL 2: CREATE KPI] */}
       {showModal && ReactDOM.createPortal(
         (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
             {/* [STYLE CHANGE] Frosted glass modal card */}
-            <div className="w-full max-w-2xl bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-6 border border-white/20 text-white">
+            <div className="w-full max-w-xl bg-gray-800 backdrop-blur-md rounded-lg shadow-xl p-6 border border-white/20 text-white">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Create KPI (Manager)</h3>
                 <button className="text-gray-200" onClick={()=>setShowModal(false)}>✕</button>
               </div>
-              
               {/* [STYLE CHANGE] High-contrast message */}
               {message && (
                 <div className={`mb-4 p-3 rounded ${message.includes('Error') ? 'bg-red-600 text-white' : 'bg-blue-600 text-white'}`}>{message}</div>
@@ -384,56 +409,56 @@ export default function Create_KPI_Manager() {
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">KPI Name *</label>
-                  <input className="w-full p-2 border border-gray-400 rounded text-white bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50" placeholder="Enter KPI Name" name="name" value={form.name} onChange={handleChange} required />
+                  <label className="block text-sm font-medium text-white mb-1">KPI Name *</label>
+                  <input className="w-full p-2 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none" placeholder="Enter KPI Name" name="name" value={form.name} onChange={handleChange} required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">Definition *</label>
-                  <textarea className="w-full p-2 border border-gray-400 rounded text-white bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50" placeholder="Enter Definition" name="def" value={form.def} onChange={handleChange} rows={4} required />
+                  <label className="block text-sm font-medium text-white mb-1">Definition *</label>
+                  <textarea className="w-full p-2 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none h-15" placeholder="Enter Definition" name="def" value={form.def} onChange={handleChange} rows={4} required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">KRA *</label>
-                  <select className="w-full p-2 border border-gray-400 rounded text-white bg-transparent focus:outline-none focus:ring-2 focus:ring-white/50" name="kra_id" value={form.kra_id} onChange={handleChange} required>
+                  <label className="block text-sm font-medium text-white mb-1">KRA *</label>
+                  <select className="w-full p-2 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none" name="kra_id" value={form.kra_id} onChange={handleChange} required>
                     <option className="text-black" value="">Select KRA</option>
                     {kras.map(k => (
                       <option className="text-black" key={k.kra_id} value={k.kra_id}>{k.name}</option>
                     ))}
                   </select>
                   {selectedKra && (
-                    <p className="text-xs text-gray-300 mt-1">KRA Target: {typeof selectedKra.target === 'number' ? `${selectedKra.target}%` : '-'}</p>
+                    <p className="text-xs text-white mt-1">KRA Target: {typeof selectedKra.target === 'number' ? `${selectedKra.target}%` : '-'}</p>
                   )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-200 mb-1">Department</label>
+                    <label className="block text-sm font-medium text-white mb-1">Department</label>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-400 rounded text-white bg-white/5"
+                      className="w-full p-2  cursor-not-allowed border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none"
                       value={userDept || ''}
                       readOnly
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-200 mb-1">Role</label>
+                    <label className="block text-sm font-medium text-white mb-1">Role</label>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-400 rounded text-white bg-white/5"
+                      className="w-full p-2 border border-white/50  cursor-not-allowed rounded-md bg-white/20 text-white placeholder-white focus:outline-none"
                       value={userRole || 'Manager'}
                       readOnly
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">Due Date *</label>
-                  <input type="date" className="w-full p-2 border border-gray-400 rounded text-white bg-white/10" name="due_date" value={form.due_date} onChange={handleChange} required />
+                  <label className="block text-sm font-medium text-white mb-1">Due Date *</label>
+                  <input type="date" className="w-full p-2 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none" name="due_date" value={form.due_date} onChange={handleChange} required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-1">Target (0-100)</label>
-                  <input type="number" min="0" max="100" className="w-full p-2 border border-gray-400 rounded text-white bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50" name="target" placeholder="e.g., 100" value={form.target} onChange={handleChange} />
+                  <label className="block text-sm font-medium text-white mb-1">Target (0-100)</label>
+                  <input type="number" min="0" max="100" className="w-full p-2 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none" name="target" placeholder="e.g., 100" value={form.target} onChange={handleChange} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-1">Scoring Method *</label>
-                  <select className="w-full p-2 border border-gray-400 rounded text-white bg-transparent focus:outline-none focus:ring-2 focus:ring-white/50" name="scoring_method" value={form.scoring_method} onChange={handleChange} required>
+                  <select className="w-full p-2 border border-white/50 rounded-md bg-white/20 text-white placeholder-white focus:outline-none" name="scoring_method" value={form.scoring_method} onChange={handleChange} required>
                     <option className="text-black" value="">Select Scoring Method</option>
                     <option className="text-black" value="Percentage">Percentage</option>
                     <option className="text-black" value="Scale (1-5)">Scale (1-5)</option>
@@ -457,15 +482,15 @@ export default function Create_KPI_Manager() {
       {/* [MODAL 3: ADMIN SELECT] */}
       {adminSelect.open && ReactDOM.createPortal(
         (
-          <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4" style={{ zIndex: 9999, pointerEvents: 'auto' }}>
+          <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4" style={{ zIndex: 9999, pointerEvents: 'auto' }}>
             {/* [STYLE CHANGE] Frosted glass modal card */}
-            <div className="w-full max-w-sm bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-6 border border-white/20 text-white">
+            <div className="w-full max-w-sm bg-gray-800 backdrop-blur-md rounded-lg shadow-xl p-6 border border-white/20 text-white">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-semibold">Select Admin</h3>
+                <h3 className="text-lg te3xt-white font-semibold">Select Admin</h3>
                 <button className="text-gray-200" onClick={()=> setAdminSelect({ open: false, mode: '', kpi: null, approver: '' })}>✕</button>
               </div>
               <select 
-                className="w-full border border-gray-400 rounded p-2 text-white bg-transparent focus:outline-none focus:ring-2 focus:ring-white/50" 
+                className="w-full border border-gray-400 rounded p-2 text-white bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50" 
                 value={adminSelect.approver} 
                 onChange={(e)=> setAdminSelect(prev=> ({ ...prev, approver: e.target.value }))}
               >
@@ -476,7 +501,7 @@ export default function Create_KPI_Manager() {
               </select>
               <div className="flex justify-end gap-2 mt-4">
                 <button className="px-4 py-2 rounded border border-white/50 text-white/90 hover:bg-white/10" onClick={()=> setAdminSelect({ open: false, mode: '', kpi: null, approver: '' })}>Cancel</button>
-                <button className="px-4 py-2 rounded bg-indigo-600 text-white" onClick={submitWithApprover}>Send</button>
+                <button className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white" onClick={submitWithApprover}>Send</button>
               </div>
             </div>
           </div>

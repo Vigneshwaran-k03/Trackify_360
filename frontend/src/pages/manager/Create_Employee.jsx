@@ -107,7 +107,7 @@ export default function Create_Employee() {
 
   return (
     <div
-      className="min-h-screen w-full max-w-md mx-auto flex items-center justify-center p-4"
+      className="min-h-screen w-full px-1 max-w-md mx-auto flex items-center justify-center p-4"
     >
       
       <div className="w-full max-w-md mt-[-80px] mx-auto bg-white/10 backdrop-blur-md p-8 rounded-lg shadow-xl border border-white/20">

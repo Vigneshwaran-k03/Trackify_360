@@ -980,14 +980,14 @@ export default function ManagerDashboard() {
                       borderWidth: 2,
                       pointRadius: 3,
                       pointHoverRadius: 5,
-                      tension: 0.35,
+                      tension: 0.35, 
                       segment: {
                         borderColor: ctx => {
                           const a = ctx?.p0?.parsed?.y; const b = ctx?.p1?.parsed?.y; if (typeof a !== 'number' || typeof b !== 'number') return '#60a5fa';
-                          return b >= a ? '#14B8A6' : '#ef4444';
+                          return b >= a ? '#0a911cff' : '#ef4444';
                         },
                         backgroundColor: ctx => {
-                          const a = ctx?.p0?.parsed?.y; const b = ctx?.p1?.parsed?.y; const base = b >= a ? '#44c902ff' : 'rgba(193, 2, 2, 0.14)';
+                          const a = ctx?.p0?.parsed?.y; const b = ctx?.p1?.parsed?.y; const base = b >= a ? 'rgba(61, 255, 13, 0.18)' : 'rgba(193, 2, 2, 0.14)';
                           return base;
                         }
                       },
@@ -1380,8 +1380,8 @@ export default function ManagerDashboard() {
             <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExpTasksOpen(v=>!v)}><Download className='w-4 h-4'/></button>
               {expTasksOpen && (
                 <div className="absolute right-0 top-10 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                  <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExpTasksOpen(false); exportTableToExcel('#mgr-tasks-table','manager-tasks.xls'); }}>Excel</button>
-                  <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExpTasksOpen(false); exportTableToCSV('#mgr-tasks-table','manager-tasks.csv'); }}>CSV</button>
+                  <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExpTasksOpen(false); exportTableToExcel('#mgr-tasks-table','manager-tasks.xls'); }}>Excel</button>
+                  <button className="block px-3 py-2 text-black hover:bg-gray-50 w-full text-left" onClick={()=>{ setExpTasksOpen(false); exportTableToCSV('#mgr-tasks-table','manager-tasks.csv'); }}>CSV</button>
                 </div>
               )}
             </div>
@@ -1524,14 +1524,14 @@ export default function ManagerDashboard() {
       </div>
     ),
     kras: (
-      <div id="mgr-kras-section" className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 md:p-6 rounded-lg shadow-lg">
+      <div id="mgr-kras-section" className="bg-white/10 backdrop-blur-sm border border-white/30 p-4 md:p-6 rounded-lg shadow-lg">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-white mb-2 sm:mb-0">My KRAs</h3>
           <div className="relative">
             <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExpKrasListOpen(v=>!v)}><Download className='w-4 h-4'/></button>
             {expKrasListOpen && (
               <div className="absolute right-0 top-10 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{
+                <button className="block px-3 py-2 bg-white text-black hover:bg-gray-50 w-full text-left" onClick={()=>{
                   setExpKrasListOpen(false);
                   const rows = [['KRA','Definition','Due Date','Overall %'], ...myKras.map(k=>[
                     String(k.name||'').replaceAll(',',' '),
@@ -1543,7 +1543,7 @@ export default function ManagerDashboard() {
                   const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
                   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='my-kras.csv'; a.click(); URL.revokeObjectURL(a.href);
                 }}>CSV</button>
-                <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{
+                <button className="block px-3 py-2 text-black bg-white hover:bg-gray-50 w-full text-left" onClick={()=>{
                   setExpKrasListOpen(false);
                   const header = '<thead><tr><th>KRA</th><th>Definition</th><th>Due Date</th><th>Overall %</th></tr></thead>';
                   const body = '<tbody>' + myKras.map(k=>`<tr><td>${k.name||''}</td><td>${k.definition||k.def||''}</td><td>${k.due_date? new Date(k.due_date).toLocaleDateString():'-'}</td><td>${typeof k.percentage==='number'? k.percentage : (typeof k.overall==='number'? k.overall: '')}</td></tr>`).join('') + '</tbody>';
@@ -1557,10 +1557,10 @@ export default function ManagerDashboard() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {myKras.map((k) => (
-            <div key={k.kra_id} className="border border-white/30 bg-black/10 rounded-lg p-4">
+            <div key={k.kra_id} className="border border-white/30 bg-white/10 rounded-lg p-4">
               <div className="flex justify-between items-start">
                 <h4 className="font-semibold text-lg text-white">{k.name}</h4>
-                <span className="bg-blue-500/30 text-blue-200 px-2 py-1 rounded text-xs">Active</span>
+        
               </div>
               <p className="text-sm text-white/80 mt-1">{k.definition || k.def || ''}</p>
               <p className="text-sm text-white/80 mt-1">Overall: {(()=>{
@@ -1573,7 +1573,7 @@ export default function ManagerDashboard() {
                 return `${overall}%`;
               })()}</p>
               <div className="mt-3 text-right">
-                <button onClick={() => openKraModal(k.kra_id, true)} className="text-blue-400 hover:text-blue-300">View Details</button>
+                <button onClick={() => openKraModal(k.kra_id, true)} className="text-green-500 hover:text-green-300">Details</button>
               </div>
             </div>
           ))}
@@ -1583,20 +1583,20 @@ export default function ManagerDashboard() {
     ),
     
     review: (
-      <div className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 md:p-6 rounded-lg shadow-lg">
-        <h3 className="text-xl font-semibold mb-4 text-white">Add Review</h3>
+      <div className="bg-white/10 backdrop-blur-sm border border-white/30 p-4 md:p-6 rounded-lg shadow-lg">
+        <h3 className="text-xl font-semibold mb-4 text-white">Add Review to Employee</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block text-sm font-medium mb-1 text-white/90">Select Employee</label>
-            <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={revEmployeeId} onChange={(e)=>{ setRevEmployeeId(e.target.value); setRevKraId(''); setRevKpis([]); }}>
-              <option value="">-- Select --</option>
-              {teamMembers.map(m=> <option key={m.user_id} value={m.user_id}>{m.name}</option>)}
+            <label className="block text-sm font-medium mb-1 text-white">Select Employee</label>
+            <select className="w-full p-2 border border-white/50 rounded bg-white/5 text-white" value={revEmployeeId} onChange={(e)=>{ setRevEmployeeId(e.target.value); setRevKraId(''); setRevKpis([]); }}>
+              <option className='text-black' value="">-- Select --</option>
+              {teamMembers.map(m=> <option className='text-black' key={m.user_id} value={m.user_id}>{m.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-white/90">Select KRA (Created by me)</label>
-            <select className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={revKraId} onChange={(e)=>{ setRevKraId(e.target.value); loadReviewKra(e.target.value); }}>
-              <option value="">-- Select --</option>
+            <label className="block text-sm font-medium mb-1 text-white">Select KRA (Created by me)</label>
+            <select className="w-full p-2 border border-white/50 rounded bg-white/5 text-white" value={revKraId} onChange={(e)=>{ setRevKraId(e.target.value); loadReviewKra(e.target.value); }}>
+              <option className='text-black' value="">-- Select --</option>
               {(function(){
                 const me = (getUserName() || '').toLowerCase();
                 const emp = teamMembers.find(e=> String(e.user_id)===String(revEmployeeId));
@@ -1605,15 +1605,15 @@ export default function ManagerDashboard() {
                   .filter(k => String(k.created_by || '').toLowerCase() === me)
                   .filter(k => !empName || String(k.employee_name || '') === empName)
                   .map(k => (
-                    <option key={k.kra_id} value={k.kra_id}>{k.name}</option>
+                    <option className='text-black' key={k.kra_id} value={k.kra_id}>{k.name}</option>
                   ));
               })()}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-white/90">Method</label>
+            <label className="block text-sm font-medium mb-1 text-white">Method</label>
             <select
-              className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900"
+              className="w-full p-2 border border-white/50 rounded bg-white/5 text-white"
               value={revMode}
               onChange={(e)=>{
                 const mode = e.target.value;
@@ -1623,13 +1623,13 @@ export default function ManagerDashboard() {
                 setRevRatingValue('');
               }}
             >
-              <option value="percentage">Percentage</option>
-              <option value="rating">Rating</option>
+              <option className='text-black' value="percentage">Percentage</option>
+              <option className='text-black' value="rating">Rating</option>
             </select>
           </div>
           {revMode === 'percentage' && (
             <div>
-              <label className="block text-sm font-medium mb-1 text-white/90">Score (Percentage)</label>
+              <label className="block text-sm font-medium mb-1 text-white">Score (Percentage)</label>
               <div className="flex items-center gap-2">
                 <input
                   type="range"
@@ -1645,28 +1645,28 @@ export default function ManagerDashboard() {
           )}
           {revMode === 'rating' && (
             <div className="space-y-2">
-              <label className="block text-sm font-medium mb-1 text-white/90">Rating Band</label>
+              <label className="block text-sm font-medium mb-1 text-white">Rating Band</label>
               <select
-                className="w-full p-2 border border-white/50 rounded bg-white/30 text-gray-900"
+                className="w-full p-2 border border-white/50 rounded bg-white/5 text-white"
                 value={revRatingBand}
                 onChange={(e)=>{
                   setRevRatingBand(e.target.value);
                   setRevRatingValue('');
                 }}
               >
-                <option value="">-- Select Rating --</option>
-                <option value="95-100">Outstanding – 95-100</option>
-                <option value="90-95">Excellent – 90-95</option>
-                <option value="85-90">Very Good – 85-90</option>
-                <option value="80-85">Good – 80-85</option>
-                <option value="75-80">Fair – 75-80</option>
-                <option value="70-75">Needs Improvement – 70-75</option>
-                <option value="65-70">Poor – 65-70</option>
-                <option value="0-65">Unacceptable – below 65</option>
+                <option className='text-black' value="">-- Select Rating --</option>
+                <option className='text-black' value="95-100">Outstanding – 95-100</option>
+                <option className='text-black' value="90-95">Excellent – 90-95</option>
+                <option className='text-black' value="85-90">Very Good – 85-90</option>
+                <option className='text-black' value="80-85">Good – 80-85</option>
+                <option className='text-black' value="75-80">Fair – 75-80</option>
+                <option className='text-black' value="70-75">Needs Improvement – 70-75</option>
+                <option className='text-black' value="65-70">Poor – 65-70</option>
+                <option className='text-black' value="0-65">Unacceptable – below 65</option>
               </select>
               <button
                 type="button"
-                className="px-3 py-2 rounded bg-indigo-600 text-white disabled:opacity-50 text-sm"
+                className="px-3 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50 text-sm"
                 disabled={!revRatingBand}
                 onClick={()=>{
                   setRevRatingModalOpen(true);
@@ -1682,12 +1682,13 @@ export default function ManagerDashboard() {
           )}
           <div className="md:col-span-2">
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium mb-1 text-white/90">Comments</label>
-              <button type="button" onClick={() => openLinkModal('review')} className="text-xs text-cyan-400 underline">Insert Link</button>
+              <label className="block text-sm font-medium mb-1 text-white">Comments</label>
+              <button type="button" onClick={() => openLinkModal('review')} className=" text-cyan-400 underline">Insert Link</button>
             </div>
             <textarea
-              className="w-full p-2 border border-white/50 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
+              className="w-full p-2 border border-white/50 rounded bg-white/5 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
               rows={2}
+              placeholder='Enter Your Comments or Insert Your Links'
               value={revComment}
               onChange={(e)=>setRevComment(e.target.value)}
             />
@@ -1724,11 +1725,11 @@ export default function ManagerDashboard() {
                   return true;
                 });
                 return list.map(kpi => (
-                  <div key={kpi.id} className="border border-white/30 bg-black/10 rounded p-3">
+                  <div key={kpi.id} className="border border-white/30 bg-black/5 rounded p-3">
                     <div className="font-medium text-white">{kpi.name}</div>
-                    <div className="text-sm text-white/80">Target: {typeof kpi.target==='number'? `${kpi.target}%` : '-'}</div>
-                    <div className="text-sm text-white/80">Achieved: {typeof kpi.percentage==='number'? `${kpi.percentage}%` : '-'}</div>
-                    <div className="text-sm text-white/80">Comments: <span dangerouslySetInnerHTML={{ __html: kpi.comments ? renderCommentHtml(kpi.comments) : '-' }} /></div>
+                    <div className="text-sm text-white">Target: {typeof kpi.target==='number'? `${kpi.target}%` : '-'}</div>
+                    <div className="text-sm text-white">Achieved: {typeof kpi.percentage==='number'? `${kpi.percentage}%` : '-'}</div>
+                    <div className="text-sm text-white">Comments: <span dangerouslySetInnerHTML={{ __html: kpi.comments ? renderCommentHtml(kpi.comments) : '-' }} /></div>
                   </div>
                 ));
               })()}
@@ -1742,17 +1743,17 @@ export default function ManagerDashboard() {
             <h3 className="text-xl font-semibold text-white mb-2 sm:mb-0">My Reviews</h3>
             <div className="relative">
               <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}><Download className='w-4 h-4'/></button>
-              <div className="absolute right-0 mt-1 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow hidden z-20">
-                <button className="block w-full text-left px-3 py-2 text-white hover:bg-gray-700" onClick={()=>exportTableToCSV('#manager-myreviews-table','my-reviews.csv')}>CSV</button>
-                <button className="block w-full text-left px-3 py-2 text-white hover:bg-gray-700" onClick={()=>exportTableToExcel('#manager-myreviews-table','my-reviews.xls')}>Excel</button>
-                <button className="block w-full text-left px-3 py-2 text-white hover:bg-gray-700" onClick={()=>exportSectionById('manager-myreviews-section','my-reviews','pdf')}>PDF</button>
+              <div className="absolute right-0 mt-1 bg-white backdrop-blur-md border border-white/30 rounded shadow hidden z-20">
+                <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>exportTableToCSV('#manager-myreviews-table','my-reviews.csv')}>CSV</button>
+                <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>exportTableToExcel('#manager-myreviews-table','my-reviews.xls')}>Excel</button>
+                <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>exportSectionById('manager-myreviews-section','my-reviews','pdf')}>PDF</button>
               </div>
             </div>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
             <table id="manager-myreviews-table" className="w-full min-w-[700px]">
               <thead>
-                <tr className="border-b border-white/30 bg-black/20">
+                <tr className="border-b border-white/20 bg-white/20">
                   <th className="text-left p-3 text-white font-semibold">KRA</th>
                   <th className="text-left p-3 text-white font-semibold">Employee</th>
                   <th className="text-left p-3 text-white font-semibold">Score</th>
@@ -1761,19 +1762,19 @@ export default function ManagerDashboard() {
                   <th className="text-left p-3 text-white font-semibold">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className='text-gray-200'>
                 {myReviews.map(r => (
                   <tr key={r.id} className="border-b border-white/20">
-                    <td className="p-3 text-white/90">{r.kra_name}</td>
-                    <td className="p-3 text-white/90">{r.employee_name}</td>
-                    <td className="p-3 text-white/90">{r.score}</td>
-                    <td className="p-3 text-white/90"><span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></td>
-                    <td className="p-3 text-white/90">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
-                    <td className="p-3"><button className="text-blue-400 hover:text-blue-300 text-sm" onClick={()=>openEditReview(r)}>Update</button></td>
+                    <td className="p-2  font-medium ">{r.kra_name}</td>
+                    <td className="p-2  font-medium ">{r.employee_name}</td>
+                    <td className="p-2  font-medium ">{r.score}</td>
+                    <td className="p-2  font-medium "><span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></td>
+                    <td className="p-2  font-medium ">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
+                    <td className="p-2  font-medium"><button className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1" onClick={()=>openEditReview(r)}>Update</button></td>
                   </tr>
                 ))}
                 {myReviews.length===0 && (
-                  <tr><td className="p-4 text-white/70" colSpan="6">No reviews yet.</td></tr>
+                  <tr><td className="p-2 font-medium" colSpan="6">No reviews yet.</td></tr>
                 )}
               </tbody>
             </table>
@@ -1782,22 +1783,22 @@ export default function ManagerDashboard() {
       </div>
     ),
     comments: (
-      <div className="bg-white/20 backdrop-blur-sm border border-white/30 p-4 md:p-6 rounded-lg shadow-lg">
+      <div className="bg-white/10 backdrop-blur-sm border border-white/30 p-4 md:p-6 rounded-lg shadow-lg">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
           <h4 className="font-medium text-white text-xl mb-2 sm:mb-0">My Comments</h4>
           <div className="flex items-center gap-2">
-            <input type="number" className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 w-24" value={perfFilter.year} onChange={(e)=>setPerfFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
-            <select className="p-2 border border-white/50 rounded bg-white/30 text-gray-900" value={perfFilter.month} onChange={(e)=>setPerfFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-              {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+            <input type="number" className="p-2 border border-white/50 rounded text-white w-24" value={perfFilter.year} onChange={(e)=>setPerfFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
+            <select className="p-2 border border-white/50 rounded text-white" value={perfFilter.month} onChange={(e)=>setPerfFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
+              {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
             </select>
           </div>
         </div>
         <div className="space-y-3">
           {perfReviews.map((r, idx)=> (
-            <div key={idx} className="border border-white/30 bg-black/10 rounded p-3">
-              <div className="flex items-center justify-between text-sm text-white/80"><span><span className="font-medium text-white">KRA:</span> {r.kra_name}</span><span>{r.review_at ? new Date(r.review_at).toLocaleDateString() : ''}</span></div>
-              <div className="text-sm mt-1 text-white/80"><span className="font-medium text-white">Score:</span> {r.score}</div>
-              <div className="text-sm mt-1 text-white/80"><span className="font-medium text-white">Comment:</span> <span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></div>
+            <div key={idx} className="border border-white/30 bg-black/5 rounded p-3">
+              <div className="flex items-center justify-between text-sm text-white"><span><span className="font-medium text-white">KRA:</span> {r.kra_name}</span><span>{r.review_at ? new Date(r.review_at).toLocaleDateString() : ''}</span></div>
+              <div className="text-sm mt-1 text-white"><span className="font-medium text-white">Score:</span> {r.score}</div>
+              <div className="text-sm mt-1 text-white"><span className="font-medium text-white">Comment:</span> <span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></div>
             </div>
           ))}
           {perfReviews.length===0 && <div className="text-white/70">No comments for this month.</div>}
@@ -1844,12 +1845,12 @@ export default function ManagerDashboard() {
         {/* Trend + KRA Performance charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Manager Trend */}
-          <div id="manager-summary-trend" className="bg-white/10 backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 relative overflow-hidden min-h-[260px]">
+          <div id="manager-summary-trend" className="backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 relative overflow-hidden min-h-[260px]">
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(800px 300px at 20% -10%, rgba(0,255,255,0.10), transparent), radial-gradient(600px 250px at 120% 20%, rgba(0,128,255,0.12), transparent)' }} />
             <div className="relative flex items-center justify-between mb-3">
               <div>
                 <div className="text-sm text-cyan-200">Trend Analysis</div>
-                <div className="text-white text-lg font-semibold">My Performance — {trendYear}</div>
+                <div className="text-white text-lg font-semibold">{userName || '-'}'s Performance — {trendYear}</div>
               </div>
             </div>
             <div className="relative h-48 md:h-52">
@@ -1889,9 +1890,9 @@ export default function ManagerDashboard() {
           </div>
 
           {/* Manager KRA Performance (Reviews) */}
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]">
+          <div className="backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-medium text-white">Manager KRA Performance (Reviews)</h4>
+              <h4 className="font-medium text-white">{userName || '-'}'s KRA Performance</h4>
             </div>
             {perfKraSeries.labels.length ? (
               <div className="h-48 md:h-52">
@@ -1911,9 +1912,9 @@ export default function ManagerDashboard() {
 
         {/* KRA and KPI charts (manager view) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]">
+          <div className="backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-medium text-white">KRA Scores (Assigned to Me)</h4>
+              <h4 className="font-medium text-white">{userName || '-'}'s KRA Scores</h4>
             </div>
             {(() => {
               const me = String(userName||'').toLowerCase();
@@ -1945,9 +1946,9 @@ export default function ManagerDashboard() {
             })()}
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]">
+          <div className="backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-medium text-white">KPI Scores (Created by Me)</h4>
+              <h4 className="font-medium text-white">{userName || '-'}'s KPI Scores</h4>
             </div>
             {(() => {
               const today = new Date(); today.setHours(0,0,0,0);
@@ -1973,24 +1974,22 @@ export default function ManagerDashboard() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* KRA details (assigned by admin to manager) */}
           <div className="border border-white/20 rounded p-4 bg-white/5">
-            <h4 className="font-medium text-white mb-3">KRA Details (Assigned to Me)</h4>
-            <div className="overflow-x-auto">
+            <h4 className="font-medium text-white mb-3">{userName || '-'}'s KRA Details</h4>
+            <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/20 text-left text-gray-200">
-                    <th className="py-2 pr-3">KRA</th>
-                    <th className="py-2 pr-3">Definition</th>
-                    <th className="py-2 pr-3">Due Date</th>
-                    <th className="py-2 pr-3">Overall %</th>
+                  <tr className="border-b border-white/20 bg-white/20">
+                    <th className="text-left p-3 text-white font-semibold">KRA</th>
+                    <th className="text-left p-3 text-white font-semibold">Definition</th>
+                    <th className="text-left p-3 text-white font-semibold">Overall</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-100">
                   {(myKras||[]).map(k => (
-                    <tr key={k.kra_id} className="border-b border-white/10">
-                      <td className="py-2 pr-3">{k.name}</td>
-                      <td className="py-2 pr-3 max-w-xs truncate">{k.definition || k.def || '-'}</td>
-                      <td className="py-2 pr-3">{k.due_date ? new Date(k.due_date).toLocaleDateString() : '-'}</td>
-                      <td className="py-2 pr-3">{(() => {
+                    <tr key={k.kra_id} className="border-b border-white/20">
+                      <td className="p-2 font-medium">{k.name}</td>
+                      <td className="p-2 font-medium">{k.definition || k.def || '-'}</td>
+                      <td className="p-2 font-medium">{(() => {
                         const today = new Date(); today.setHours(0,0,0,0);
                         const arr = (myKPIs||[])
                           .filter(x=> String(x.kra_id)===String(k.kra_id))
@@ -2010,38 +2009,50 @@ export default function ManagerDashboard() {
           </div>
 
           {/* KPI details (created by manager) */}
-          <div className="border border-white/20 rounded p-4 bg-white/5">
-            <h4 className="font-medium text-white mb-3">KPI Details (Created by Me)</h4>
-            <div className="overflow-x-auto">
+          <div className="border border-white/20 rounded p-2 bg-white/5">
+            <h4 className="font-medium text-white mb-3">{userName || '-'}'s KPI Details</h4>
+            <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/20 text-left text-gray-200">
-                    <th className="py-2 pr-3">KPI</th>
-                    <th className="py-2 pr-3">KRA</th>
-                    <th className="py-2 pr-3">Target %</th>
-                    <th className="py-2 pr-3">Score %</th>
-                    <th className="py-2 pr-3">Due Date</th>
+                  <tr className="border-b border-white/20 bg-white/20">
+                    <th className="text-left p-3 text-white font-semibold">KPI</th>
+                    <th className="text-left p-3 text-white font-semibold">KRA</th>
+                    <th className="text-left p-3 text-white font-semibold">Target</th>
+                    <th className="text-left p-3 text-white font-semibold">Score</th>
+                    <th className="text-left p-3 text-white font-semibold">Due-Date</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-100">
                   {(() => {
                     const me = String(userName||'').toLowerCase();
-                    const list = (myKPIs||[]).filter(k => String(k.created_by||'').toLowerCase() === me);
+                    const today = new Date(); today.setHours(0,0,0,0);
+                    const list = (myKPIs||[])
+                      .filter(k => String(k.created_by||'').toLowerCase() === me)
+                      .filter(k => {
+                        if (k.kpi_status) return String(k.kpi_status).toLowerCase() === 'active';
+                        return !k.due_date || new Date(k.due_date) >= today;
+                      });
                     return list.map(k => (
                       <tr key={k.id} className="border-b border-white/10">
-                        <td className="py-2 pr-3">{k.name}</td>
-                        <td className="py-2 pr-3">{k.kra_name || resKraname(k.kra_id)}</td>
-                        <td className="py-2 pr-3">{typeof k.target === 'number' ? `${k.target}%` : '-'}</td>
-                        <td className="py-2 pr-3">{typeof k.progress === 'number' ? `${k.progress}%` : (typeof k.percentage === 'number' ? `${k.percentage}%` : '-')}</td>
-                        <td className="py-2 pr-3">{k.due_date ? new Date(k.due_date).toLocaleDateString() : '-'}</td>
+                        <td className="p-2 font-medium">{k.name}</td>
+                        <td className="p-2 font-medium">{k.kra_name || resKraname(k.kra_id)}</td>
+                        <td className="p-2 font-medium">{typeof k.target === 'number' ? `${k.target}%` : '-'}</td>
+                        <td className="p-2 font-medium">{typeof k.progress === 'number' ? `${k.progress}%` : (typeof k.percentage === 'number' ? `${k.percentage}%` : '-')}</td>
+                        <td className="p-2 font-medium">{k.due_date ? new Date(k.due_date).toLocaleDateString() : '-'}</td>
                       </tr>
                     ));
                   })()}
                   {(() => {
                     const me = String(userName||'').toLowerCase();
-                    const list = (myKPIs||[]).filter(k => String(k.created_by||'').toLowerCase() === me);
+                    const today = new Date(); today.setHours(0,0,0,0);
+                    const list = (myKPIs||[])
+                      .filter(k => String(k.created_by||'').toLowerCase() === me)
+                      .filter(k => {
+                        if (k.kpi_status) return String(k.kpi_status).toLowerCase() === 'active';
+                        return !k.due_date || new Date(k.due_date) >= today;
+                      });
                     if (!list.length) return (
-                      <tr><td className="py-3 text-gray-300" colSpan={5}>No KPIs created by you.</td></tr>
+                      <tr><td className="py-3 text-gray-300" colSpan={5}>No active KPIs created by you.</td></tr>
                     );
                     return null;
                   })()}
@@ -2055,17 +2066,17 @@ export default function ManagerDashboard() {
         <div className="grid grid-cols-1 gap-6">
           {/* Employees with performance scores */}
           <div className="border border-white/20 rounded p-4 bg-white/5">
-            <h4 className="font-medium text-white mb-3">Employees & Performance</h4>
-            <div className="overflow-x-auto max-h-64">
+            <h4 className="font-medium text-white mb-3">{userName || '-'}'s Team Employee Performance</h4>
+            <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/20 text-left text-gray-200">
-                    <th className="py-2 pr-3">Employee</th>
-                    <th className="py-2 pr-3">Dept</th>
-                    <th className="py-2 pr-3">Avg Score</th>
+                  <tr className="border-b border-white/20 bg-white/20">
+                    <th className="text-left p-3 text-white font-semibold">Employee</th>
+                    <th className="text-left p-3 text-white font-semibold">Dept</th>
+                    <th className="text-left p-3 text-white font-semibold">Performance</th>
                   </tr>
                 </thead>
-                <tbody className="text-gray-100">
+                <tbody className="text-gray-200">
                   {(() => {
                     if (!teamMembers.length) return (
                       <tr><td className="py-3 text-gray-300" colSpan={3}>No employees in your team.</td></tr>
@@ -2083,10 +2094,10 @@ export default function ManagerDashboard() {
                       const arr = byEmp.get(key) || [];
                       const avg = arr.length ? Math.round((arr.reduce((a,b)=>a+b,0)/arr.length)*100)/100 : null;
                       return (
-                        <tr key={emp.user_id} className="border-b border-white/10">
-                          <td className="py-2 pr-3">{emp.name}</td>
-                          <td className="py-2 pr-3">{emp.dept || emp.department || userDept || '-'}</td>
-                          <td className="py-2 pr-3">{avg === null ? '-' : `${avg}%`}</td>
+                        <tr key={emp.user_id} className="border-b border-white/20">
+                          <td className="p-2 font-medium">{emp.name}</td>
+                          <td className="p-2 font-medium">{emp.dept || emp.department || userDept || '-'}</td>
+                          <td className="p-2 font-medium">{avg === null ? '-' : `${avg}%`}</td>
                         </tr>
                       );
                     });
@@ -2098,24 +2109,24 @@ export default function ManagerDashboard() {
 
           {/* Manager Reviews (received from Admin) */}
           <div className="border border-white/20 rounded p-4 bg-white/5" id="manager-summary-review-table">
-            <h4 className="font-medium text-white mb-3">Manager Reviews (From Admin)</h4>
-            <div className="overflow-x-auto">
+            <h4 className="font-medium text-white mb-3">{userName || '-'}'s Review</h4>
+            <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/20 text-left text-gray-200">
-                    <th className="py-2 pr-3">KRA</th>
-                    <th className="py-2 pr-3">Score %</th>
-                    <th className="py-2 pr-3">Comment</th>
-                    <th className="py-2 pr-3">Reviewed At</th>
+                  <tr className="border-b border-white/20 bg-white/20">
+                    <th className="text-left p-3 text-white font-semibold">KRA</th>
+                    <th className="text-left p-3 text-white font-semibold">Review_Score</th>
+                    <th className="text-left p-3 text-white font-semibold">Comment</th>
+                    <th className="text-left p-3 text-white font-semibold">Reviewed At</th>
                   </tr>
                 </thead>
-                <tbody className="text-gray-100">
+                <tbody className="text-gray-200">
                   {perfReviews.map(r => (
-                    <tr key={r.id} className="border-b border-white/10">
-                      <td className="py-2 pr-3">{r.kra_name || '-'}</td>
-                      <td className="py-2 pr-3">{typeof r.score === 'number' ? r.score : (r.score ?? '-')}</td>
-                      <td className="py-2 pr-3"><span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></td>
-                      <td className="py-2 pr-3">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
+                    <tr key={r.id} className="border-b border-white/20">
+                      <td className="p-2 font-medium">{r.kra_name || '-'}</td>
+                      <td className="p-2 font-medium">{typeof r.score === 'number' ? r.score : (r.score ?? '-')}</td>
+                      <td className="p-2 font-medium"><span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></td>
+                      <td className="p-2 font-medium">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
                     </tr>
                   ))}
                   {perfReviews.length === 0 && (
@@ -2159,8 +2170,8 @@ export default function ManagerDashboard() {
     
         {/* KRA Details Modal */}
         {kraModalOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md border border-white/30 w-full max-w-3xl rounded-lg shadow-xl p-6 text-white">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 w-full max-w-3xl rounded-lg shadow-xl p-6 text-white">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold text-white">KRA Details</h3>
                 <button onClick={() => setKraModalOpen(false)} className="text-white/80 hover:text-white text-2xl font-bold">✕</button>
@@ -2182,7 +2193,7 @@ export default function ManagerDashboard() {
                     <div className="space-y-3">
                       {kraModalKpis.length === 0 && <div className="text-white/70">No KPIs yet.</div>}
                       {kraModalKpis.map(kpi => (
-                        <div key={kpi.id} className="border border-white/30 bg-black/10 rounded-lg p-3">
+                        <div key={kpi.id} className="border border-white/30 bg-white/10 rounded-lg p-3">
                           <div className="flex justify-between items-center">
                             <div>
                               <div className="font-medium text-white">{kpi.name}</div>
@@ -2316,15 +2327,15 @@ export default function ManagerDashboard() {
 
         {/* Edit Review Modal */}
         {revEditOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-gray-900/80 backdrop-blur-md border border-white/30 text-white w-full max-w-md rounded shadow-lg p-6">
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 text-white w-full max-w-md rounded shadow-lg p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">Update Review</h3>
                 <button onClick={()=>setRevEditOpen(false)} className="text-gray-300 hover:text-white">✕</button>
               </div>
               <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-white/90">Score (read-only)</label>
+                  <label className="block text-sm font-medium mb-1 text-white">Score</label>
                   <input
                     type="number"
                     min="0"
@@ -2335,8 +2346,8 @@ export default function ManagerDashboard() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-white/90">Comment</label>
-                  <textarea className="w-full p-2 border border-white/50 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" rows={3} value={revEditForm.comment} onChange={(e)=>setRevEditForm(prev=>({ ...prev, comment: e.target.value }))} />
+                  <label className="block text-sm font-medium mb-1 text-white">Comment</label>
+                  <textarea className="w-full p-2 border border-white/50 rounded bg-white/10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white" rows={3} value={revEditForm.comment} onChange={(e)=>setRevEditForm(prev=>({ ...prev, comment: e.target.value }))} />
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-4">
@@ -2606,8 +2617,8 @@ export default function ManagerDashboard() {
           </div>
         )}
         {revRatingModalOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[9999]">
-            <div className="bg-gray-900/80 backdrop-blur-md border border-white/30 text-white w-full max-w-sm rounded shadow-lg p-6">
+          <div className="fixed inset-0 flex items-center justify-center z-[9999]">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 text-white w-full max-w-sm rounded shadow-lg p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">Set Score in Rating Range</h3>
                 <button
@@ -2620,7 +2631,7 @@ export default function ManagerDashboard() {
                 </button>
               </div>
               <div className="space-y-3">
-                <div className="text-sm text-white/80">
+                <div className="text-sm text-white">
                   Selected band: {
                     revRatingBand === '95-100' ? 'Outstanding – 95-100' :
                     revRatingBand === '90-95' ? 'Excellent – 90-95' :
@@ -2634,23 +2645,23 @@ export default function ManagerDashboard() {
                   }
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-white/90">Score</label>
+                  <label className="block text-sm font-medium mb-1 text-white">Score</label>
                   <input
                     type="number"
-                    className="w-full p-2 border border-white/50 rounded bg-white/20 text-white"
+                    className="w-full p-2 border border-white/50 rounded bg-white/5 text-white"
                     value={revRatingValue}
                     onChange={(e)=>{
                       const v = e.target.value;
                       setRevRatingValue(v);
                     }}
                   />
-                  <div className="mt-1 text-xs text-white/70">Enter a value within the selected range.</div>
+                  <div className="mt-1 text-xs text-white">Enter a value within the selected range.</div>
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-4">
                 <button
                   onClick={()=>setRevRatingModalOpen(false)}
-                  className="px-4 py-2 rounded border border-white/50 text-white"
+                  className="text-sm px-3 py-2 rounded bg-white/10 hover:bg-white/20"
                 >
                   Cancel
                 </button>
@@ -2667,7 +2678,7 @@ export default function ManagerDashboard() {
                     setRevRatingValue(String(num));
                     setRevRatingModalOpen(false);
                   }}
-                  className="px-4 py-2 rounded bg-indigo-600 text-white disabled:opacity-50"
+                  className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700  text-white "
                   disabled={!revRatingBand || revRatingValue === ''}
                 >
                   Apply
