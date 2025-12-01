@@ -237,33 +237,30 @@ export default function Layout() {
   const isEmployee = roleLower === "employee";
 
   const headerToggleButtonClass = isManager
-    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-indigo-300/60 bg-indigo-700/80 hover:bg-indigo-500 shadow-md shadow-indigo-900/50"
+    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-700 hover:bg-[linear-gradient(135deg,#005F77_0%,#002C33_100%)] shadow-md "
     : isEmployee
-    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-fuchsia-300/60 bg-purple-700/80 hover:bg-fuchsia-600 shadow-md shadow-fuchsia-900/50"
-    : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-400/40 bg-teal-700/80 hover:bg-teal-500 shadow-md shadow-teal-900/50";
+    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-rose-800 hover:bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]"
+    : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-[#C19A6B] hover:bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]";
 
   const headerHomeButtonClass = isManager
-    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-indigo-300/60 bg-indigo-800/80 hover:bg-indigo-600 shadow-md shadow-indigo-900/40"
+    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-700 hover:bg-[linear-gradient(135deg,#005F77_0%,#002C33_100%)]"
     : isEmployee
-    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-fuchsia-300/60 bg-purple-800/90 hover:bg-fuchsia-600 shadow-md shadow-fuchsia-900/40"
-    : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-400/40 bg-teal-800/90 hover:bg-teal-600 shadow-md shadow-teal-900/40";
+    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-rose-800 hover:bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]"
+    : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-[#C19A6B] hover:bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]";
 
   const rootBgClass = isManager
-    ? "bg-gradient-to-br from-indigo-800 via-indigo-700 to-[#0D1226]"
+    ? "bg-[linear-gradient(135deg,#005F77_0%,#002C33_100%)]"
     : isEmployee
-    ? "bg-gradient-to-br from-purple-800 via-fuchsia-800 to-[#2C003E]"
-    : "bg-gradient-to-br from-teal-900 via-emerald-800 to-teal-950";
+    ? "bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]"
+    : "bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]";
 
-  const sidebarBaseClass = isManager
-    ? "bg-[#0B0F29]/95 text-white border-r border-indigo-500/40"
-    : isEmployee
-    ? "bg-[#2C003E]/95 text-white border-r border-fuchsia-400/40"
-    : "bg-teal-950/95 text-white border-r border-teal-500/40";
+  const sidebarBaseClass = "bg-black/40 backdrop-blur-xl border border-black"
+    
 
   const desktopSidebarWidth = isCollapsed ? "w-20" : "w-64";
 
   const headerClass =
-    "p-4 bg-black/30 backdrop-blur-xl flex items-center gap-4";
+    "p-3 bg-black/30 backdrop-blur-xl flex items-center gap-4";
 
   /* -----------------------------------------------------------
      RETURN UI

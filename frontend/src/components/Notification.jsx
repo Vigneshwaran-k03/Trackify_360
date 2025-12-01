@@ -240,10 +240,10 @@ export default function Notification() {
         onClick={() => { if (!open) fetchPendingKPIs(); setOpen(v => !v); }}
         className={`relative inline-flex items-center justify-center w-10 h-10 rounded-xl border ${
           getRole()?.toLowerCase() === 'manager' 
-            ? 'border-indigo-400/60 bg-indigo-800/80 hover:bg-indigo-600/80 shadow-indigo-900/40' 
+            ? 'border-teal-700 hover:bg-[linear-gradient(135deg,#005F77_0%,#002C33_100%)]' 
             : getRole()?.toLowerCase() === 'employee'
-              ? 'border-fuchsia-300/60 bg-purple-700/80 hover:bg-fuchsia-600/80 shadow-fuchsia-900/40'
-              : 'border-teal-400/40 bg-teal-800/80 hover:bg-teal-600/80 shadow-teal-900/40'
+              ? 'border-rose-800 hover:bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]'
+              : 'border-[#C19A6B] hover:bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]'
         } shadow-md text-slate-50 z-50`}
         title="Notifications"
         aria-label="Notifications"

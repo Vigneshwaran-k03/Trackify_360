@@ -3,7 +3,7 @@ import { getToken, getUserName } from '../../utils/authStorage';
 // Import the background image
 import backgroundImage from '../../assets/background.png';
 
-export default function AdminKraLog() {
+export default function ManagerKraLog() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -147,15 +147,20 @@ export default function AdminKraLog() {
   };
 
   return (
-    <div className="min-h-screen w-full">
+    // Wrapper div for background image
+    <div
+      className="min-h-screen w-full"
+    >
      <div className='p-4 sm:p-6'>
       {/* Content container with padding */}
-       <div className="bg-white/20 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 mb-4">
+       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 mb-4">
         {/* Header/Filter bar with glassmorphism */}
-        <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-4">
-          <h1 className="text-2xl text-white font-semibold">KRA Log</h1>
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <h1 className="text-2xl text-white font-semibold">KRA Log</h1>
+          </div>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 className={`px-3 py-1 rounded border border-white/50 text-white/90 transition-colors ${tab==='mine' ? 'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`}
                 onClick={()=> { setTab('mine'); setManager(''); setEmployee(''); }}
@@ -169,40 +174,42 @@ export default function AdminKraLog() {
                 Manager Changes
               </button>
             </div>
-            <select
-              className="border border-white/50 rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-white"
-              value={dept}
-              onChange={(e)=>{ setDept(e.target.value); setManager(''); setEmployee(''); }}
-            >
-              <option className="text-black border border-black" value="">Select dept</option>
-              {departments.map(d => (
-                <option className="text-black border border-black" key={d.id || d.name} value={d.name || d}>{d.name || d}</option>
-              ))}
-            </select>
-            {(tab === 'mine' || tab === 'manager') && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
               <select
-                className="border border-white/50 rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-white"
-                value={manager}
-                onChange={(e)=>{ setManager(e.target.value); if (tab==='mine') setEmployee(''); }}
+                className="border border-white/50 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white w-full min-w-0"
+                value={dept}
+                onChange={(e)=>{ setDept(e.target.value); setManager(''); setEmployee(''); }}
               >
-                <option className="text-black border border-black" value="">Select manager {tab==='mine' ? '(optional)' : ''}</option>
-                {managers.map(m => (
-                  <option className="text-black border border-black" key={m.user_id || m.id || m.email} value={m.name}>{m.name}</option>
+                <option className="text-black border border-black" value="">Select dept</option>
+                {departments.map(d => (
+                  <option className="text-black border border-black" key={d.id || d.name} value={d.name || d}>{d.name || d}</option>
                 ))}
               </select>
-            )}
-            {tab === 'manager' && (
-              <select
-                className="border border-white/50 rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-white"
-                value={employee}
-                onChange={(e)=> setEmployee(e.target.value)}
-              >
-                <option className="text-black" value="">Select employee (optional)</option>
-                {employees.map(emp => (
-                  <option className="text-black"key={emp.user_id || emp.id || emp.email} value={emp.name}>{emp.name}</option>
-                ))}
-              </select>
-            )}
+              {(tab === 'mine' || tab === 'manager') && (
+                <select
+                  className="border border-white/50 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white w-full min-w-0"
+                  value={manager}
+                  onChange={(e)=>{ setManager(e.target.value); if (tab==='mine') setEmployee(''); }}
+                >
+                  <option className="text-black border border-black" value="">Select manager {tab==='mine' ? '(optional)' : ''}</option>
+                  {managers.map(m => (
+                    <option className="text-black border border-black" key={m.user_id || m.id || m.email} value={m.name}>{m.name}</option>
+                  ))}
+                </select>
+              )}
+              {tab === 'manager' && (
+                <select
+                  className="border border-white/50 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white w-full md:w-auto min-w-0"
+                  value={employee}
+                  onChange={(e)=> setEmployee(e.target.value)}
+                >
+                  <option className="text-black" value="">Select employee (optional)</option>
+                  {employees.map(emp => (
+                    <option className="text-black"key={emp.user_id || emp.id || emp.email} value={emp.name}>{emp.name}</option>
+                  ))}
+                </select>
+              )}
+            </div>
           </div>
          </div>
 
@@ -216,10 +223,10 @@ export default function AdminKraLog() {
         )}
 
         {/* Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 px-1 p-4 md:grid-cols-2 gap-4">
           {groupedFiltered.map(({ kra_id, latest }) => (
             // Card with glassmorphism
-            <div key={`card-${kra_id}`} className="bg-white/1  backdrop-blur-sm border border-white/30 rounded-lg p-4 shadow-lg text-white">
+            <div key={`card-${kra_id}`} className="bg-white/10  backdrop-blur-sm border border-white/30 rounded-lg p-4 shadow-lg text-white">
               <div className="flex flex-col sm:flex-row items-start justify-between gap-2">
                 <div>
                   <div className="text-xl font-bold text-white">{latest.kra_name}</div>
@@ -247,9 +254,9 @@ export default function AdminKraLog() {
         {/* Modal with glassmorphism */}
         {showModal && (
           // Modal overlay with padding for responsiveness
-          <div className="fixed inset-0  flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
             {/* Modal content */}
-            <div className="bg-gray-800 backdrop-blur-md border border-white/30 rounded-lg shadow-xl w-full max-w-md p-6 text-white">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col p-6 text-white">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-white">Changes: {modalLog?.kra_name}</h3>
                 <button className="text-white/80 hover:text-white text-2xl font-bold" onClick={()=> setShowModal(false)}>✕</button>
@@ -259,7 +266,7 @@ export default function AdminKraLog() {
                 <div>Manager: {modalLog?.manager_name || '-'}</div>
                 <div>Employee: {modalLog?.employee_name || '-'}</div>
               </div>
-              <div className="mt-3 max-h-60 overflow-y-auto">
+              <div className="mt-3 max-h-60 overflow-y-auto flex-1">
                 {renderChanges(modalLog?.changes)}
               </div>
               <div className="mt-4 flex justify-end">
