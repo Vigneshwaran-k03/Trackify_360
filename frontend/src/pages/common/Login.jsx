@@ -8,7 +8,7 @@ import dashboardImg from "../../assets/dashboard.jpg";
 import scoringImg from "../../assets/scoreing.jpg";
 import notificationImg from "../../assets/notification.jpg";
 import customImg from "../../assets/custome.png";
-import logoImg from "../../assets/logo.png";
+import logoImg from "../../assets/logolp.png";
 import bgVideo from "../../assets/bgvideo.mp4";
 import { CheckCircle } from "lucide-react";
 import whychoseImg from "../../assets/whychose.png";
@@ -126,26 +126,26 @@ export default function Login() {
         >
           <h2 className="text-3xl text-center text-black font-bold mb-6">Welcome Buddy</h2>
 
-          <label className="block text-black/90 text-sm mb-1">Email</label>
+          <label className="block text-black/90 text-md font-bold mb-1">Email</label>
           <input
             type="email"
             placeholder="Enter Your Login Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 mb-4 rounded-full border border-black/60 bg-transparent text-black placeholder-white caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+            className="w-full p-3 mb-4 rounded-full border font-semibold text-md  border-black/60 bg-white/5 text-black placeholder-white caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
           />
 
-          <label className="block text-black/90 text-sm mb-1">Password</label>
+          <label className="block text-black text-md text-sm mb-1">Password</label>
           <input
             type="password"
             placeholder="********"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 mb-4 rounded-full border border-black/60 bg-transparent text-black placeholder-white caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+            className="w-full p-3 mb-4 rounded-full border border-black/60 bg-white/5 text-semibold text-md  text-black placeholder-white caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
           />
 
           <div className="mb-4 text-right">
-            <a href="/forgot" className="text-sm font-semibold text-black hover:underline">Forgot Password?</a>
+            <a href="/forgot" className="text-md font-semibold text-black font-bold hover:underline">Forgot Password?</a>
           </div>
           <button
             type="submit"
