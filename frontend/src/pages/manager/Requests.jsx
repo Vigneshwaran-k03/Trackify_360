@@ -18,7 +18,7 @@ function RequestRow({ r, onOpen }) {
       <td className="px-3 py-2 text-sm">
         {/* Updated button style */}
         <button 
-          className="px-2 py-1 border border-white/30 rounded text-white hover:bg-white/10 text-xs" 
+          className="px-2 py-1 border border-white/50 rounded text-white bg-blue-600 hover:bg-white/20 transition-colors" 
           onClick={()=>onOpen(r)}
         >
           View
@@ -80,8 +80,9 @@ export default function ManagerRequests() {
       className="min-h-screen p-4 md:p-8"
     >
       {/* Main Frosted Glass Card */}
-      <div className="bg-white/20 backdrop-blur-md text-white p-4 md:p-6 rounded-lg shadow-xl">
-        <div className="flex items-center gap-3 mb-3">
+      <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg shadow-lg p-4 mb-4">
+         <h1 className="text-2xl font-semibold text-white">Requests and Approvals</h1>
+        <div className="flex items-center gap-3 p-3 mb-3">
           <label className="text-sm text-gray-100">Type:</label>
           <select 
             className="border border-white/30 rounded px-2 py-1 bg-white/80 text-black" 
@@ -173,8 +174,8 @@ export default function ManagerRequests() {
 
         {/* Detail Modal */}
         {detail && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="w-full max-w-2xl bg-white/20 backdrop-blur-md rounded-lg shadow-xl p-6 max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-2xl bg-gray-800 backdrop-blur-md rounded-lg shadow-xl p-6 max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold text-white">Request #{detail.id}</h3>
                 <button onClick={()=>setDetail(null)} className="text-white text-2xl">✕</button>
@@ -194,8 +195,8 @@ export default function ManagerRequests() {
               </div>
               {reqType === 'kpi' && tab === 'inbox' && detail.status === 'Pending' && (
                 <div className="flex items-center justify-end gap-2 mt-4">
-                  <button className="px-4 py-2 rounded border border-white/30 text-white hover:bg-white/10" onClick={()=>{ setRejectComment(''); setRejectOpen(true); }}>Reject</button>
-                  <button className="px-4 py-2 rounded bg-indigo-600 text-white" onClick={()=>act(detail.id, 'approve')}>Approve</button>
+                  <button className="px-4 py-2 rounded border border-red-400 bg-red-400 text-white hover:bg-red-600 transition-colors" onClick={()=>{ setRejectComment(''); setRejectOpen(true); }}>Reject</button>
+                  <button className="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 transition-colors" onClick={()=>act(detail.id, 'approve')}>Approve</button>
                 </div>
               )}
             </div>
@@ -204,24 +205,24 @@ export default function ManagerRequests() {
 
         {/* Reject Modal */}
         {rejectOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="w-full max-w-md bg-white/20 backdrop-blur-md rounded-lg shadow-xl p-6">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-gray-800 backdrop-blur-md rounded-lg shadow-xl p-6">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold text-white">Reject Request #{detail?.id}</h3>
                 <button onClick={()=>setRejectOpen(false)} className="text-white text-2xl">✕</button>
               </div>
-              <div className="mb-3 text-sm text-gray-100">Please provide a reason for rejection.</div>
+              <div className="mb-3 text-sm text-white">Please provide a reason for rejection.</div>
               {/* Usable textarea */}
               <textarea 
-                className="w-full border border-white/30 rounded p-2 text-black bg-white/80" 
+                className="w-full border border-white/50 rounded p-2 text-white bg-white/20 focus:outline-none focus:ring-2 focus:ring-white placeholder-white/70" 
                 rows={4} 
                 placeholder="Enter comment" 
                 value={rejectComment} 
                 onChange={(e)=>setRejectComment(e.target.value)} 
               />
               <div className="flex items-center justify-end gap-2 mt-4">
-                <button className="px-4 py-2 rounded border border-white/30 text-white hover:bg-white/10" onClick={()=>setRejectOpen(false)}>Cancel</button>
-                <button className="px-4 py-2 rounded bg-red-600 text-white" onClick={async ()=>{ await act(detail.id, 'reject', rejectComment); setRejectOpen(false); }}>Submit</button>
+                <button className="px-4 py-2 rounded border border-white/50 text-white hover:bg-white/20 transition-colors" onClick={()=>setRejectOpen(false)}>Cancel</button>
+                <button className="px-4 py-2 rounded bg-red-400 text-white hover:bg-red-600 transition-colors" onClick={async ()=>{ await act(detail.id, 'reject', rejectComment); setRejectOpen(false); }}>Submit</button>
               </div>
             </div>
           </div>
