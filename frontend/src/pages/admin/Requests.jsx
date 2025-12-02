@@ -73,19 +73,18 @@ export default function AdminRequests() {
   return (
     // Wrapper div for background image
     <div
-      className="min-h-screen w-full"
     >
       {/* Content container with padding */}
-      <div className="max-w-6xl mx-auto py-8 px-4 text-white">
+      <div className="min-h-screen p-4 md:p-8">
         
 
         {/* Filter/Tab bar with glassmorphism */}
-        <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg shadow-lg p-4 mb-4">
-        <h1 className="text-2xl font-semibold text-white">Requests and Approvals</h1>
+        <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-4 md:p-8 max-w-7xl mx-auto">
+        <h1 className="text-3xl font-semibold text-white">Requests & Approvals</h1>
           <div className="flex items-center gap-3 p-3 mb-3">
             <label className="text-sm font-medium text-white/90">Type:</label>
             <select
-              className="border border-white/50 rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-white"
+              className="border border-white/50 rounded px-2 text-white focus:outline-none focus:ring-2 focus:ring-white"
               value={reqType}
               onChange={(e)=>{ setReqType(e.target.value); setDetail(null); }}
             >

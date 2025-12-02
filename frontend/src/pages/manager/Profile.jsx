@@ -173,7 +173,7 @@ export default function ManagerProfile() {
       {/* Main Frosted Glass Card */}
       <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-xl max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-semibold text-white">My Profile</h3>
+          <h3 className="text-3xl font-semibold text-white">My Profile</h3>
           <button onClick={()=>setCpOpen(true)} className="px-3 py-2 rounded bg-sky-400 hover:bg-sky-500 text-white text-sm">Change Password</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

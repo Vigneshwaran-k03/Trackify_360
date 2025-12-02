@@ -132,16 +132,16 @@ export default function Login() {
             placeholder="Enter Your Login Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 mb-4 rounded-full border font-semibold text-md  border-black/60 bg-white/5 text-black placeholder-white caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+            className="w-full p-3 mb-4 rounded-full border font-semibold text-md  border-black/60 bg-white/5 text-black placeholder-gray-600 caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
           />
 
-          <label className="block text-black text-md text-sm mb-1">Password</label>
+          <label className="block text-black text-md font-bold mb-1">Password</label>
           <input
             type="password"
             placeholder="********"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 mb-4 rounded-full border border-black/60 bg-white/5 text-semibold text-md  text-black placeholder-white caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+            className="w-full p-3 mb-4 rounded-full border border-black/60 bg-white/5 text-semibold text-md  text-black placeholder-gray-600 caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
           />
 
           <div className="mb-4 text-right">

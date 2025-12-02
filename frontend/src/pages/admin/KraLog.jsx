@@ -146,15 +146,15 @@ export default function AdminKraLog() {
   return (
     // Wrapper div for background image
     <div
-      className="min-h-screen w-full"
+      
     >
-     <div className='p-4 sm:p-6'>
+     <div className='min-h-screen p-4 md:p-8'>
       {/* Content container with padding */}
-       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 mb-4">
+       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-4 md:p-8 max-w-7xl mx-auto">
         {/* Header/Filter bar with glassmorphism */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <h1 className="text-2xl text-white font-semibold">KRA Log</h1>
+            <h1 className="text-3xl text-white font-semibold">KRA Log</h1>
           </div>
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-2">

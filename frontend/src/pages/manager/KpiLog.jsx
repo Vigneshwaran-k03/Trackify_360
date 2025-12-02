@@ -164,7 +164,7 @@ export default function ManagerKpiLog() {
         <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 mb-4">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <h1 className="text-2xl text-white font-semibold">KPI Log</h1>
+              <h1 className="text-3xl text-white font-semibold">KPI Log</h1>
             </div>
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2">

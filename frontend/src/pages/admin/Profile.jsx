@@ -154,11 +154,11 @@ export default function AdminProfile() {
     <div
       className="min-h-screen w-full bg-cover bg-center bg-fixed"
     >
-      <div className="max-w-6xl mx-auto py-8 px-4">
+      <div className="min-h-screen p-4 md:p-8">
         {/* Main Profile Card with glassmorphism */}
-        <div className="bg-white/10 backdrop-blur-sm border border-white/30 p-6 rounded-lg shadow-lg text-white">
+        <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-4 md:p-8 max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
-            <h3 className="text-2xl font-semibold text-white mb-2 sm:mb-0">My Profile</h3>
+            <h3 className="text-3xl font-semibold text-white mb-2 sm:mb-0">My Profile</h3>
             <button
               onClick={()=>setCpOpen(true)}
               className="px-3 py-2 rounded bg-sky-400 hover:bg-sky-500 text-white text-sm transition-colors"

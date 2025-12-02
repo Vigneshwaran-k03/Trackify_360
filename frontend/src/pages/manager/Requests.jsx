@@ -80,8 +80,8 @@ export default function ManagerRequests() {
       className="min-h-screen p-4 md:p-8"
     >
       {/* Main Frosted Glass Card */}
-      <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg shadow-lg p-4 mb-4">
-         <h1 className="text-2xl font-semibold text-white">Requests and Approvals</h1>
+      <div className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg shadow-lg p-4 md:p-8 max-w-7xl mx-auto">
+         <h1 className="text-3xl font-semibold text-white">Requests and Approvals</h1>
         <div className="flex items-center gap-3 p-3 mb-3">
           <label className="text-sm text-gray-100">Type:</label>
           <select 
@@ -96,7 +96,7 @@ export default function ManagerRequests() {
         <div className="flex flex-col sm:flex-row flex-wrap gap-2 mb-4">
           <div className="flex flex-wrap gap-2">
             <button 
-              className={`px-3 py-2 rounded border whitespace-nowrap ${tab==='my'?'bg-indigo-600 text-white border-indigo-600':'border-white/30 text-white hover:bg-white/10'}`} 
+              className={`px-3 py-2 rounded border border-white/50 text-white/90 transition-colors ${tab==='my'?'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`} 
               onClick={()=>{setTab('my'); setStatus(reqType==='kra'?'': '');}}
             >
               My Requests
@@ -104,13 +104,13 @@ export default function ManagerRequests() {
             {reqType === 'kpi' && (
               <>
                 <button 
-                  className={`px-3 py-2 rounded border whitespace-nowrap ${tab==='inbox'?'bg-indigo-600 text-white border-indigo-600':'border-white/30 text-white hover:bg-white/10'}`} 
+                  className={`px-3 py-2 rounded border border-white/50 text-white/90 transition-colors ${tab==='inbox'?'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`} 
                   onClick={()=>{setTab('inbox'); setStatus('Pending')}}
                 >
                   Requests
                 </button>
                 <button 
-                  className={`px-3 py-2 rounded border whitespace-nowrap ${tab==='approvals'?'bg-indigo-600 text-white border-indigo-600':'border-white/30 text-white hover:bg-white/10'}`} 
+                  className={`px-3 py-2 rounded border border-white/50 text-white/90 transition-colors ${tab==='approvals'?'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`} 
                   onClick={()=>{setTab('approvals'); setStatus('Approved')}}
                 >
                   Approvals

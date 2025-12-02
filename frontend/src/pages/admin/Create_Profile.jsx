@@ -103,7 +103,7 @@ export default function Create_Profile() {
     >
       <div className="w-full max-w-md mt-[-80px] mx-auto bg-white/10 backdrop-blur-md p-8 rounded-lg shadow-xl border border-white/20">
         
-        <h2 className="text-2xl text-white font-bold mb-6 text-center">Create User</h2>
+        <h2 className="text-3xl text-white font-bold mb-6 text-center">Create User</h2>
         
         {message && (
           <div className={`mb-4 p-3 rounded-md border ${

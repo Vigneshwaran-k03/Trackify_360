@@ -45,10 +45,10 @@ function Tooltip({ label, children, show }) {
         <div
           className="
             absolute 
-            left-full 
-            top-1/2 
-            -translate-y-1/2
-            ml-2
+            left-1/2 
+            -translate-x-1/2
+            left-full
+            mb-2
             whitespace-nowrap
             z-[9999]
             px-2 py-1 rounded-lg text-xs
@@ -58,7 +58,7 @@ function Tooltip({ label, children, show }) {
           "
         >
           {label}
-          <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-l-4 border-transparent border-l-black/90"></div>
+          <div className="absolute left-1/2 -translate-x-1/2 right-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black/90"></div>
         </div>
       )}
     </div>
@@ -182,7 +182,7 @@ export default function Layout() {
         { path: "/kracreation", label: "Create KRA", Icon: Target },
         { path: "/kpi_log", label: "KPI Log", Icon: ClipboardClock },
         { path: "/kra_log", label: "KRA Log", Icon: NotebookText },
-        { path: "/requests", label: "Requests & Approvals", Icon: ClipboardCheck },
+        { path: "/requests", label: "Requests & Approvals", tooltipLabel: "R&A", Icon: ClipboardCheck },
       ];
     }
 
@@ -195,7 +195,7 @@ export default function Layout() {
         { path: "/create_kpi", label: "Create & My KPI", Icon: BarChart3 },
         { path: "/kpi_log", label: "KPI Log", Icon: ClipboardClock },
         { path: "/kra_log", label: "KRA Log", Icon: NotebookText },
-        { path: "/requests", label: "Requests & Approvals", Icon: ClipboardCheck },
+        { path: "/requests", label: "Requests & Approvals", tooltipLabel: "R&A", Icon: ClipboardCheck },
       ];
     }
 
@@ -204,7 +204,7 @@ export default function Layout() {
       { path: "/profile", label: "Profile", Icon: UserPen },
       { path: "/create_kpi", label: "Create & My KPI", Icon: BarChart3 },
       { path: "/kpi_log", label: "KPI Log", Icon: ClipboardClock },
-      { path: "/requests", label: "Requests & Approvals", Icon: ClipboardCheck },
+      { path: "/requests", label: "Requests & Approvals", tooltipLabel: "R&A", Icon: ClipboardCheck },
     ];
   };
 
@@ -308,7 +308,7 @@ export default function Layout() {
             return (
               <Tooltip
                 key={item.path}
-                label={item.label}
+                label={item.tooltipLabel || item.label}
                 show={!isMobile && isCollapsed}
               >
                 <Link
