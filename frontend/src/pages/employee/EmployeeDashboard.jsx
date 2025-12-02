@@ -19,11 +19,7 @@ import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfQuarte
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { exportChartFromRef, exportSectionById, exportTableToCSV, exportTableToExcel, downloadBlob } from '../../utils/exportUtils';
-
-// --- IMPORTANT ---
-// Import your background image like this
-import backgroundImage from '../../assets/background.png';
-
+import { Download, FunnelPlus,CircleFadingPlus } from 'lucide-react';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
 
 export default function EmployeeDashboard() {
@@ -86,6 +82,12 @@ export default function EmployeeDashboard() {
   // Export dropdowns and format
   const [exportAllFormat, setExportAllFormat] = useState('pdf'); // pdf|png|jpg
   const [expMyPerfOpen, setExpMyPerfOpen] = useState(false);
+  const [filterModal, setFilterModal] = useState({ 
+    open: false, 
+    section: '', 
+    year: new Date().getFullYear(),
+    onApply: null 
+  });
   const [expB1Open, setExpB1Open] = useState(false);
   const [expB2Open, setExpB2Open] = useState(false);
   const [expB3Open, setExpB3Open] = useState(false);
@@ -807,9 +809,9 @@ export default function EmployeeDashboard() {
     return canvas;
   };
 
-  const FilterModal = ({ title, filter, setFilter, onClose, allowAllKinds }) => (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-      <div className="bg-white/20 backdrop-blur-md text-white w-full max-w-md rounded-lg shadow-xl p-6">
+  const FilterModal = ({ title, filter, setFilter, onClose, allowAllKinds, showDateBasis = false, dateBasis, setDateBasis }) => (
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+      <div className="bg-gray-800 backdrop-blur-md text-white w-full max-w-md rounded-lg shadow-xl p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-semibold text-white">{title}</h3>
           <button onClick={onClose} className="text-white/70 hover:text-white">
@@ -821,94 +823,108 @@ export default function EmployeeDashboard() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium mb-1 text-gray-100">Type</label>
+            <label className="block text-sm font-medium mb-1 text-white">Type</label>
             <select
-              className="w-full p-2 border border-white/30 rounded bg-white/80 text-black"
+              className="w-full p-2 border border-white/30 rounded bg-white/10 text-white"
               value={filter.kind}
               onChange={(e)=>setFilter(prev=>({ ...prev, kind: e.target.value }))}
             >
               {allowAllKinds ? (
                 <>
-                  <option value="date">Date</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
-                  <option value="quarterly">Quarterly</option>
-                  <option value="yearly">Yearly</option>
+                  <option className='text-black' value="date">Date</option>
+                  <option className='text-black' value="weekly">Weekly</option>
+                  <option className='text-black' value="monthly">Monthly</option>
+                  <option className='text-black' value="quarterly">Quarterly</option>
+                  <option className='text-black' value="yearly">Yearly</option>
                 </>
               ) : (
                 <>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
-                  <option value="quarterly">Quarterly</option>
-                  <option value="yearly">Yearly</option>
+                  <option className='text-black' value="weekly">Weekly</option>
+                  <option className='text-black' value="monthly">Monthly</option>
+                  <option className='text-black' value="quarterly">Quarterly</option>
+                  <option className='text-black' value="yearly">Yearly</option>
                 </>
               )}
             </select>
           </div>
           {filter.kind === 'date' && (
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1 text-gray-100">Select Date</label>
-              <input type="date" className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={filter.date} onChange={(e)=>setFilter(prev=>({ ...prev, date: e.target.value }))} />
+              <label className="block text-sm font-medium mb-1 text-white">Select Date</label>
+              <input type="date" className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={filter.date} onChange={(e)=>setFilter(prev=>({ ...prev, date: e.target.value }))} />
             </div>
           )}
           {filter.kind === 'weekly' && (
             <>
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-100">Month</label>
-                <select className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={filter.month} onChange={(e)=>setFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-                  {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                <label className="block text-sm font-medium mb-1 text-white">Month</label>
+                <select className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={filter.month} onChange={(e)=>setFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
+                  {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-100">Year</label>
-                <input type="number" className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={filter.year} onChange={(e)=>setFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
+                <label className="block text-sm font-medium mb-1 text-white">Year</label>
+                <input type="number" className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={filter.year} onChange={(e)=>setFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-1 text-gray-100">Week (1-5)</label>
-                <input type="number" min="1" max="5" className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={filter.week} onChange={(e)=>setFilter(prev=>({ ...prev, week: Number(e.target.value) }))} />
+                <label className="block text-sm font-medium mb-1 text-white">Week (1-5)</label>
+                <input type="number" min="1" max="5" className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={filter.week} onChange={(e)=>setFilter(prev=>({ ...prev, week: Number(e.target.value) }))} />
               </div>
             </>
           )}
           {filter.kind === 'monthly' && (
             <>
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-100">Month</label>
-                <select className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={filter.month} onChange={(e)=>setFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-                  {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                <label className="block text-sm font-medium mb-1 text-white">Month</label>
+                <select className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={filter.month} onChange={(e)=>setFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
+                  {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-100">Year</label>
-                <input type="number" className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={filter.year} onChange={(e)=>setFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
+                <label className="block text-sm font-medium mb-1 text-white">Year</label>
+                <input type="number" className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={filter.year} onChange={(e)=>setFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
               </div>
             </>
           )}
           {filter.kind === 'quarterly' && (
             <>
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-100">Quarter</label>
-                <select className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={filter.quarter} onChange={(e)=>setFilter(prev=>({ ...prev, quarter: Number(e.target.value) }))}>
-                  <option value={1}>Q1</option>
-                  <option value={2}>Q2</option>
-                  <option value={3}>Q3</option>
-                  <option value={4}>Q4</option>
+                <label className="block text-sm font-medium mb-1 text-white">Quarter</label>
+                <select className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={filter.quarter} onChange={(e)=>setFilter(prev=>({ ...prev, quarter: Number(e.target.value) }))}>
+                  <option className='text-black' value={1}>Q1</option>
+                  <option className='text-black' value={2}>Q2</option>
+                  <option className='text-black' value={3}>Q3</option>
+                  <option className='text-black' value={4}>Q4</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-100">Year</label>
-                <input type="number" className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={filter.year} onChange={(e)=>setFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
+                <label className="block text-sm font-medium mb-1 text-white">Year</label>
+                <input type="number" className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={filter.year} onChange={(e)=>setFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
               </div>
             </>
           )}
           {filter.kind === 'yearly' && (
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1 text-gray-100">Year</label>
-              <input type="number" className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={filter.year} onChange={(e)=>setFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
+              <label className="block text-sm font-medium mb-1 text-white">Year</label>
+              <input type="number" className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={filter.year} onChange={(e)=>setFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
+            </div>
+          )}
+          {showDateBasis && (
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1 text-white">Date Basis</label>
+              <select
+                className="w-full p-2 border border-white/30 rounded bg-white/10 text-white"
+                value={dateBasis}
+                onChange={(e) => setDateBasis(e.target.value)}
+              >
+                <option className='text-black' value="created">Created Date</option>
+                <option className='text-black' value="due">Due Date</option>
+                <option className='text-black' value="both">Both</option>
+              </select>
             </div>
           )}
         </div>
         <div className="flex justify-end gap-2 mt-4">
-          <button onClick={onClose} className="px-4 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Close</button>
+          <button onClick={onClose} className="px-4 py-2 rounded bg-white/20 border border-white/30 hover:bg-white/10 text-white">Close</button>
         </div>
       </div>
     </div>
@@ -924,40 +940,57 @@ export default function EmployeeDashboard() {
 
   const sections = {
     overview: (
-      <div id="employee-overview-section">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold text-white">Overview</h3>
+      <div id="employee-overview-section" className='space-y-6'>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
+          <h3 className="text-xl font-semibold text-white mb-2 sm:mb-0">Overview</h3>
           <div className="relative">
-            <button className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500" onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}>Export</button>
-            <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black">
-              <button className="block w-full text-left px-3 py-2 hover:bg-gray-50" onClick={()=>exportSectionById('employee-overview-section','employee-overview','pdf')}>PDF</button>
-              <button className="block w-full text-left px-3 py-2 hover:bg-gray-50" onClick={()=>exportSectionById('employee-overview-section','employee-overview','png')}>PNG</button>
-              <button className="block w-full text-left px-3 py-2 hover:bg-gray-50" onClick={()=>exportSectionById('employee-overview-section','employee-overview','jpg')}>JPG</button>
+            <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}><Download className='w-4 h-4'/></button>
+            <div className="absolute right-0 mt-1 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
+              <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>exportSectionById('employee-overview-section','employee-overview','pdf')}>PDF</button>
+              <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>exportSectionById('employee-overview-section','employee-overview','png')}>PNG</button>
+              <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>exportSectionById('employee-overview-section','employee-overview','jpg')}>JPG</button>
             </div>
           </div>
         </div>
         {/* Employee Trend Analysis (first in overview) */}
-        <div id="employee-trend-analysis" className="bg-white/10 backdrop-blur-md rounded-lg p-4 md:p-5 shadow relative overflow-hidden mb-6">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(1000px 400px at 20% -10%, rgba(0,255,255,0.10), transparent), radial-gradient(800px 300px at 120% 20%, rgba(0,128,255,0.12), transparent), radial-gradient(1000px 500px at 50% 120%, rgba(0,255,128,0.08), transparent)' }} />
+        <div id="employee-trend-analysis" className=" backdrop-blur-md bg-white/10 rounded-lg p-4 md:p-5 shadow-lg border border-white/20 relative overflow-visible mb-6">
+          <div className="absolute inset-0 pointer-events-none"  />
           <div className="relative flex items-center justify-between mb-3">
             <div>
               <div className="text-sm text-cyan-200">Trend Analysis</div>
               <div className="text-white text-lg font-semibold">My Performance — {empTrendYear}</div>
             </div>
+       
             <div className="flex items-center gap-2">
-              <input type="number" className="p-1.5 rounded bg-white/10 text-white w-24 border border-white/30" value={empTrendYear} onChange={(e)=>setEmpTrendYear(Number(e.target.value)||new Date().getFullYear())} />
-              <div className={`text-sm font-semibold ${empTrendDelta >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{empTrendDelta >= 0 ? '▲' : '▼'} {Math.abs(empTrendDelta)}</div>
+              <div className={`text-md  font-semibold ${empTrendDelta >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                {empTrendDelta >= 0 ? 'Growth ▲' : 'Decline ▼'} {Math.abs(empTrendDelta)}
+              </div>
+              <div className="relative group">
+                <button 
+                  type="button"
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
+                  onClick={() => setFilterModal({ 
+                    open: true, 
+                    section: 'trend', 
+                    year: empTrendYear,
+                    onApply: (year) => setEmpTrendYear(year)
+                  })}
+                >
+                <FunnelPlus className='w-4 h-4'/>
+                </button>
+              </div>
+             
               <div className="relative">
                 <button
-                  className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500 disabled:opacity-50"
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
                   onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
                 >
-                  Export
+                <Download className='w-4 h-4'/>
                 </button>
-                <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
-                  <button className="block w-full text-left px-3 py-1 hover:bg-gray-50" onClick={()=>exportSectionById('employee-trend-analysis','employee-trend-analysis','pdf')}>PDF</button>
-                  <button className="block w-full text-left px-3 py-1 hover:bg-gray-50" onClick={()=>exportSectionById('employee-trend-analysis','employee-trend-analysis','png')}>PNG</button>
-                  <button className="block w-full text-left px-3 py-1 hover:bg-gray-50" onClick={()=>exportSectionById('employee-trend-analysis','employee-trend-analysis','jpg')}>JPG</button>
+                <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-xs">
+                  <button className="block w-full text-left px-3 py-1 text-black hover:bg-gray-50" onClick={()=>exportSectionById('employee-trend-analysis','employee-trend-analysis','pdf')}>PDF</button>
+                  <button className="block w-full text-left px-3 py-1 text-black hover:bg-gray-50" onClick={()=>exportSectionById('employee-trend-analysis','employee-trend-analysis','png')}>PNG</button>
+                  <button className="block w-full text-left px-3 py-1 text-black hover:bg-gray-50" onClick={()=>exportSectionById('employee-trend-analysis','employee-trend-analysis','jpg')}>JPG</button>
                 </div>
               </div>
             </div>
@@ -1008,29 +1041,39 @@ export default function EmployeeDashboard() {
         </div>
 
         {/* My Performance (Reviews) - Chart */}
-        <div id="my-performance" className="bg-white/20 backdrop-blur-md p-4 rounded-lg shadow-xl mb-6">
+        <div id="my-performance" className="bg-white/10 backdrop-blur-md p-4 rounded-lg shadow-xl mb-6">
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-            <h4 className="font-medium text-white">My Performance (Reviews)</h4>
+            <div className="flex items-center gap-2">
+              <h4 className="font-medium text-white">My Performance</h4>
+            </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <label className="text-sm text-gray-200">Month</label>
-              <select className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black" value={perfFilter.month} onChange={(e)=>setPerfFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-                {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+              <select className="p-2 border border-white/30 rounded text-sm text-white" value={perfChartType} onChange={(e)=>setPerfChartType(e.target.value)}>
+                <option className='text-black' value="bar">Bar</option>
+                <option className='text-black' value="line">Line</option>
+                <option className='text-black' value="pie">Pie</option>
               </select>
-              <label className="text-sm text-gray-200">Year</label>
-              <input type="number" className="p-2 border border-white/30 rounded text-sm w-24 bg-white/80 text-black" value={perfFilter.year} onChange={(e)=>setPerfFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
-              <label className="text-sm text-gray-200">Chart</label>
-              <select className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black" value={perfChartType} onChange={(e)=>setPerfChartType(e.target.value)}>
-                <option value="bar">Bar</option>
-                <option value="line">Line</option>
-                <option value="pie">Pie</option>
-              </select>
+             <div className="relative">
+                <button 
+                  type='button' 
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
+                  onClick={() => setFilterModal({ 
+                    open: true, 
+                    section: 'performance',
+                    year: perfFilter.year,
+                    month: perfFilter.month,
+                    onApply: (year, month) => setPerfFilter({ year, month })
+                  })}
+                >
+                  <FunnelPlus className='w-4 h-4'/>
+                </button>
+              </div>
               <div className="relative">
-                  <button onClick={()=>setExpMyPerfOpen(v=>!v)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Export</button>
+                  <button onClick={()=>setExpMyPerfOpen(v=>!v)} className='inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20'><Download className='w-4 h-4'/></button>
                   {expMyPerfOpen && (
                     <div className="absolute right-0 top-10 bg-white border rounded shadow text-sm z-10 text-black">
-                      <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{ setExpMyPerfOpen(false); exportSectionById('my-performance','my-performance','pdf'); }}>PDF</button>
-                      <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{ setExpMyPerfOpen(false); exportSectionById('my-performance','my-performance','png'); }}>PNG</button>
-                      <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{ setExpMyPerfOpen(false); exportSectionById('my-performance','my-performance','jpg'); }}>JPG</button>
+                      <button className="block px-3 py-2 hover:bg-gray-100 text-black w-full text-left" onClick={()=>{ setExpMyPerfOpen(false); exportSectionById('my-performance','my-performance','pdf'); }}>PDF</button>
+                      <button className="block px-3 py-2 hover:bg-gray-100 w-full text-black text-left" onClick={()=>{ setExpMyPerfOpen(false); exportSectionById('my-performance','my-performance','png'); }}>PNG</button>
+                      <button className="block px-3 py-2 hover:bg-gray-100 w-full text-black text-left" onClick={()=>{ setExpMyPerfOpen(false); exportSectionById('my-performance','my-performance','jpg'); }}>JPG</button>
                     </div>
                   )}
                 </div>
@@ -1068,17 +1111,17 @@ export default function EmployeeDashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Block 1: KRA Scores All KRAs */}
-          <div id="b1" className="bg-white/20 backdrop-blur-md p-4 rounded-lg shadow-xl">
+          <div id="b1" className="bg-white/10 backdrop-blur-md p-4 rounded-lg shadow-xl">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <h4 className="font-medium text-white">KRA Scores</h4>
+              <h4 className="font-medium text-white">KRA Scores-Active</h4>
               <div className="flex items-center gap-2">
-                <select value={b1Type} onChange={(e)=>setB1Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
-                  <option value="pie">Pie</option>
+                <select value={b1Type} onChange={(e)=>setB1Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm text-white">
+                  <option className='text-black' value="bar">Bar</option>
+                  <option className='text-black' value="line">Line</option>
+                  <option className='text-black' value="pie">Pie</option>
                 </select>
                 <div className="relative">
-                  <button onClick={()=>setExpB1Open(v=>!v)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Export</button>
+                  <button onClick={()=>setExpB1Open(v=>!v)} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"><Download className='w-4 h-4'/></button>
                   {expB1Open && (
                     <div className="absolute right-0 top-10 bg-white border rounded shadow text-sm z-10 text-black">
                       <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{ setExpB1Open(false); exportSectionById('b1','kra-scores','pdf'); }}>PDF</button>
@@ -1120,21 +1163,21 @@ export default function EmployeeDashboard() {
           </div>
 
           {/* Block 2: KPI Scores for selected KRA */}
-          <div id="b2" className="bg-white/20 backdrop-blur-md p-4 rounded-lg shadow-xl">
+          <div id="b2" className="bg-white/10 backdrop-blur-md p-4 rounded-lg shadow-xl">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <h4 className="font-medium text-white">KPI Scores (Select KRA)</h4>
+              <h4 className="font-medium text-white">KPI Scores-Active</h4>
               <div className="flex items-center gap-2 flex-wrap">
-                <select value={b2KraId} onChange={(e)=>setB2KraId(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="">All</option>
-                  {allKras.map(k=> <option key={k.kra_id} value={k.kra_id}>{k.name}</option>)}
+                <select  value={b2KraId} onChange={(e)=>setB2KraId(e.target.value)} className="p-2 border border-white/30 rounded text-sm text-white">
+                  <option className='text-black' value="">All</option>
+                  {allKras.map(k=> <option className='text-black' key={k.kra_id} value={k.kra_id}>{k.name}</option>)}
                 </select>
-                <select value={b2Type} onChange={(e)=>setB2Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="pie">Pie</option>
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
+                <select value={b2Type} onChange={(e)=>setB2Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm text-white">
+                  <option className='text-black' value="pie">Pie</option>
+                  <option className='text-black' value="bar">Bar</option>
+                  <option className='text-black' value="line">Line</option>
                 </select>
                 <div className="relative">
-                  <button onClick={()=>setExpB2Open(v=>!v)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Export</button>
+                  <button onClick={()=>setExpB2Open(v=>!v)} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"><Download className='w-4 h-4'/></button>
                   {expB2Open && (
                     <div className="absolute right-0 top-10 bg-white border rounded shadow text-sm z-10 text-black">
                       <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{ setExpB2Open(false); exportSectionById('b2','kpi-scores-selected-kra','pdf'); }}>PDF</button>
@@ -1165,23 +1208,18 @@ export default function EmployeeDashboard() {
           </div>
 
           {/* Block 3: KRA Score with Created-date filter */}
-          <div id="b3" className="bg-white/20 backdrop-blur-md p-4 rounded-lg shadow-xl">
+          <div id="b3" className="bg-white/10 backdrop-blur-md p-4 rounded-lg shadow-xl">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <h4 className="font-medium text-white">KRA Scores</h4>
+              <h4 className="font-medium text-white">KRA Scores-(by Frequency)</h4>
               <div className="flex items-center gap-2 flex-wrap">
-                <select value={b3Basis} onChange={(e)=>setB3Basis(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="created">Created Date</option>
-                  <option value="due">Due Date</option>
-                  <option value="both">Both</option>
+                <select value={b3Type} onChange={(e)=>setB3Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm text-white">
+                  <option className='text-black' value="line">Line</option>
+                  <option className='text-black' value="bar">Bar</option>
+                  <option className='text-black' value="pie">Pie</option>
                 </select>
-                <select value={b3Type} onChange={(e)=>setB3Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="line">Line</option>
-                  <option value="bar">Bar</option>
-                  <option value="pie">Pie</option>
-                </select>
-                <button onClick={()=>setB3FilterOpen(true)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Filter</button>
+                <button onClick={()=>setB3FilterOpen(true)} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"><FunnelPlus className='w-4 h-4'/></button>
                 <div className="relative">
-                  <button onClick={()=>setExpB3Open(v=>!v)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Export</button>
+                  <button onClick={()=>setExpB3Open(v=>!v)} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"><Download className='w-4 h-4'/></button>
                   {expB3Open && (
                     <div className="absolute right-0 top-10 bg-white border rounded shadow text-sm z-10 text-black">
                       <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{ setExpB3Open(false); exportSectionById('b3','kra-scores-created-filter','pdf'); }}>PDF</button>
@@ -1221,27 +1259,29 @@ export default function EmployeeDashboard() {
           </div>
 
           {/* Block 4: KPI Scores with Created/Due/Both date filter per KRA */}
-          <div id="b4" className="bg-white/20 backdrop-blur-md p-4 rounded-lg shadow-xl">
+          <div id="b4" className="bg-white/10 backdrop-blur-md p-4 rounded-lg shadow-xl">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <h4 className="font-medium text-white">KPI Scores (Date filter)</h4>
+              <h4 className="font-medium text-white">KPI Scores-(By Frequency)</h4>
               <div className="flex items-center gap-2 flex-wrap">
-                <select value={b4KraId} onChange={(e)=>setB4KraId(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="">All</option>
-                  {allKras.map(k=> <option key={k.kra_id} value={k.kra_id}>{k.name}</option>)}
+                <select value={b4KraId} onChange={(e)=>setB4KraId(e.target.value)} className="p-2 border border-white/30 rounded text-sm text-white">
+                  <option className='text-black' value="">All</option>
+                  {allKras.map(k=> <option className='text-black' key={k.kra_id} value={k.kra_id}>{k.name}</option>)}
                 </select>
-                <select value={b4Basis} onChange={(e)=>setB4Basis(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="created">Created Date</option>
-                  <option value="due">Due Date</option>
-                  <option value="both">Both</option>
+                <select value={b4Type} onChange={(e)=>setB4Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm text-white">
+                  <option className='text-black' value="pie">Pie</option>
+                  <option className='text-black' value="bar">Bar</option>
+                  <option className='text-black' value="line">Line</option>
                 </select>
-                <select value={b4Type} onChange={(e)=>setB4Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="pie">Pie</option>
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
-                </select>
-                <button onClick={()=>setB4FilterOpen(true)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Filter</button>
+                <button 
+                  onClick={()=>setB4FilterOpen(true)} 
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
+                  title="Filter options"
+
+                >
+                  <FunnelPlus className='w-4 h-4'/>
+                </button>
                 <div className="relative">
-                  <button onClick={()=>setExpB4Open(v=>!v)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Export</button>
+                  <button onClick={()=>setExpB4Open(v=>!v)} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"><Download className='w-4 h-4'/></button>
                   {expB4Open && (
                     <div className="absolute right-0 top-10 bg-white border rounded shadow text-sm z-10 text-black">
                       <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{ setExpB4Open(false); exportSectionById('b4','kpi-scores-created-filter','pdf'); }}>PDF</button>
@@ -1279,27 +1319,27 @@ export default function EmployeeDashboard() {
           </div>
 
           {/* Block 5: Combined frequency charts (limited kinds) */}
-          <div id="b5" className="bg-white/20 backdrop-blur-md p-4 rounded-lg shadow-xl lg:col-span-2">
+          <div id="b5" className="bg-white/10 backdrop-blur-md p-4 rounded-lg shadow-xl lg:col-span-2">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <h4 className="font-medium text-white">Frequency Charts</h4>
+              <h4 className="font-medium text-white">KRA and KPI by Frequency</h4>
               <div className="flex items-center gap-2 flex-wrap">
-                <select value={b5KraId} onChange={(e)=>setB5KraId(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="">All KRAs</option>
-                  {allKras.map(k=> <option key={k.kra_id} value={k.kra_id}>{k.name}</option>)}
+                <select value={b5KraId} onChange={(e)=>setB5KraId(e.target.value)} className="p-2 border border-white/30 rounded text-sm text-white">
+                  <option className='text-black' value="">All KRAs</option>
+                  {allKras.map(k=> <option className='text-black' key={k.kra_id} value={k.kra_id}>{k.name}</option>)}
                 </select>
-                <select value={b5Basis} onChange={(e)=>setB5Basis(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="created">Created Date</option>
-                  <option value="due">Due Date</option>
-                  <option value="both">Both</option>
+                <select value={b5Basis} onChange={(e)=>setB5Basis(e.target.value)} className="p-2 border border-white/30 rounded text-sm text-white">
+                  <option className='text-black' value="created">Created Date</option>
+                  <option className='text-black' value="due">Due Date</option>
+                  <option className='text-black' value="both">Both</option>
                 </select>
-                <select value={b5Type} onChange={(e)=>setB5Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black">
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
-                  <option value="pie">Pie</option>
+                <select value={b5Type} onChange={(e)=>setB5Type(e.target.value)} className="p-2 border border-white/30 rounded text-sm text-white">
+                  <option className='text-black' value="bar">Bar</option>
+                  <option className='text-black' value="line">Line</option>
+                  <option className='text-black' value="pie">Pie</option>
                 </select>
-                <button onClick={()=>setB5FilterOpen(true)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Filter</button>
+                <button onClick={()=>setB5FilterOpen(true)} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"><FunnelPlus className='w-4 h-4'/></button>
                 <div className="relative">
-                  <button onClick={()=>setExpB5Open(v=>!v)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Export</button>
+                  <button onClick={()=>setExpB5Open(v=>!v)} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"><Download className='w-4 h-4'/></button>
                   {expB5Open && (
                     <div className="absolute right-0 top-10 bg-white border rounded shadow text-sm z-10 text-black">
                       <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{ setExpB5Open(false); exportSectionById('b5','frequency-combined','pdf'); }}>PDF</button>
@@ -1382,7 +1422,15 @@ export default function EmployeeDashboard() {
           <FilterModal title="KRA Scores Filter" filter={b3Filter} setFilter={setB3Filter} onClose={()=>setB3FilterOpen(false)} allowAllKinds={true} />
         )}
         {b4FilterOpen && (
-          <FilterModal title="KPI Scores Filter" filter={b4Filter} setFilter={setB4Filter} onClose={()=>setB4FilterOpen(false)} allowAllKinds={true} />
+          <FilterModal 
+            title="Filter KPI Scores (Date filter)" 
+            filter={b4Filter} 
+            setFilter={setB4Filter} 
+            onClose={()=>setB4FilterOpen(false)}
+            showDateBasis={true}
+            dateBasis={b4Basis}
+            setDateBasis={setB4Basis}
+          />
         )}
         {b5FilterOpen && (
           <FilterModal title="Frequency Filter" filter={b5Filter} setFilter={setB5Filter} onClose={()=>setB5FilterOpen(false)} allowAllKinds={false} />
@@ -1390,21 +1438,23 @@ export default function EmployeeDashboard() {
       </div>
     ),
     tasks: (
-      <div className="bg-white/20 backdrop-blur-md p-6 rounded-lg shadow-xl mb-8">
+      <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-xl mb-8">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h3 className="text-xl font-semibold text-white">My KPIs</h3>
           <div className="flex items-center gap-3 flex-wrap">
-            <select className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black" value={empTasksFilter} onChange={(e)=>setEmpTasksFilter(e.target.value)}>
-              <option value="active">Active</option>
-              <option value="end">End</option>
-              <option value="all">All</option>
+            <select className="p-2 border border-white/30 rounded text-sm text-white" value={empTasksFilter} onChange={(e)=>setEmpTasksFilter(e.target.value)}>
+              <option className='text-black' value="active">Active</option>
+              <option className='text-black' value="end">End</option>
+              <option className='text-black' value="all">All</option>
             </select>
-            <select className="p-2 border border-white/30 rounded text-sm bg-white/80 text-black" value={empTasksKraFilter} onChange={(e)=>setEmpTasksKraFilter(e.target.value)}>
-              <option value="">All KRAs</option>
-              {allKras.map(k=> (<option key={k.kra_id} value={k.kra_id}>{k.name}</option>))}
+            <select className="p-2 border border-white/30 rounded text-sm text-white" value={empTasksKraFilter} onChange={(e)=>setEmpTasksKraFilter(e.target.value)}>
+              <option className='text-black' value="">All KRAs</option>
+              {allKras.map(k=> (<option className='text-black' key={k.kra_id} value={k.kra_id}>{k.name}</option>))}
             </select>
+             <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={() => navigate('/create_kpi')}><CircleFadingPlus className='w-4 h-4' /></button>
             <div className="relative">
-              <button onClick={()=>setExpTasksOpen(v=>!v)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Export</button>
+              
+              <button onClick={()=>setExpTasksOpen(v=>!v)} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"><Download className='w-4 h-4' /></button>
               {expTasksOpen && (
                 <div className="absolute right-0 top-10 bg-white border rounded shadow text-sm z-10 text-black">
                   <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{ setExpTasksOpen(false); exportSectionById('emp-tasks-wrap','my-kpis','pdf'); }}>PDF</button>
@@ -1413,20 +1463,20 @@ export default function EmployeeDashboard() {
                 </div>
               )}
             </div>
-            <button className="px-4 py-2 rounded bg-indigo-600 text-white" onClick={() => navigate('/create_kpi')}>Create KPI</button>
+           
           </div>
         </div>
         <div id="emp-tasks-wrap" className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
-          <table id="emp-tasks-table" className="w-full">
+          <table id="emp-tasks-table" className="w-full min-w-[700px]">
             <thead>
               <tr className="border-b border-white/20 bg-white/20">
-                <th className="text-left p-3 text-white">KRA</th>
-                <th className="text-left p-3 text-white">KPI Name</th>
-                <th className="text-left p-3 text-white">Progress</th>
-                <th className="text-left p-3 text-white">Target</th>
-                <th className="text-left p-3 text-white">Due Date</th>
-                <th className="text-left p-3 text-white">Status</th>
-                <th className="text-left p-3 text-white">Actions</th>
+                <th className="text-left p-3 text-white font-semibold">KRA</th>
+                <th className="text-left p-3 text-white font-semibold">KPI Name</th>
+                <th className="text-left p-3 text-white font-semibold">Progress</th>
+                <th className="text-left p-3 text-white font-semibold">Target</th>
+                <th className="text-left p-3 text-white font-semibold">Due Date</th>
+                <th className="text-left p-3 text-white font-semibold">Status</th>
+                <th className="text-left p-3 text-white font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -1445,11 +1495,11 @@ export default function EmployeeDashboard() {
                 const st = getStatusInfo(kpi.progress, kpi.target);
                 return (
                   <tr key={kpi.id} className="border-b border-white/20 hover:bg-white/5">
-                    <td className="p-3 text-white">{kpi.kra_name || '-'}</td>
+                    <td className="p-3 font-medium text-white">{kpi.kra_name || '-'}</td>
                     <td className="p-3 font-medium text-white">{kpi.name}</td>
-                    <td className="p-3 text-white">{kpi.progress}%</td>
-                    <td className="p-3 text-white">{kpi.target ?? 100}%</td>
-                    <td className="p-3 text-white">{kpi.due_date ? new Date(kpi.due_date).toLocaleDateString() : '-'}</td>
+                    <td className="p-3 font-medium text-white">{kpi.progress}%</td>
+                    <td className="p-3 font-medium text-white">{kpi.target ?? 100}%</td>
+                    <td className="p-3 font-medium text-white">{kpi.due_date ? new Date(kpi.due_date).toLocaleDateString() : '-'}</td>
                     <td className="p-3"><span className={`px-2 py-1 rounded text-xs ${st.color}`}>{st.label}</span></td>
                     <td className="p-3 flex gap-3">
                       {(() => {
@@ -1457,14 +1507,14 @@ export default function EmployeeDashboard() {
                         const isOverdue = kpi.due_date ? new Date(kpi.due_date) < today : false;
                         if (isOverdue) {
                           return (
-                            <button onClick={() => removeKpi(kpi.id)} className="text-red-400 hover:text-red-300 text-sm">Remove</button>
+                            <button onClick={() => removeKpi(kpi.id)} className="text-white border border-red-600 rounded bg-red-400 hover:bg-red-600 px-1">Remove</button>
                           );
                         }
                         return (
                           <>
-                            <button onClick={() => openScoreModal(kpi)} className="text-blue-300 hover:text-blue-100 text-sm">View</button>
-                            <button onClick={() => openEditModal(kpi)} className="text-indigo-300 hover:text-indigo-100 text-sm">Edit</button>
-                            <button onClick={() => removeKpi(kpi.id)} className="text-red-400 hover:text-red-300 text-sm">Remove</button>
+                            <button onClick={() => openScoreModal(kpi)} className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1">View</button>
+                            <button onClick={() => openEditModal(kpi)} className="text-white border border-green-600 rounded bg-green-400 hover:bg-green-600 px-1">Edit</button>
+                            <button onClick={() => removeKpi(kpi.id)} className="text-white border border-red-600 rounded bg-red-400 hover:bg-red-600 px-1">Remove</button>
                           </>
                         );
                       })()}
@@ -1478,52 +1528,9 @@ export default function EmployeeDashboard() {
       </div>
     ),
     kras: (
-      <div id="kras-section" className="bg-white/20 backdrop-blur-md p-6 rounded-lg shadow-xl mb-8">
+      <div id="kras-section" className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-xl mb-8">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-white">My KRAs</h3>
-          <div className="relative">
-            <button onClick={()=>setExpKrasOpen(v=>!v)} className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500">Export</button>
-            {expKrasOpen && (
-              <div className="absolute right-0 top-10 bg-white border rounded shadow text-sm z-10 text-black">
-                <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{
-                  setExpKrasOpen(false);
-                  const today = new Date(); today.setHours(0,0,0,0);
-                  const rows = recentKRAs.map(k=>{
-                    const arr = myKPIs.filter(x=> String(x.kra_id)===String(k.kra_id) && (
-                      x.kpi_status ? String(x.kpi_status).toLowerCase()==='active' : (!x.due_date || new Date(x.due_date) >= today)
-                    )).map(x=> typeof x.progress==='number'? x.progress:0);
-                    const overall = arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
-                    return [
-                      (k.name||'').replaceAll(',',' '),
-                      (k.definition||'').replaceAll(',',' '),
-                      k.due_date ? new Date(k.due_date).toLocaleDateString() : '-',
-                      overall
-                    ];
-                  });
-                  const header = ['KRA','Definition','Due Date','Overall %'];
-                  const csv = [header, ...rows].map(r=>r.join(',')).join('\n');
-                  downloadBlob('kras.csv', csv, 'text/csv;charset=utf-8;');
-                }}>CSV</button>
-                <button className="block px-3 py-2 hover:bg-gray-100 w-full text-left" onClick={()=>{
-                  setExpKrasOpen(false);
-                  const table = document.createElement('table');
-                  const today = new Date(); today.setHours(0,0,0,0);
-                  const rowsHtml = recentKRAs.map(k=>{
-                    const arr = myKPIs.filter(x=> String(x.kra_id)===String(k.kra_id) && (
-                      x.kpi_status ? String(x.kpi_status).toLowerCase()==='active' : (!x.due_date || new Date(x.due_date) >= today)
-                    )).map(x=> typeof x.progress==='number'? x.progress:0);
-                    const overall = arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
-                    return `<tr><td>${k.name||''}</td><td>${k.definition||''}</td><td>${k.due_date? new Date(k.due_date).toLocaleDateString():'-'}</td><td>${overall}</td></tr>`;
-                  }).join('');
-                  table.innerHTML = `
-                    <thead><tr><th>KRA</th><th>Definition</th><th>Due Date</th><th>Overall %</th></tr></thead>
-                    <tbody>${rowsHtml}</tbody>`;
-                  const html = `\uFEFF<html><head><meta charset=\"UTF-8\"></head><body>${table.outerHTML}</body></html>`;
-                  downloadBlob('kras.xls', html, 'application/vnd.ms-excel');
-                }}>Excel</button>
-              </div>
-            )}
-          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {recentKRAs.map((kra) => (
@@ -1531,10 +1538,10 @@ export default function EmployeeDashboard() {
               <h4 className="font-medium mb-2 text-white">{kra.name}</h4>
               <p className="text-sm text-gray-200 mb-3">{kra.definition}</p>
               <div className="flex justify-between items-center text-sm mb-2">
-                <span className="text-gray-300">Due: {new Date(kra.due_date).toLocaleDateString()}</span>
+                <span className="text-white">Due: {new Date(kra.due_date).toLocaleDateString()}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-100">Overall: {(() => {
+                <span className="text-sm text-white">Overall: {(() => {
                   const today = new Date(); today.setHours(0,0,0,0);
                   const arr = myKPIs.filter(x=> String(x.kra_id)===String(kra.kra_id) && (
                     x.kpi_status ? String(x.kpi_status).toLowerCase()==='active' : (!x.due_date || new Date(x.due_date) >= today)
@@ -1544,9 +1551,9 @@ export default function EmployeeDashboard() {
                 })()}%</span>
                 <button
                   onClick={() => handleKpiClick(kra.kra_id)}
-                  className="text-blue-300 hover:text-blue-100 text-sm font-medium"
+                  className="text-green-500 hover:text-green-300"
                 >
-                  View Details
+                 Details
                 </button>
               </div>
             </div>
@@ -1555,59 +1562,102 @@ export default function EmployeeDashboard() {
       </div>
     ),
     comments: (
-      <div className="bg-white/20 backdrop-blur-md p-6 rounded-lg shadow-xl">
-        <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <h3 className="text-xl font-semibold text-white">Comments</h3>
+      <div className="bg-white/10 backdrop-blur-md p-4 md:p-6 rounded-lg shadow-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+          <h3 className="text-xl font-semibold text-white">Review Comments</h3>
           <div className="flex items-center gap-2">
-            <input type="number" className="p-2 border border-white/30 rounded w-24 bg-white/80 text-black" value={perfFilter.year} onChange={(e)=>setPerfFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
-            <select className="p-2 border border-white/30 rounded bg-white/80 text-black" value={perfFilter.month} onChange={(e)=>setPerfFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-              {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+            <input 
+              type="number" 
+              className="p-2 border border-white/30 rounded w-24 text-white focus:outline-none focus:ring-2 focus:ring-white/50" 
+              value={perfFilter.year} 
+              onChange={(e) => setPerfFilter(prev => ({ ...prev, year: Number(e.target.value) }))} 
+            />
+            <select 
+              className="p-2 border border-white/30 rounded text-white focus:outline-none focus:ring-2 focus:ring-white/50" 
+              value={perfFilter.month} 
+              onChange={(e) => setPerfFilter(prev => ({ ...prev, month: Number(e.target.value) }))}
+            >
+              {Array.from({length: 12}, (_, i) => i + 1).map(m => (
+                <option key={m} value={m} className="text-black">{m}</option>
+              ))}
             </select>
           </div>
         </div>
-        <div className="space-y-2">
-          {perfReviews.map((r, idx)=> (
-            <div key={idx} className="border border-white/30 bg-white/10 rounded p-3">
-              <div className="flex items-center justify-between text-sm text-gray-300">
-                <span><span className="font-medium text-gray-100">KRA:</span> {r.kra_name}</span>
-                <span>{r.review_at ? new Date(r.review_at).toLocaleDateString() : ''}</span>
-              </div>
-              <div className="text-sm mt-1 text-white"><span className="font-medium text-gray-100">Score:</span> {r.score}</div>
-              <div className="text-sm mt-1 text-white"><span className="font-medium text-gray-100">Comment:</span> <span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></div>
-            </div>
-          ))}
-          {perfReviews.length===0 && (
-            <div className="text-gray-200">No comments for this month.</div>
-          )}
-        </div>
+        
+        {perfReviews.length > 0 ? (
+          <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
+            <table className="w-full min-w-[700px]">
+              <thead>
+                <tr className="border-b border-white/20 bg-white/20">
+                  <th className="text-left p-3 text-white font-semibold">KRA</th>
+                  <th className="text-left p-3 text-white font-semibold">Date</th>
+                  <th className="text-left p-3 text-white font-semibold">Score</th>
+                  <th className="text-left p-3 text-white font-semibold">Comment</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10 text-gray-200">
+                {perfReviews.map((r, idx) => (
+                  <tr key={idx} className="hover:bg-white/5">
+                    <td className="p-2  font-medium">{r.kra_name || '-'}</td>
+                    <td className="p-2  font-medium">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
+                    <td className="p-2  font-medium">{r.score || '-'}</td>
+                    <td className="p-2  font-medium" dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} />
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center py-8 text-white/70">No comments found for this month.</div>
+        )}
       </div>
     ),
 summary: (
-      <div id="employee-summary-section" className="space-y-6">
-        <div className="flex items-center justify-between mb-4">
+      <div id="employee-summary-section" className="space-y-6 bg-white/5 backdrop-blur-md rounded-lg shadow-lg p-6 border border-white/20 text-white mb-8">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <h3 className="text-xl font-semibold text-white">Summary</h3>
           <button
-            className="px-3 py-2 rounded text-white bg-gradient-to-r from-blue-800 to-blue-500 disabled:opacity-50"
+            className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
             onClick={() => exportSectionById('employee-summary-section','employee-summary','pdf')}
           >
-            Export PDF
+            <Download className='w-4 h-4'/>
           </button>
         </div>
 
-        {/* Employee details (profile style similar to manager summary) */}
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 md:p-5 shadow border border-white/20 text-white">
-          <div className="text-sm text-gray-300 mb-1">Employee</div>
-          <div className="text-lg font-semibold truncate">{userName || '-'}</div>
-          <div className="text-xs text-white mt-1 truncate">Email: {userEmail || '-'}</div>
-          <div className="text-xs text-white mt-1 truncate">Department: {userDept || '-'}</div>
-          <div className="text-xs text-white mt-1">Total KRAs: {allKras.length}</div>
+        {/* Employee profile + quick stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div className="border border-white/20 rounded p-4 bg-white/5 col-span-1 md:col-span-1">
+            <div className="text-sm text-white mb-1">Employee</div>
+            <div className="text-lg font-semibold text-white truncate">{userName || '-'}</div>
+            <div className="text-xs text-white mt-1 truncate">Email: {userEmail || '-'}</div>
+            <div className="text-xs text-white mt-1 truncate">Department: {userDept || '-'}</div>
+          </div>
+          <div className="border border-white/20 rounded p-4 bg-white/5">
+            <div className="text-sm text-white mb-1">This Month Performance</div>
+            <div className="text-2xl font-semibold text-white">
+              {(() => {
+                const scores = perfReviews
+                  .filter(r => r.score !== null && r.score !== undefined)
+                  .map(r => typeof r.score === 'number' ? r.score : Number(r.score || 0))
+                  .filter(v => !Number.isNaN(v));
+                if (!scores.length) return '-';
+                const avg = Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 100) / 100;
+                return `${avg}%`;
+              })()}
+            </div>
+          </div>
+          <div className="border border-white/20 rounded p-4 bg-white/5">
+            <div className="text-sm text-white mb-1">Total KRAs</div>
+            <div className="text-2xl font-semibold text-white">{allKras.length}</div>
+            <div className="text-xs text-gray-400 mt-1">Key Result Areas</div>
+          </div>
         </div>
 
         {/* Trend + My Performance charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Employee Trend Analysis */}
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 md:p-5 shadow relative overflow-hidden border border-white/20" id="employee-summary-trend">
-            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(1000px 400px at 20% -10%, rgba(0,255,255,0.10), transparent), radial-gradient(800px 300px at 120% 20%, rgba(0,128,255,0.12), transparent), radial-gradient(1000px 500px at 50% 120%, rgba(0,255,128,0.08), transparent)' }} />
+          <div className=" backdrop-blur-md rounded-lg p-4 md:p-5 shadow relative overflow-hidden border border-white/20" id="employee-summary-trend">
+            <div className="absolute inset-0 pointer-events-none" />
             <div className="relative flex items-center justify-between mb-3">
               <div>
                 <div className="text-sm text-cyan-200">Trend Analysis</div>
@@ -1660,9 +1710,9 @@ summary: (
           </div>
 
           {/* My Performance (Reviews) */}
-          <div className="bg-white/20 backdrop-blur-md p-4 rounded-lg shadow-xl border border-white/20" id="employee-summary-my-performance">
+          <div className="backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]" id="employee-summary-my-performance">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <h4 className="font-medium text-white">My Performance (Reviews)</h4>
+              <h4 className="font-medium text-white">My KRA Performance</h4>
             </div>
             {(() => {
               const labels = perfKraSeries.labels;
@@ -1678,7 +1728,7 @@ summary: (
               };
               if (!labels.length) return <div className="text-gray-200">No reviews for the selected month.</div>;
               return (
-                <div className="h-40 md:h-48">
+                <div className="h-40 md:h-52 ">
                   <Bar data={{ labels, datasets: [{ label: 'Avg Score', data: values, backgroundColor: 'rgba(59,130,246,0.5)', borderColor: '#3b82f6' }] }} options={options} />
                 </div>
               );
@@ -1689,7 +1739,7 @@ summary: (
         {/* KRA & KPI charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* KRA Scores */}
-          <div className="bg-white/20 backdrop-blur-md p-4 rounded-lg shadow-xl border border-white/20" id="employee-summary-kra-chart">
+          <div className=" backdrop-blur-md p-4 rounded-lg shadow-xl border border-white/20" id="employee-summary-kra-chart">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
               <h4 className="font-medium text-white">KRA Scores</h4>
             </div>
@@ -1714,7 +1764,7 @@ summary: (
           </div>
 
           {/* KPI Scores (all active KPIs) */}
-          <div className="bg-white/20 backdrop-blur-md p-4 rounded-lg shadow-xl border border-white/20" id="employee-summary-kpi-chart">
+          <div className="backdrop-blur-md p-4 rounded-lg shadow-xl border border-white/20" id="employee-summary-kpi-chart">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
               <h4 className="font-medium text-white">KPI Scores (All Active KPIs)</h4>
             </div>
@@ -1737,9 +1787,9 @@ summary: (
         </div>
 
         {/* Tables: KRAs, KPIs, Manager reviews */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {/* KRA details table */}
-          <div className="bg-white/10 backdrop-blur-md rounded-lg shadow border border-white/20 p-4" id="employee-summary-kra-table">
+          <div className="backdrop-blur-md rounded-lg shadow border border-white/20 p-4" id="employee-summary-kra-table">
             <div className="flex items-center justify-between mb-3">
               <h4 className="font-medium text-white">KRA Details</h4>
             </div>
@@ -1908,12 +1958,12 @@ summary: (
         )}
         {/* KRA Details Modal */}
         {kraModalOpen && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md text-white w-full max-w-3xl rounded-lg shadow-xl p-6">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md text-white w-full max-w-3xl rounded-lg shadow-xl p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-xl font-semibold text-white">KRA: {kraModalName}</h3>
-                  <p className="text-sm text-gray-200">Overall: <span className="font-semibold text-indigo-300">{kraModalAgg}%</span></p>
+                  <p className="text-sm text-white">Overall: <span className="font-semibold text-indigo-300">{kraModalAgg}%</span></p>
                 </div>
                 <button onClick={() => setKraModalOpen(false)} className="text-gray-100 hover:text-white text-2xl">✕</button>
               </div>
@@ -1926,23 +1976,21 @@ summary: (
                       <div className="flex justify-between items-center">
                         <div>
                           <h4 className="font-semibold text-white">{kpi.name}</h4>
-                          <p className="text-sm text-gray-200">Due: {new Date(kpi.due_date).toLocaleDateString()} • Method: {kpi.scoring_method} • {typeof kpi.percentage === 'number' ? `Current: ${kpi.percentage}%` : 'No score yet'}</p>
+                          <p className="text-sm text-white">Due: {new Date(kpi.due_date).toLocaleDateString()} • Method: {kpi.scoring_method} • {typeof kpi.percentage === 'number' ? `Current: ${kpi.percentage}%` : 'No score yet'}</p>
                         </div>
                       </div>
                       <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                          <label className="block text-sm font-medium mb-1 text-gray-100">Score</label>
-                          <div className="text-base font-medium text-gray-100">
+                          <label className="block text-sm font-medium mb-1 text-white">Score</label>
+                          <div className="text-base font-medium text-white">
                             {kpi.scoring_method === 'Percentage' && `${kpi.score ?? 0}%`}
                             {(kpi.scoring_method === 'Scale (1-5)' || kpi.scoring_method === 'Rating') && `${kpi.score ?? 0} / 5`}
                             {kpi.scoring_method === 'Scale (1-10)' && `${kpi.score ?? 0} / 10`}
                           </div>
                         </div>
                         <div className="md:col-span-2">
-                          <label className="block text-sm font-medium mb-1 text-gray-100">Comments</label>
-                          <div className="p-2 border border-white/30 rounded bg-black/20 min-h-[48px]">
-                            <span dangerouslySetInnerHTML={{ __html: kpi.comments ? renderCommentHtml(kpi.comments) : '-' }} />
-                          </div>
+                          <label className="block text-sm font-medium mb-1 text-white">Comments</label>
+                          <span dangerouslySetInnerHTML={{ __html: kpi.comments ? renderCommentHtml(kpi.comments) : '-' }} />
                         </div>
                       </div>
                     </div>
@@ -1951,8 +1999,8 @@ summary: (
                     <div className="p-4 border border-white/30 rounded text-gray-200">No KPIs created for this KRA yet.</div>
                   )}
                   <div className="flex justify-end pt-2 gap-2">
-                    <button onClick={submitKraModalNotify} className="px-4 py-2 rounded bg-indigo-600 text-white">Submit</button>
                     <button onClick={() => setKraModalOpen(false)} className="px-4 py-2 rounded bg-white/20 border border-white/30 hover:bg-white/10 text-white">Close</button>
+                    <button onClick={submitKraModalNotify} className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white">Submit</button>
                   </div>
                 </div>
               )}
@@ -1961,50 +2009,50 @@ summary: (
         )}
         {/* Edit KPI Modal */}
         {editModalOpen && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md text-white w-full max-w-lg rounded-lg shadow-xl p-6 max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md text-white w-full max-w-lg rounded-lg shadow-xl p-6 max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">Edit KPI</h3>
                 <button onClick={() => setEditModalOpen(false)} className="text-gray-100 hover:text-white text-2xl">✕</button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-100">Name</label>
-                  <input className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={editForm.name} onChange={(e)=>setEditForm({...editForm,name:e.target.value})} />
+                  <label className="block text-sm font-medium mb-1 text-white">Name</label>
+                  <input className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={editForm.name} onChange={(e)=>setEditForm({...editForm,name:e.target.value})} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-100">Due Date</label>
-                  <input type="date" className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={editForm.due_date} onChange={(e)=>setEditForm({...editForm,due_date:e.target.value})} />
+                  <label className="block text-sm font-medium mb-1 text-white">Due Date</label>
+                  <input type="date" className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={editForm.due_date} onChange={(e)=>setEditForm({...editForm,due_date:e.target.value})} />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium mb-1 text-gray-100">Definition</label>
-                  <textarea className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" rows={2} value={editForm.def} onChange={(e)=>setEditForm({...editForm,def:e.target.value})} />
+                  <label className="block text-sm font-medium mb-1 text-white">Definition</label>
+                  <textarea className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" rows={2} value={editForm.def} onChange={(e)=>setEditForm({...editForm,def:e.target.value})} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-100">Target (0-100)</label>
-                  <input type="number" min="0" max="100" className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={editForm.target} onChange={(e)=>setEditForm({...editForm,target:e.target.value})} />
+                  <label className="block text-sm font-medium mb-1 text-white">Target (0-100)</label>
+                  <input type="number" min="0" max="100" className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={editForm.target} onChange={(e)=>setEditForm({...editForm,target:e.target.value})} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-100">Scoring Method</label>
-                  <select className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={editForm.scoring_method} onChange={(e)=>setEditForm({...editForm,scoring_method:e.target.value})}>
-                    <option value="Percentage">Percentage</option>
-                    <option value="Scale (1-5)">Scale (1-5)</option>
-                    <option value="Scale (1-10)">Scale (1-10)</option>
-                    <option value="Rating">Rating</option>
+                  <label className="block text-sm font-medium mb-1 text-white">Scoring Method</label>
+                  <select className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={editForm.scoring_method} onChange={(e)=>setEditForm({...editForm,scoring_method:e.target.value})}>
+                    <option className='text-black' value="Percentage">Percentage</option>
+                    <option className='text-black' value="Scale (1-5)">Scale (1-5)</option>
+                    <option className='text-black' value="Scale (1-10)">Scale (1-10)</option>
+                    <option className='text-black' value="Rating">Rating</option>
                   </select>
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-4">
                 <button onClick={()=>setEditModalOpen(false)} className="px-4 py-2 rounded border border-white/30 text-white hover:bg-white/10">Cancel</button>
-                <button onClick={submitEditModal} className="px-4 py-2 rounded bg-indigo-600 text-white">Update</button>
+                <button onClick={submitEditModal} className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white">Update</button>
               </div>
             </div>
           </div>
         )}
         {/* Score KPI Modal */}
         {scoreModalOpen && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md text-white w-full max-w-md rounded-lg shadow-xl p-6 max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md text-white w-full max-w-lg rounded-lg shadow-xl p-6 max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">Score KPI{scoreModalKpi ? `: ${scoreModalKpi.name}` : ''}</h3>
                 <button onClick={() => setScoreModalOpen(false)} className="text-gray-100 hover:text-white text-2xl">✕</button>
@@ -2012,7 +2060,7 @@ summary: (
               {scoreModalKpi && (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-100">Score</label>
+                    <label className="block text-sm font-medium mb-1 text-white">Score</label>
                     {/* Render appropriate input by method */}
                     {scoreModalKpi.scoring_method === 'Percentage' && (
                       <div className="flex items-center gap-2">
@@ -2083,14 +2131,14 @@ summary: (
                   </div>
                   <div>
                     <div className="flex items-center justify-between">
-                      <label className="block text-sm font-medium mb-1 text-gray-100">Comments</label>
-                      <button type="button" onClick={() => openLinkModal('score')} className="text-xs text-indigo-300 underline">Insert Link</button>
+                      <label className="block text-sm mb-1 text-white">Comments</label>
+                      <button type="button" onClick={() => openLinkModal('score')} className="text-cyan-400 underline underline">Insert Link</button>
                     </div>
-                    <textarea className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" rows={3} value={scoreModalComments} onChange={(e) => setScoreModalComments(e.target.value)} placeholder="Add comments (optional)" />
+                    <textarea className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" rows={3} value={scoreModalComments} onChange={(e) => setScoreModalComments(e.target.value)}/>
                   </div>
                   <div className="flex justify-end gap-2">
                     <button onClick={() => setScoreModalOpen(false)} className="px-4 py-2 rounded border border-white/30 text-white hover:bg-white/10">Cancel</button>
-                    <button onClick={submitScoreModal} className="px-4 py-2 rounded bg-indigo-600 text-white">Update</button>
+                    <button onClick={submitScoreModal} className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white">Update</button>
                   </div>
                 </div>
               )}
@@ -2103,25 +2151,100 @@ summary: (
         )}
         {/* Insert Link Modal */}
         {linkModalOpen && (
-          <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
-            <div className="bg-white/20 backdrop-blur-md text-white w-full max-w-sm rounded-lg shadow-xl p-5">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 text-white w-full max-w-sm rounded-lg shadow-xl p-5">
               <div className="flex justify-between items-center mb-3">
                 <h4 className="font-semibold text-white">Insert Link</h4>
                 <button onClick={closeLinkModal} className="text-gray-100 hover:text-white text-2xl">✕</button>
               </div>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm mb-1 text-gray-100">Link Text (Name)</label>
-                  <input className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" value={linkName} onChange={(e)=>setLinkName(e.target.value)} />
+                  <label className="block text-sm mb-1 text-White">Link Name</label>
+                  <input placeholder='ex: Ui_edit_PR' className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={linkName} onChange={(e)=>setLinkName(e.target.value)} />
                 </div>
                 <div>
-                  <label className="block text-sm mb-1 text-gray-100">URL (http or https)</label>
-                  <input className="w-full p-2 border border-white/30 rounded bg-white/80 text-black" placeholder="https://..." value={linkUrl} onChange={(e)=>setLinkUrl(e.target.value)} />
+                  <label className="block text-sm mb-1 text-white">URL </label>
+                  <input placeholder="https://..." className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" value={linkUrl} onChange={(e)=>setLinkUrl(e.target.value)} />
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-4">
                 <button onClick={closeLinkModal} className="px-4 py-2 rounded border border-white/30 text-white hover:bg-white/10">Cancel</button>
-                <button onClick={confirmLinkModal} className="px-4 py-2 rounded bg-indigo-600 text-white" disabled={!linkName || !/^https?:\/\//i.test(linkUrl)}>Insert</button>
+                <button onClick={confirmLinkModal} className="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700" disabled={!linkName || !/^https?:\/\//i.test(linkUrl)}>Insert</button>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Filter Modal */}
+        {filterModal.open && (
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-50" onClick={() => setFilterModal(prev => ({ ...prev, open: false }))}>
+            <div className="bg-gray-800 backdrop-blur-md border border-white/30 rounded-lg shadow-xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto text-white" onClick={e => e.stopPropagation()}>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">
+                  {filterModal.section === 'performance' ? 'Performance Filters' : 'Trend Filters'}
+                </h3>
+                <button 
+                  onClick={() => setFilterModal(prev => ({ ...prev, open: false }))}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm mb-1">Year</label>
+                  <input
+                    type="number"
+                    className='w-full p-2 rounded bg-white/10 border border-white/30 text-white'
+                    value={filterModal.year}
+                    onChange={(e) => {
+                      const year = parseInt(e.target.value) || new Date().getFullYear();
+                      setFilterModal(prev => {
+                        const newState = { ...prev, year };
+                        // Auto-apply when year changes
+                        if (newState.onApply) {
+                          newState.onApply(year, newState.month);
+                        }
+                        return newState;
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm mb-1">Month (1-12)</label>
+                  <select
+                    className="w-full p-2 rounded bg-white/10 border border-white/30 text-white"
+                    value={filterModal.month || 1}
+                    onChange={(e) => {
+                      const month = parseInt(e.target.value);
+                      setFilterModal(prev => {
+                        const newState = { ...prev, month };
+                        // Auto-apply when month changes
+                        if (newState.onApply) {
+                          newState.onApply(newState.year, month);
+                        }
+                        return newState;
+                      });
+                    }}
+                  >
+                    {Array.from({length: 12}, (_, i) => i + 1).map(month => (
+                      <option key={month} value={month} className="text-black">
+                        {month}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setFilterModal(prev => ({ ...prev, open: false }))}
+                  className="text-sm px-4 py-2 rounded bg-gray-600 hover:bg-gray-700"
+                >
+                  Close
+                </button>
               </div>
             </div>
           </div>
@@ -2129,4 +2252,4 @@ summary: (
       </div>
     </div>
   );
-}
+};

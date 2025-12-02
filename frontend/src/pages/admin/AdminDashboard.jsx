@@ -782,7 +782,7 @@ export default function AdminDashboard() {
               <div className="text-white text-lg font-semibold">Company Performance — {ovFilter.year}</div>
             </div>
             <div className="flex items-center gap-2">
-              <div className={`text-sm font-semibold ${companyTrendDelta >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{companyTrendDelta >= 0 ? '▲' : '▼'} {Math.abs(companyTrendDelta)}</div>
+              <div className={`text-md font-semibold ${companyTrendDelta >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{companyTrendDelta >= 0 ? 'Growth ▲' : 'Decline ▼'} {Math.abs(companyTrendDelta)}</div>
               <div className="relative group">
                 <button
                   type="button"
