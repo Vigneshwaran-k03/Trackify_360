@@ -19,10 +19,6 @@ import female3 from '../../assets/profile_image/female3.png';
 import female4 from '../../assets/profile_image/female4.png';
 import female5 from '../../assets/profile_image/female5.png';
 
-// --- IMPORTANT ---
-// Import your background image like this
-import backgroundImage from '../../assets/background.png';
-
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function EmployeeProfile() {
@@ -221,23 +217,23 @@ export default function EmployeeProfile() {
       className="min-h-screen p-4 md:p-8"
     >
       {/* Main Frosted Glass Card */}
-      <div className="bg-white/20 backdrop-blur-md p-6 rounded-lg shadow-xl max-w-7xl mx-auto text-white">
+      <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-xl max-w-7xl mx-auto text-white">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-semibold text-white">My Profile</h3>
-          <button onClick={()=>setCpOpen(true)} className="px-3 py-2 rounded bg-indigo-600 text-white text-sm">Change Password</button>
+          <h3 className="text-3xl font-semibold text-white">My Profile</h3>
+          <button onClick={()=>setCpOpen(true)} className="px-3 py-2 rounded bg-sky-400 hover:bg-sky-500 text-white text-sm cursor-pointer">Change Password</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h4 className="font-medium mb-3 text-gray-100">Personal Information</h4>
+            <h4 className="font-medium mb-3 text-lg text-white">Personal Information</h4>
             <div className="space-y-2 text-white">
-              <p><span className="font-medium text-gray-200">Name:</span> {userName}</p>
-              <p><span className="font-medium text-gray-200">Department:</span> {userDept}</p>
-              <p><span className="font-medium text-gray-200">Role:</span> Employee</p>
-              <p><span className="font-medium text-gray-200">Email:</span> {userEmail}</p>
+              <p><span className="font-medium text-white">Name:</span> {userName}</p>
+              <p><span className="font-medium text-white ">Department:</span> {userDept}</p>
+              <p><span className="font-medium text-white">Role:</span> Employee</p>
+              <p><span className="font-medium text-white">Email:</span> {userEmail}</p>
             </div>
           </div>
           <div>
-            <h4 className="font-medium mb-3 text-gray-100">Profile Picture</h4>
+            <h4 className="font-medium mb-3 text-lg text-white">Profile Picture</h4>
             <div className="flex flex-col lg:flex-row items-start gap-4">
               <img 
                 src={pendingFile ? pendingAvatar : resolveAvatar(pendingAvatar || avatar)} 
@@ -247,19 +243,19 @@ export default function EmployeeProfile() {
               <div className="flex-1 space-y-3 w-full">
                 <div className="grid grid-cols-5 gap-3">
                   {['male1','male2','male3','male4','male5','female1','female2','female3','female4','female5'].map(key=> (
-                    <button type="button" key={key} onClick={()=>selectDefault(key)} className={`border border-white/30 rounded overflow-hidden focus:outline-none ${(pendingAvatar===`default:${key}`) || (!pendingAvatar && avatar===`default:${key}`) ? 'ring-2 ring-indigo-400' : ''}`}>
-                      <img src={resolveAvatar(`default:${key}`)} alt={key} className="w-16 h-16 object-cover" />
+                    <button type="button" key={key} onClick={()=>selectDefault(key)} className={`border-0 border-white/30 cursor-pointer rounded overflow-hidden focus:outline-none ${(pendingAvatar===`default:${key}`) || (!pendingAvatar && avatar===`default:${key}`) ? 'ring-1 ring-indigo-400' : ''}`}>
+                      <img src={resolveAvatar(`default:${key}`)} alt={key} className="w-20 h-20 object-cover" />
                     </button>
                   ))}
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-1 block text-gray-100">Upload from device</label>
+                  <label className="text-sm font-medium mb-1 block text-white">Upload from device</label>
                   <input ref={fileRef} type="file" accept="image/*" onChange={onUpload} className="hidden" />
                   <button type="button" onClick={()=>fileRef.current?.click()} className="px-3 py-2 rounded border border-white/30 text-sm text-white hover:bg-white/10">Choose from local</button>
                 </div>
                 <div className="pt-1 flex justify-end">
                   <button type="button" onClick={saveAvatar} disabled={!pendingAvatar}
-                    className="px-3 py-2 rounded bg-indigo-600 text-white text-sm disabled:opacity-60">
+                    className="px-3 py-2 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700">
                     Change Profile
                   </button>
                 </div>
@@ -268,15 +264,15 @@ export default function EmployeeProfile() {
           </div>
         </div>
         <div className="mt-8">
-          <h4 className="font-medium mb-4 text-gray-100">My Performance Gauges</h4>
+          <h4 className="font-medium mb-4 text-lg text-white">My Performance</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border border-white/30 rounded p-4 bg-white/10">
+            <div className="border border-white/30 rounded p-4 bg-white/5">
               <div className="flex items-center justify-between mb-3">
-                <div className="font-medium text-white">Gauge 1</div>
+                <div className="font-medium text-white text-md">{new Date(gauge1Filter.year, gauge1Filter.month - 1).toLocaleString('default', { month: 'long' })}</div>
                 <div className="flex items-center gap-2">
-                  <input type="number" className="p-2 border border-white/30 rounded w-24 bg-white/80 text-black" value={gauge1Filter.year} onChange={(e)=>setGauge1Filter(prev=>({ ...prev, year: Number(e.target.value) }))} />
-                  <select className="p-2 border border-white/30 rounded bg-white/80 text-black" value={gauge1Filter.month} onChange={(e)=>setGauge1Filter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-                    {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                  <input type="number" className="p-2 border border-white/30 rounded w-24 text-white" value={gauge1Filter.year} onChange={(e)=>setGauge1Filter(prev=>({ ...prev, year: Number(e.target.value) }))} />
+                  <select className="p-2 border border-white/30 rounded text-white" value={gauge1Filter.month} onChange={(e)=>setGauge1Filter(prev=>({ ...prev, month: Number(e.target.value) }))}>
+                    {Array.from({length:12},(_,i)=>i+1).map(m=> <option className='text-black' key={m} value={m}>{m}</option>)}
                   </select>
                 </div>
               </div>
@@ -294,16 +290,15 @@ export default function EmployeeProfile() {
                   options={{ responsive: true, plugins: { legend: { display: false }, tooltip: { enabled: true } } }}
                 />
                 <div className="text-center mt-2 text-xl font-semibold text-white">{gauge1Avg}%</div>
-                <div className="text-center text-sm text-gray-200">Target: {gauge1Target}%</div>
               </div>
             </div>
-            <div className="border border-white/30 rounded p-4 bg-white/10">
+            <div className="border border-white/30 rounded p-4 bg-white/5">
               <div className="flex items-center justify-between mb-3">
-                <div className="font-medium text-white">Gauge 2</div>
+                <div className="font-medium text-white text-md">{new Date(gauge1Filter.year, gauge1Filter.month - 1).toLocaleString('default', { month: 'long' })}</div>
                 <div className="flex items-center gap-2">
-                  <input type="number" className="p-2 border border-white/30 rounded w-24 bg-white/80 text-black" value={gauge2Filter.year} onChange={(e)=>setGauge2Filter(prev=>({ ...prev, year: Number(e.target.value) }))} />
-                  <select className="p-2 border border-white/30 rounded bg-white/80 text-black" value={gauge2Filter.month} onChange={(e)=>setGauge2Filter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-                    {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m}>{m}</option>)}
+                  <input type="number" className="p-2 border border-white/30 rounded w-24 text-white" value={gauge2Filter.year} onChange={(e)=>setGauge2Filter(prev=>({ ...prev, year: Number(e.target.value) }))} />
+                  <select className="p-2 border border-white/30 rounded text-white" value={gauge2Filter.month} onChange={(e)=>setGauge2Filter(prev=>({ ...prev, month: Number(e.target.value) }))}>
+                    {Array.from({length:12},(_,i)=>i+1).map(m=> <option className="text-black" key={m} value={m}>{m}</option>)}
                   </select>
                 </div>
               </div>
@@ -321,24 +316,23 @@ export default function EmployeeProfile() {
                   options={{ responsive: true, plugins: { legend: { display: false }, tooltip: { enabled: true } } }}
                 />
                 <div className="text-center mt-2 text-xl font-semibold text-white">{gauge2Avg}%</div>
-                <div className="text-center text-sm text-gray-200">Target: {gauge2Target}%</div>
               </div>
             </div>
           </div>
-          <div className="text-sm text-gray-200 mt-2">Each gauge shows the average of all KRA review scores for the selected month.</div>
         </div>
         {cpOpen && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-            <div className="bg-white/20 backdrop-blur-md w-full max-w-md rounded-lg shadow-xl p-6">
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md w-full max-w-md rounded-lg shadow-xl p-6">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="text-lg font-semibold text-white">Change Password</h4>
-                <button onClick={()=>setCpOpen(false)} className="text-gray-100 hover:text-white text-2xl">✕</button>
+                <button onClick={()=>setCpOpen(false)} className="text-white hover:text-gray-200">✕</button>
               </div>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm mb-1 text-gray-100">Email</label>
-                  <input disabled value={userEmail} className="w-full p-2 border border-white/30 rounded bg-gray-200/80 text-gray-700" />
+                  <label className="block text-sm mb-1 text-white">Email</label>
+                  <input disabled value={userEmail} className="w-full p-2 border border-white/30 rounded bg-white/20 text-white" />
                 </div>
+                <div className="flex items-center justify-end">
                 <button
                   onClick={async()=>{
                     try {
@@ -349,10 +343,11 @@ export default function EmployeeProfile() {
                     } catch { setCpMsg('Failed to send verification'); }
                     finally { setCpLoading(false); }
                   }}
-                  className="px-4 py-2 rounded bg-indigo-600 text-white disabled:opacity-60"
+                  className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white"
                   disabled={cpLoading}
                 >{cpLoading? 'Sending...' : 'Send verification'}</button>
                 {cpMsg && <div className="text-sm text-emerald-300">{cpMsg}</div>}
+              </div>
               </div>
             </div>
           </div>

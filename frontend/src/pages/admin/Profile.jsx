@@ -248,6 +248,7 @@ export default function AdminProfile() {
                   className="w-full p-2 border rounded bg-white/30 border-white/50 text-white opacity-70 cursor-not-allowed"
                 />
               </div>
+              <div className="flex items-center justify-end">
               <button
                 onClick={async()=>{
                   try {
@@ -268,6 +269,7 @@ export default function AdminProfile() {
                   {cpMsg}
                 </div>
               )}
+            </div>
             </div>
           </div>
         </div>

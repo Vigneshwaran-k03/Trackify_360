@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getToken } from '../../utils/authStorage';
 
-// --- IMPORTANT ---
-// Import your background image like this
-import backgroundImage from '../../assets/background.png';
+import {Eye } from 'lucide-react';
 
 function RequestRow({ r, onOpen }) {
   return (
@@ -21,7 +19,7 @@ function RequestRow({ r, onOpen }) {
           className="px-2 py-1 border border-white/50 rounded text-white bg-blue-600 hover:bg-white/20 transition-colors" 
           onClick={()=>onOpen(r)}
         >
-          View
+          <Eye className='w-6 h-6' />
         </button>
       </td>
     </tr>
@@ -75,7 +73,7 @@ export default function ManagerRequests() {
   const parsedChanges = (detail && detail.requested_changes) ? (() => { try { return JSON.parse(detail.requested_changes); } catch { return {}; } })() : {};
 
   return (
-    // New wrapper div for background image
+
     <div
       className="min-h-screen p-4 md:p-8"
     >
@@ -85,12 +83,12 @@ export default function ManagerRequests() {
         <div className="flex items-center gap-3 p-3 mb-3">
           <label className="text-sm text-gray-100">Type:</label>
           <select 
-            className="border border-white/30 rounded px-2 py-1 bg-white/80 text-black" 
+            className="border border-white/30 rounded px-2 py-1 text-white" 
             value={reqType} 
             onChange={(e)=>{ setReqType(e.target.value); setDetail(null); setTab(e.target.value==='kra'?'my':'inbox'); setStatus(e.target.value==='kra'?'':'Pending'); }}
           >
-            <option value="kpi">KPI</option>
-            <option value="kra">KRA</option>
+            <option className='text-black' value="kpi">KPI</option>
+            <option className='text-black' value="kra">KRA</option>
           </select>
         </div>
         <div className="flex flex-col sm:flex-row flex-wrap gap-2 mb-4">
@@ -120,33 +118,33 @@ export default function ManagerRequests() {
           </div>
           <div className="flex-1 min-w-[200px] flex items-center gap-2 justify-end">
             {reqType === 'kpi' ? (
-              <select className="border border-white/30 rounded px-2 py-1 bg-white/80 text-black" value={status} onChange={(e)=>setStatus(e.target.value)}>
+              <select className="border border-white/30 rounded px-2 py-1 text-white" value={status} onChange={(e)=>setStatus(e.target.value)}>
                 {tab==='inbox' ? (
                   <>
-                    <option>Pending</option>
-                    <option>Approved</option>
-                    <option>Rejected</option>
+                    <option className='text-black'>Pending</option>
+                    <option className='text-black'>Approved</option>
+                    <option className='text-black'>Rejected</option>
                   </>
                 ) : tab==='approvals' ? (
                   <>
-                    <option>Approved</option>
-                    <option>Rejected</option>
+                    <option className='text-black'>Approved</option>
+                    <option className='text-black'>Rejected</option>
                   </>
                 ) : (
                   <>
-                    <option value="">All</option>
-                    <option>Pending</option>
-                    <option>Approved</option>
-                    <option>Rejected</option>
+                    <option className='text-black' value="">All</option>
+                    <option className='text-black'>Pending</option>
+                    <option className='text-black'>Approved</option>
+                    <option className='text-black'>Rejected</option>
                   </>
                 )}
               </select>
             ) : (
-              <select className="border border-white/30 rounded px-2 py-1 bg-white/80 text-black" value={status} onChange={(e)=>setStatus(e.target.value)}>
-                <option value="">All</option>
-                <option>Pending</option>
-                <option>Approved</option>
-                <option>Rejected</option>
+              <select className="border border-white/30 rounded px-2 py-1 text-white" value={status} onChange={(e)=>setStatus(e.target.value)}>
+                <option className='text-black' value="">All</option>
+                <option className='text-black'>Pending</option>
+                <option className='text-black'>Approved</option>
+                <option className='text-black'>Rejected</option>
               </select>
             )}
           </div>

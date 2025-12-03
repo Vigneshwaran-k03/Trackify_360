@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getToken } from '../../utils/authStorage';
-// Import the background image
-import backgroundImage from '../../assets/background.png';
+import {Eye } from 'lucide-react';
 
 function RequestRow({ r, onOpen }) {
   // Styled for the new background
@@ -18,7 +17,7 @@ function RequestRow({ r, onOpen }) {
           className="px-2 py-1 border border-white/50 rounded text-white bg-blue-600 hover:bg-white/20 transition-colors"
           onClick={()=>onOpen(r)}
         >
-          View
+          <Eye className='w-6 h-6' />
         </button>
       </td>
     </tr>

@@ -280,6 +280,7 @@ export default function ManagerKraLog() {
             </div>
           </div>
         )}
+        
         </div>
 
       </div>

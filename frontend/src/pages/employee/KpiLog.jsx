@@ -89,87 +89,117 @@ export default function EmployeeKpiLog() {
   }, [grouped, kraFilter]);
 
   return (
-    // Wrapper div for background image
-    <div
-      className="min-h-screen w-full bg-cover bg-center bg-fixed"
+    <div 
+      className="min-h-screen w-full"
+      
     >
-      <div className="max-w-5xl mx-auto py-8 px-4">
-        {/* Header/Filter bar with glassmorphism */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 bg-white/20 backdrop-blur-sm border border-white/30 p-4 rounded-lg shadow-lg">
-          <h1 className="text-2xl font-semibold text-white mb-3 sm:mb-0">My KPI Log</h1>
-          <div className="flex items-center gap-2">
-            <label className="text-sm text-white/80">KRA</label>
-            <select
-              className="p-2 border border-white/50 rounded bg-white/30 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-              value={kraFilter}
-              onChange={(e)=>setKraFilter(e.target.value)}
-            >
-              <option value="">All</option>
-              {kraOptions.map(name => (<option key={name} value={name}>{name}</option>))}
-            </select>
+      <div className="p-4 sm:p-6">
+        {/* Filter Bar Card */}
+        <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 md:p-8 max-w-7xl mx-auto">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <h1 className="text-3xl text-white font-semibold">My KPI Log</h1>
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-white/90">Filter by KRA</label>
+              <select
+                className="p-2 border border-white/30 text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/50"
+                value={kraFilter}
+                onChange={(e)=>setKraFilter(e.target.value)}
+              >
+                <option value="" className="text-black">All KRAs</option>
+                {kraOptions.map(name => (
+                  <option key={name} value={name} className="text-black">{name}</option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
-
-        {/* Loading/Error/Empty States */}
-        {loading && <div className="text-white text-lg font-semibold text-center p-4">Loading...</div>}
-        {error && <div className="bg-red-500/80 text-white font-semibold rounded-lg p-3 mb-3 shadow-lg">{error}</div>}
+          {/* Loading/Error/Empty States */}
+        {loading && <div className="text-center text-white p-4">Loading...</div>}
+        {error && (
+          <div className="bg-red-500/30 text-red-100 border border-red-400 p-3 rounded-lg mb-3">
+            {error}
+          </div>
+        )}
         {!loading && !error && !groupedFiltered.length && (
-          <div className="text-white/90 text-lg p-4 bg-black/20 rounded-lg text-center backdrop-blur-sm">
-            No logs found matching your criteria.
+          <div className="text-white text-lg p-4 font-semibold text-center">
+            No KPI logs found.
           </div>
         )}
 
         {/* Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {groupedFiltered.map(({ kpi_id, latest, entries }) => (
-            // Card with glassmorphism
-            <div key={`card-${kpi_id}`} className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-4 flex flex-col justify-between shadow-lg text-white">
-              <div className="flex flex-col sm:flex-row items-start justify-between">
-                <div className="mb-2 sm:mb-0">
-                  <div className="text-lg font-semibold text-white">{latest.kpi_name}</div>
-                  <div className="text-sm text-white/80">KRA: {latest.kra_name}</div>
-                  <div className="text-sm text-white/80">Dept: {latest.dept || '-'}</div>
-                  <div className="text-sm text-white/80">Due: {latest.due_date ? new Date(latest.due_date).toLocaleDateString() : '-'}</div>
-                </div>
-                <div className="text-sm text-white/80 text-left sm:text-right flex-shrink-0">
-                  <div>Last Update By: <span className="font-medium text-white">{latest.updated_by}</span></div>
-                  <div>At: {new Date(latest.updated_at).toLocaleString()}</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 py-7 gap-4">
+          {groupedFiltered.map(({ kpi_id, latest }) => (
+            <div key={`card-${kpi_id}`} className="bg-white/2 mt-3 backdrop-blur-sm border border-white/20 rounded-lg p-4 shadow-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                <div className="text-xl font-semibold text-white">{latest.kpi_name}</div>
+                <div className="text-sm text-white text-left sm:text-right">
+                  <div>Due: {latest.due_date ? new Date(latest.due_date).toLocaleDateString() : '-'}</div>
                 </div>
               </div>
-              <div className="mt-3 flex justify-end">
-                <button
-                  className="px-3 py-1 rounded border border-white/50 text-white text-sm hover:bg-white/20 transition-colors"
+              <div className="text-sm text-white mb-3">
+                KRA: {latest.kra_name} • Dept: {latest.dept || '-'}
+              </div>
+              <div className="flex justify-between items-center mt-4 pt-3">
+                <div className="text-sm text-white">
+                  <div>Last Update By: <span className="text-white">{latest.updated_by}</span></div>
+                  <div>At: {new Date(latest.updated_at).toLocaleString()}</div>
+                </div>
+                <div className="mt-3 flex justify-end">
+                <button 
+                  className="px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
                   onClick={()=>{ setModalKpiId(kpi_id); setModalOpen(true); }}
                 >
-                  See changes
+                  See Changes
                 </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
-
-        {/* Modal with glassmorphism */}
+      </div>
+        {/* Modal */}
         {modalOpen && modalKpiId !== null && (
-          // Modal overlay with padding for responsiveness
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-            {/* Modal panel */}
-            <div className="bg-white/20 backdrop-blur-md border border-white/30 w-full max-w-2xl rounded-lg shadow-xl p-6 max-h-[80vh] text-white">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-semibold text-white">KPI Change History</h3>
-                <button className="text-white/80 hover:text-white text-2xl font-bold" onClick={()=>{ setModalOpen(false); setModalKpiId(null); }}>✕</button>
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-md border border-white/20 w-full max-w-3xl rounded-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+              <div className="flex items-center justify-between p-4 border-b border-white/20">
+                <h3 className="text-xl font-semibold text-white">KPI Change History</h3>
+                <button 
+                  className="text-white/70 hover:text-white text-2xl font-bold transition-colors" 
+                  onClick={()=>{ setModalOpen(false); setModalKpiId(null); }}
+                >
+                  ✕
+                </button>
               </div>
-              {/* Scrollable content area */}
-              <div className="space-y-3 overflow-y-auto max-h-[calc(80vh-80px)] pr-2">
-                {(grouped.find(g=> g.kpi_id===modalKpiId)?.entries || []).map((log) => (
-                  // Log item card
-                  <div key={`log-${log.kpi_id}-${log.version}-${log.updated_at}`} className="border border-white/30 bg-black/10 rounded-lg p-3">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                      <div className="text-sm text-white/90">Version v{log.version}</div>
-                      <div className="text-sm text-white/80">By {log.updated_by} • {new Date(log.updated_at).toLocaleString()}</div>
+              <div className="overflow-y-auto p-4 space-y-4">
+                {(grouped.find(g => g.kpi_id === modalKpiId)?.entries || []).map((log) => (
+                  <div 
+                    key={`log-${log.kpi_id}-${log.version}-${log.updated_at}`} 
+                    className="bg-white/10 border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-colors"
+                  >
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div className="px-2 py-0.5 text-white text-md font-medium rounded">
+                         Version v{log.version}
+                        </div>
+                        <div className="text-sm text-white/80">
+                          Updated by <span className="text-white font-medium">{log.updated_by}</span>
+                        </div>
+                      </div>
+                      <div className="text-sm text-white/60 mt-1 sm:mt-0">
+                       Updated at: {new Date(log.updated_at).toLocaleString()}
+                      </div>
                     </div>
-                    <div className="mt-2">{renderChanges(log.changes)}</div>
+                    <div className="mt-2 pl-1">
+                      {renderChanges(log.changes)}
+                    </div>
+                    
                   </div>
+                  
                 ))}
+                <div className='flex justify-end'>
+                <div className='text-lg px-4 py-2 w-fit rounded bg-gray-600 hover:bg-gray-700' onClick={()=>{ setModalOpen(false); setModalKpiId(null); }}><button>Close</button></div>
+              </div>
               </div>
             </div>
           </div>

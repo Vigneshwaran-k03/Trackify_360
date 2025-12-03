@@ -161,7 +161,7 @@ export default function ManagerKpiLog() {
       <div className="p-4 sm:p-6">
         
         {/* Filter Bar Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 mb-4">
+        <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 md:p-8 max-w-7xl mx-auto">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <h1 className="text-3xl text-white font-semibold">KPI Log</h1>
@@ -270,13 +270,19 @@ export default function ManagerKpiLog() {
             <div className="p-4 sm:p-6 space-y-3 overflow-y-auto flex-1 text-white">
               {(grouped.find(g=> g.kpi_id===modalKpiId)?.entries || []).map((log) => (
                 <div key={`log-${log.kpi_id}-${log.version}-${log.updated_at}`} className="bg-white/10 border border-white/20 rounded-lg p-3">
+                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div className="text-sm text-white font-medium">Version v{log.version}</div>
-                    <div className="text-sm text-white">By {log.updated_by} • {new Date(log.updated_at).toLocaleString()}</div>
+                    <div className="px-2 py-0.5 text-white text-md font-medium rounded">Version v{log.version}</div>
+                    <div className="text-sm text-white">Updated By {log.updated_by}</div>
                   </div>
+                  <div className="text-sm text-white">Updated at: {new Date(log.updated_at).toLocaleString()}</div>
+                </div>  
                   <div className="mt-2">{renderChanges(log.changes)}</div>
                 </div>
               ))}
+              <div className='flex justify-end'>
+                <div className='text-lg px-4 py-2 w-fit rounded bg-gray-600 hover:bg-gray-700'  onClick={()=>{ setModalOpen(false); setModalKpiId(null); }}><button>Close</button></div>
+              </div>
             </div>
           </div>
         </div>

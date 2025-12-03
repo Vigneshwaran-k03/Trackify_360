@@ -19,7 +19,7 @@ import html2canvas from 'html2canvas';
 import { exportChartFromRef, exportSectionById, exportTableToCSV, exportTableToExcel } from '../../utils/exportUtils';
 import axios from 'axios';
 import { getToken, getRole, getUserName } from '../../utils/authStorage';
-import { Download, FunnelPlus,CircleFadingPlus } from 'lucide-react';
+import { Download, FunnelPlus,CircleFadingPlus, PencilRuler,Eye } from 'lucide-react';
 export default function ManagerDashboard() {
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
   const [userName, setUserName] = useState('');
@@ -805,20 +805,6 @@ export default function ManagerDashboard() {
     }
   };
 
-  const removeKpi = async (kpiId) => {
-    try {
-      if (!window.confirm('Send a deletion request for this KPI to the Admin?')) return;
-      const token = getToken();
-      await axios.post('http://localhost:3000/requests/kpi-change', {
-        kpi_id: Number(kpiId),
-        action: 'delete',
-        requested_changes: {},
-        request_comment: 'Manager requested KPI deletion'
-      }, { headers: { Authorization: `Bearer ${token}` } });
-      alert('Deletion request sent to Admin.');
-      fetchMyKPIs();
-    } catch (_) {}
-  };
 
   // Updated link color for readability
   const renderCommentHtml = (text) => {
@@ -1433,13 +1419,11 @@ export default function ManagerDashboard() {
                     <div className="flex gap-3">
                       {(() => { const today = new Date(); today.setHours(0,0,0,0); const overdue = kpi.due_date && new Date(kpi.due_date) < today; return (
                         overdue ? (
-                          <button className="text-white border border-red-600 rounded bg-red-400 hover:bg-red-600 px-1" onClick={() => removeKpi(kpi.id)}>Remove</button>
+                          <span>--</span>
                         ) : (
                           <>
-                            <button className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1" onClick={() => openScoreModal(kpi)}>View</button>
-                            <button className="text-white border border-green-600 rounded bg-green-400 hover:bg-green-600 px-1" onClick={() => openEditModal(kpi)}>Edit</button>
-                            <button className="text-white border border-red-600 rounded bg-red-400 hover:bg-red-600 px-1" onClick={() => removeKpi(kpi.id)}>Remove</button>
-                          </>
+                            <button className="text-white border border-indigo-600 rounded bg-indigo-500 hover:bg-indigo-600 px-1" onClick={() => openScoreModal(kpi)}><Eye className='w-6 h-6'/></button>
+                            <button className="text-white border border-green-600 rounded bg-green-500 hover:bg-green-600 px-1" onClick={() => openEditModal(kpi)}><PencilRuler className='w-6 h-6'/></button>                          </>
                         )
                       ); })()}
                     </div>
@@ -1780,7 +1764,7 @@ export default function ManagerDashboard() {
               </thead>
               <tbody className="divide-y divide-white/10 text-gray-200">
                 {perfReviews.map((r, idx) => (
-                  <tr key={idx} className="hover:bg-white/5">
+                  <tr key={idx} className="border-b border-white/20">
                     <td className="p-2  font-medium">{r.kra_name || '-'}</td>
                     <td className="p-2  font-medium">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
                     <td className="p-2  font-medium">{r.score || '-'}</td>
@@ -1881,7 +1865,7 @@ export default function ManagerDashboard() {
           {/* Manager KRA Performance (Reviews) */}
           <div className="backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-medium text-white">My KRA Performance</h4>
+              <h4 className="font-medium text-white">KRA Performance</h4>
             </div>
             {perfKraSeries.labels.length ? (
               <div className="h-48 md:h-52">
@@ -1903,7 +1887,7 @@ export default function ManagerDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-medium text-white">My KRA Scores</h4>
+              <h4 className="font-medium text-white">KRA Scores(Active)</h4>
             </div>
             {(() => {
               const me = String(userName||'').toLowerCase();
@@ -1937,7 +1921,7 @@ export default function ManagerDashboard() {
 
           <div className="backdrop-blur-md rounded-lg p-4 shadow-lg border border-white/20 min-h-[260px]">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-medium text-white">My KPI Scores</h4>
+              <h4 className="font-medium text-white">KPI Scores(Active)</h4>
             </div>
             {(() => {
               const today = new Date(); today.setHours(0,0,0,0);
@@ -1960,16 +1944,17 @@ export default function ManagerDashboard() {
         </div>
 
         {/* Tables: KRA details, KPI details, logs, employees with scores */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {/* KRA details (assigned by admin to manager) */}
           <div className="border border-white/20 rounded p-4 bg-white/5">
-            <h4 className="font-medium text-white mb-3">My KRA Details</h4>
+            <h4 className="font-medium text-white mb-3">KRA Details</h4>
             <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-white/20 bg-white/20">
                     <th className="text-left p-3 text-white font-semibold">KRA</th>
                     <th className="text-left p-3 text-white font-semibold">Definition</th>
+                    <th className="text-left p-3 text-white font-semibold">Target</th>
                     <th className="text-left p-3 text-white font-semibold">Overall</th>
                   </tr>
                 </thead>
@@ -1978,6 +1963,7 @@ export default function ManagerDashboard() {
                     <tr key={k.kra_id} className="border-b border-white/20">
                       <td className="p-2 font-medium">{k.name}</td>
                       <td className="p-2 font-medium">{k.definition || k.def || '-'}</td>
+                      <td className="p-2 font-medium">{typeof k.target === 'number' ? `${k.target}%` : (k.target ? `${k.target}%` : '-')}</td>
                       <td className="p-2 font-medium">{(() => {
                         const today = new Date(); today.setHours(0,0,0,0);
                         const arr = (myKPIs||[])

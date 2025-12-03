@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getToken, getRole, getUserName, getEmail } from '../../utils/authStorage';
-// --- IMPORTANT ---
-// Import your background image like this
-import backgroundImage from '../../assets/background.png';
+import { SquarePen,Trash2 } from 'lucide-react';
 
 export default function Kracreation() {
   const [formData, setFormData] = useState({
@@ -300,8 +298,8 @@ export default function Kracreation() {
                     <td className="p-2 text-white">{typeof k.target === 'number' ? k.target : '-'}</td>
                     <td className="p-2">
                       <div className="flex gap-2">
-                        <button type="button" className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white" onClick={()=> openEdit(k)}>Change</button>
-                        <button type="button" className="px-3 py-1 rounded border border-red-600 bg-red-400 text-white hover:bg-red-600 hover:text-white" onClick={()=> removeDirect(k)}>Remove</button>
+                        <button type="button" className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white" onClick={()=> openEdit(k)}><SquarePen className="w-6 h-6"/></button>
+                        <button type="button" className="px-3 py-1 rounded border border-red-600 bg-red-400 text-white hover:bg-red-600 hover:text-white" onClick={()=> removeDirect(k)}><Trash2 className="w-6 h-6"/></button>
                       </div>
                     </td>
                   </tr>

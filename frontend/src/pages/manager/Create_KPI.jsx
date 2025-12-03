@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { getToken, getRole } from '../../utils/authStorage';
-
-// [CHANGE] Import your background image
-// !! You may need to change this path depending on your file structure !!
-import backgroundImage from '../../assets/background.png';
+import { SquarePen,Trash2 } from 'lucide-react';
 
 export default function Create_KPI_Manager() {
   // [LOGIC UNCHANGED]
@@ -238,7 +235,7 @@ export default function Create_KPI_Manager() {
     <div
       className="min-h-screen w-full py-8 px-4" >
       {/* [STYLE CHANGE] Main card with frosted glass effect */}
-      <div className="w-full max-w-6xl mx-auto bg-white/10 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl border border-white/20 text-white">
+      <div className="w-full max-w-7xl mx-auto bg-white/10 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl border border-white/20 text-white">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-bold">Create & My KPI</h2>
           <button onClick={()=>setShowModal(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors">New KPI</button>
@@ -314,10 +311,15 @@ export default function Create_KPI_Manager() {
                     </td>
                     <td className="p-3 text-white">
                       <div className="flex gap-2">
+                        {String(k.kpi_status || '').toLowerCase() == 'end' && (
+                          <>
+                            <button className="px-3 py-1 rounded border border-red-600 bg-red-400 hover:bg-red-600 text-white text-sm transition-colors" onClick={()=>openRemove(k)}><Trash2 className='w-6 h-6' /></button>
+                          </>
+                        )}
                         {String(k.kpi_status || '').toLowerCase() !== 'end' && (
                           <>
-                            <button className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition-colors" onClick={()=>openChange(k)}>Change</button>
-                            <button className="px-3 py-1 rounded border border-red-600 bg-red-400 hover:bg-red-600 text-white text-sm transition-colors" onClick={()=>openRemove(k)}>Remove</button>
+                            <button className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition-colors" onClick={()=>openChange(k)}><SquarePen className='w-6 h-6' /></button>
+                            <button className="px-3 py-1 rounded border border-red-600 bg-red-400 hover:bg-red-600 text-white text-sm transition-colors" onClick={()=>openRemove(k)}><Trash2 className='w-6 h-6' /></button>
                           </>
                         )}
                       </div>

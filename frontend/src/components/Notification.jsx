@@ -238,7 +238,7 @@ export default function Notification() {
     <div className="relative z-50">
       <button
         onClick={() => { if (!open) fetchPendingKPIs(); setOpen(v => !v); }}
-        className={`relative inline-flex items-center justify-center w-10 h-10 rounded-xl border ${
+        className={`relative cursor-pointer inline-flex items-center justify-center w-10 h-10 rounded-xl border ${
           getRole()?.toLowerCase() === 'manager' 
             ? 'border-teal-700 hover:bg-[linear-gradient(135deg,#005F77_0%,#002C33_100%)]' 
             : getRole()?.toLowerCase() === 'employee'

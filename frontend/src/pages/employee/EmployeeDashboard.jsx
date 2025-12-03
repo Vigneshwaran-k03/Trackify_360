@@ -19,7 +19,7 @@ import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfQuarte
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { exportChartFromRef, exportSectionById, exportTableToCSV, exportTableToExcel, downloadBlob } from '../../utils/exportUtils';
-import { Download, FunnelPlus,CircleFadingPlus } from 'lucide-react';
+import { Download, FunnelPlus,CircleFadingPlus,PencilRuler, Eye, Trash2 } from 'lucide-react';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
 
 export default function EmployeeDashboard() {
@@ -407,24 +407,6 @@ export default function EmployeeDashboard() {
       if (e?.response?.status === 401) logoutAndRedirect();
     }
   };
-
-  const removeKpi = async (kpiId) => {
-    try {
-      if (!window.confirm('Send a deletion request for this KPI to your manager?')) return;
-      const token = getToken();
-      await axios.post('http://localhost:3000/requests/kpi-change', {
-        kpi_id: Number(kpiId),
-        action: 'delete',
-        requested_changes: {},
-        request_comment: 'Employee requested KPI deletion'
-      }, { headers: { Authorization: `Bearer ${token}` } });
-      alert('Deletion request sent to your manager.');
-      fetchMyKPIs();
-    } catch (e) {
-      if (e?.response?.status === 401) logoutAndRedirect();
-    }
-  };
-
   const fetchMyKPIs = async () => {
     try {
       const token = getToken();
@@ -1494,7 +1476,7 @@ export default function EmployeeDashboard() {
               })().map((kpi) => {
                 const st = getStatusInfo(kpi.progress, kpi.target);
                 return (
-                  <tr key={kpi.id} className="border-b border-white/20 hover:bg-white/5">
+                  <tr key={kpi.id} className="border-b border-white/20">
                     <td className="p-3 font-medium text-white">{kpi.kra_name || '-'}</td>
                     <td className="p-3 font-medium text-white">{kpi.name}</td>
                     <td className="p-3 font-medium text-white">{kpi.progress}%</td>
@@ -1507,14 +1489,13 @@ export default function EmployeeDashboard() {
                         const isOverdue = kpi.due_date ? new Date(kpi.due_date) < today : false;
                         if (isOverdue) {
                           return (
-                            <button onClick={() => removeKpi(kpi.id)} className="text-white border border-red-600 rounded bg-red-400 hover:bg-red-600 px-1">Remove</button>
+                            <span className="text-white">--</span>
                           );
                         }
                         return (
                           <>
-                            <button onClick={() => openScoreModal(kpi)} className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1">View</button>
-                            <button onClick={() => openEditModal(kpi)} className="text-white border border-green-600 rounded bg-green-400 hover:bg-green-600 px-1">Edit</button>
-                            <button onClick={() => removeKpi(kpi.id)} className="text-white border border-red-600 rounded bg-red-400 hover:bg-red-600 px-1">Remove</button>
+                            <button onClick={() => openScoreModal(kpi)} className="text-white border border-indigo-600 rounded bg-indigo-500 hover:bg-indigo-600 px-1"><Eye className='w-6 h-6' /></button>
+                            <button onClick={() => openEditModal(kpi)} className="text-white border border-green-600 rounded bg-green-500 hover:bg-green-600 px-1"><PencilRuler tooltip='Edit KPI' className='w-6 h-6' /></button>
                           </>
                         );
                       })()}
@@ -1535,7 +1516,7 @@ export default function EmployeeDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {recentKRAs.map((kra) => (
             <div key={kra.kra_id} className="border border-white/30 bg-white/10 rounded p-4">
-              <h4 className="font-medium mb-2 text-white">{kra.name}</h4>
+              <h4 className="font-medium mb-2 text-white text-lg ">{kra.name}</h4>
               <p className="text-sm text-gray-200 mb-3">{kra.definition}</p>
               <div className="flex justify-between items-center text-sm mb-2">
                 <span className="text-white">Due: {new Date(kra.due_date).toLocaleDateString()}</span>
@@ -1597,7 +1578,7 @@ export default function EmployeeDashboard() {
               </thead>
               <tbody className="divide-y divide-white/10 text-gray-200">
                 {perfReviews.map((r, idx) => (
-                  <tr key={idx} className="hover:bg-white/5">
+                  <tr key={idx} className="border-b border-white/20">
                     <td className="p-2  font-medium">{r.kra_name || '-'}</td>
                     <td className="p-2  font-medium">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
                     <td className="p-2  font-medium">{r.score || '-'}</td>
@@ -1741,7 +1722,7 @@ summary: (
           {/* KRA Scores */}
           <div className=" backdrop-blur-md p-4 rounded-lg shadow-xl border border-white/20" id="employee-summary-kra-chart">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <h4 className="font-medium text-white">KRA Scores</h4>
+              <h4 className="font-medium text-white">KRA Performance</h4>
             </div>
             {(() => {
               const today = new Date(); today.setHours(0,0,0,0);
@@ -1766,7 +1747,7 @@ summary: (
           {/* KPI Scores (all active KPIs) */}
           <div className="backdrop-blur-md p-4 rounded-lg shadow-xl border border-white/20" id="employee-summary-kpi-chart">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <h4 className="font-medium text-white">KPI Scores (All Active KPIs)</h4>
+              <h4 className="font-medium text-white">KPI Scores(Active)</h4>
             </div>
             {(() => {
               const today = new Date(); today.setHours(0,0,0,0);
@@ -1793,28 +1774,30 @@ summary: (
             <div className="flex items-center justify-between mb-3">
               <h4 className="font-medium text-white">KRA Details</h4>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/20 text-left text-gray-200">
-                    <th className="py-2 pr-3">KRA</th>
-                    <th className="py-2 pr-3">Target %</th>
-                    <th className="py-2 pr-3">Overall %</th>
+                  <tr className="border-b border-white/20 bg-white/20">
+                    <th className="text-left p-3 text-white font-semibold">KRA</th>
+                    <th className="text-left p-3 text-white font-semibold">Definition</th>
+                    <th className="text-left p-3 text-white font-semibold">Target %</th>
+                    <th className="text-left p-3 text-white font-semibold">Overall %</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-100">
                   {allKras.map(k => {
                     const agg = kraAggregates[k.kra_id] ?? 0;
                     return (
-                      <tr key={k.kra_id} className="border-b border-white/10">
-                        <td className="py-2 pr-3">{k.name}</td>
-                        <td className="py-2 pr-3">{typeof k.target === 'number' ? `${k.target}%` : '-'}</td>
-                        <td className="py-2 pr-3">{agg}%</td>
+                      <tr key={k.kra_id} className="border-b border-white/20">
+                        <td className="p-2 font-medium">{k.name}</td>
+                        <td className="p-2 font-medium">{k.definition || k.def || '-'}</td>
+                        <td className="p-2 font-medium">{typeof k.target === 'number' ? `${k.target}%` : '-'}</td>
+                        <td className="p-2 font-medium">{agg}%</td>
                       </tr>
                     );
                   })}
                   {allKras.length === 0 && (
-                    <tr><td className="py-3 text-gray-300" colSpan={3}>No KRAs available.</td></tr>
+                    <tr><td className="py-3 text-gray-300" colSpan={4}>No KRAs available.</td></tr>
                   )}
                 </tbody>
               </table>
@@ -1826,27 +1809,27 @@ summary: (
             <div className="flex items-center justify-between mb-3">
               <h4 className="font-medium text-white">KPI Details</h4>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/20 text-left text-gray-200">
-                    <th className="py-2 pr-3">KPI</th>
-                    <th className="py-2 pr-3">KRA</th>
-                    <th className="py-2 pr-3">Target %</th>
-                    <th className="py-2 pr-3">Progress %</th>
-                    <th className="py-2 pr-3">Due Date</th>
+                  <tr className="border-b border-white/20 bg-white/20">
+                    <th className="text-left p-3 text-white font-semibold">KPI</th>
+                    <th className="text-left p-3 text-white font-semibold">KRA</th>
+                    <th className="text-left p-3 text-white font-semibold">Target %</th>
+                    <th className="text-left p-3 text-white font-semibold">Progress %</th>
+                    <th className="text-left p-3 text-white font-semibold">Due Date</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-100">
                   {myKPIs.map(k => {
                     const kra = allKras.find(x => String(x.kra_id)===String(k.kra_id));
                     return (
-                      <tr key={k.id} className="border-b border-white/10">
-                        <td className="py-2 pr-3">{k.name}</td>
-                        <td className="py-2 pr-3">{kra?.name || k.kra_name || '-'}</td>
-                        <td className="py-2 pr-3">{typeof k.target === 'number' ? `${k.target}%` : '-'}</td>
-                        <td className="py-2 pr-3">{typeof k.progress === 'number' ? `${k.progress}%` : '-'}</td>
-                        <td className="py-2 pr-3">{k.due_date ? new Date(k.due_date).toLocaleDateString() : '-'}</td>
+                      <tr key={k.id} className="border-b border-white/20">
+                        <td className="p-2 font-medium">{k.name}</td>
+                        <td className="p-2 font-medium">{kra?.name || k.kra_name || '-'}</td>
+                        <td className="p-2 font-medium">{typeof k.target === 'number' ? `${k.target}%` : '-'}</td>
+                        <td className="p-2 font-medium">{typeof k.progress === 'number' ? `${k.progress}%` : '-'}</td>
+                        <td className="p-2 font-medium">{k.due_date ? new Date(k.due_date).toLocaleDateString() : '-'}</td>
                       </tr>
                     );
                   })}
@@ -1864,23 +1847,23 @@ summary: (
             <div className="flex items-center justify-between mb-3">
               <h4 className="font-medium text-white">Manager Reviews</h4>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto bg-black/20 rounded-lg shadow-inner">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/20 text-left text-gray-200">
-                    <th className="py-2 pr-3">KRA</th>
-                    <th className="py-2 pr-3">Score %</th>
-                    <th className="py-2 pr-3">Comment</th>
-                    <th className="py-2 pr-3">Reviewed At</th>
+                  <tr className="border-b border-white/20 bg-white/20">
+                    <th className="text-left p-3 text-white font-semibold">KRA</th>
+                    <th className="text-left p-3 text-white font-semibold">Score</th>
+                    <th className="text-left p-3 text-white font-semibold">Comment</th>
+                    <th className="text-left p-3 text-white font-semibold">Reviewed At</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-100">
                   {perfReviews.map(r => (
-                    <tr key={r.id} className="border-b border-white/10">
-                      <td className="py-2 pr-3">{r.kra_name || '-'}</td>
-                      <td className="py-2 pr-3">{typeof r.score === 'number' ? r.score : (r.score ?? '-')}</td>
-                      <td className="py-2 pr-3"><span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></td>
-                      <td className="py-2 pr-3">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
+                    <tr key={r.id} className="border-b border-white/20">
+                      <td className="p-2 font-medium">{r.kra_name || '-'}</td>
+                      <td className="p-2 font-medium">{typeof r.score === 'number' ? r.score : (r.score ?? '-')}</td>
+                      <td className="p-2 font-medium"><span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></td>
+                      <td className="p-2 font-medium">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
                     </tr>
                   ))}
                   {perfReviews.length === 0 && (

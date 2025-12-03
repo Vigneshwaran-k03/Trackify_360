@@ -161,7 +161,7 @@ export default function AdminKpiLog() {
       <div className="min-h-screen p-4 md:p-8">
         
         {/* Filter Bar Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-4 md:p-8 max-w-7xl mx-auto">
+        <div className="bg-white/10 border border-white/20 backdrop-blur-md rounded-lg shadow-xl p-4 md:p-8 max-w-7xl mx-auto">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <h1 className="text-3xl text-white font-semibold">KPI Log</h1>
@@ -278,6 +278,9 @@ export default function AdminKpiLog() {
                   <div className="mt-2">{renderChanges(log.changes)}</div>
                 </div>
               ))}
+              <div className='flex justify-end'>
+                <div className='text-lg px-4 py-2 w-fit rounded bg-gray-600 hover:bg-gray-700'  onClick={()=>{ setModalOpen(false); setModalKpiId(null); }}><button>Close</button></div>
+              </div>
             </div>
           </div>
         </div>

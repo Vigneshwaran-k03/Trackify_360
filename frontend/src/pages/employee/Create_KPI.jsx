@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getToken, getRole } from '../../utils/authStorage';
-
-// --- IMPORTANT ---
-// Import your background image like this
-import backgroundImage from '../../assets/background.png';
-
+import { SquarePen,Trash2 } from 'lucide-react';
 export default function Create_KPI_Employee() {
   const [form, setForm] = useState({ name: '', def: '', kra_id: '', due_date: '', scoring_method: '', target: '' });
   const [kras, setKras] = useState([]);
@@ -20,6 +16,33 @@ export default function Create_KPI_Employee() {
   const selectedKra = kras.find(k => String(k.kra_id) === String(form.kra_id));
   const [userDept, setUserDept] = useState('');
   const [userRole, setUserRole] = useState('');
+
+  // Function to handle KPI deletion request
+  const removeKpi = async (kpiId) => {
+    try {
+      if (!window.confirm('Send a deletion request for this KPI to your manager?')) return;
+      const token = getToken();
+      await axios.post('http://localhost:3000/requests/kpi-change', {
+        kpi_id: Number(kpiId),
+        action: 'delete',
+        requested_changes: {},
+        request_comment: 'Employee requested KPI deletion'
+      }, { 
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        } 
+      });
+      alert('Deletion request sent to your manager.');
+      fetchMyKpis(statusFilter); // Refresh the KPI list
+    } catch (error) {
+      console.error('Error requesting KPI deletion:', error);
+      alert('Failed to send delete request. Please try again.');
+      if (error?.response?.status === 401) {
+        window.location.href = '/login';
+      }
+    }
+  };
 
   useEffect(() => {
     if (!message) return;
@@ -165,13 +188,13 @@ export default function Create_KPI_Employee() {
   return (
     // New wrapper div for background image
     <div
-      className="min-h-screen p-4 md:p-8"
+      className="min-h-screen w-full p-4 md:p-8"
     >
       {/* Main Frosted Glass Card */}
-      <div className="min-h-screen text-white mx-auto bg-white/20 backdrop-blur-md p-8 rounded-lg shadow-xl max-w-7xl">
+      <div className="w-full max-w-7xl mx-auto bg-white/10 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl border border-white/20 text-whitel">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white">Create & My KPI</h2>
-          <button onClick={()=>setShowModal(true)} className="bg-indigo-600 text-white px-4 py-2 rounded">New KPI</button>
+          <h2 className="text-3xl font-bold text-white">Create & My KPI</h2>
+          <button onClick={()=>setShowModal(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors">New KPI</button>
         </div>
         
         {message && (
@@ -186,25 +209,25 @@ export default function Create_KPI_Employee() {
               <div className="flex items-center gap-2">
                 <label className="text-sm whitespace-nowrap text-gray-100">Status:</label>
                 <select 
-                  className="border border-white/30 rounded px-2 py-1 bg-white/80 text-black min-w-[120px]" 
+                  className="border border-gray-400 rounded px-2 py-1 bg-transparent text-white" 
                   value={statusFilter} 
                   onChange={(e)=>setStatusFilter(e.target.value)}
                 >
-                  <option value="Active">Active</option>
-                  <option value="End">End</option>
-                  <option value="All">All</option>
+                  <option className='text-black' value="Active">Active</option>
+                  <option className='text-black' value="End">End</option>
+                  <option className='text-black' value="All">All</option>
                 </select>
               </div>
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <label className="text-sm whitespace-nowrap text-gray-100">Filter by KRA:</label>
                 <select 
-                  className="border border-white/30 rounded px-2 py-1 bg-white/80 text-black flex-1 min-w-[150px]" 
+                  className="border border-gray-400 rounded px-2 py-1 bg-transparent text-white" 
                   value={kraFilter} 
                   onChange={(e)=>setKraFilter(e.target.value)}
                 >
-                  <option value="">All KRAs</option>
+                  <option className='text-black' value="">All KRAs</option>
                   {[...new Map(myKpis.map(k=>[k.kra_id, k.kra_name]))].map(([id, name]) => (
-                    <option key={id} value={id}>{name}</option>
+                    <option className='text-black' key={id} value={id}>{name}</option>
                   ))}
                 </select>
               </div>
@@ -213,22 +236,80 @@ export default function Create_KPI_Employee() {
           
           {!myKpis.length && <div className="text-sm text-gray-200">No KPIs created yet.</div>}
           
-          <ul className="divide-y divide-white/20">
-            {filteredKpis.map(k => (
-              <li key={k.id} className="py-2 flex items-center justify-between">
-                <div>
-                  <div className="font-medium text-white">{k.name}</div>
-                  <div className="text-xs text-gray-200">KRA: {k.kra_name} • Due: {k.due_date ? new Date(k.due_date).toLocaleDateString() : '-'}</div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-xs text-gray-100">Status: {k.kpi_status}</div>
-                  {String(k.kpi_status || '').toLowerCase() !== 'end' && (
-                    <button className="px-2 py-1 border border-white/30 rounded text-white hover:bg-white/10" onClick={()=>openChange(k)}>Change</button>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-x-auto rounded-lg border border-white/30">
+            <table className="min-w-full border border-white/20 text-left">
+              <thead>
+                <tr className="bg-white/20 border-b border-white/30">
+                  <th className="p-3 text-white font-semibold">KPI Name</th>
+                  <th className="p-3 text-white font-semibold">KRA Name</th>
+                  <th className="p-3 text-white font-semibold">Definition</th>
+                  <th className="p-3 text-white font-semibold">Target</th>
+                  <th className="p-3 text-white font-semibold">Due Date</th>
+                  <th className="p-3 text-white font-semibold">Status</th>
+                  <th className="p-3 text-white font-semibold">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredKpis.map(k => (
+                  <tr key={k.id} className="border-t border-white/20 bg-black/20 transition-colors">
+                    <td className="p-3 text-white">{k.name || '-'}</td>
+                    <td className="p-3 text-white">{k.kra_name || '-'}</td>
+                    <td className="p-3 text-white">
+                      <div className="p-3 text-white">{k.def || 'No definition'}</div>
+                    </td>
+                    <td className="p-3 text-white">{k.target !== null && k.target !== undefined ? k.target : '-'}</td>
+                    <td className="p-3 text-white">
+                      {k.due_date ? new Date(k.due_date).toLocaleDateString() : '-'}
+                    </td>
+                    <td className="p-3 text-white">
+                      <span className={`px-2 py-1 rounded text-md font-medium ${
+                        String(k.kpi_status || '').toLowerCase() === 'active' 
+                          ? 'text-green-300' 
+                          : String(k.kpi_status || '').toLowerCase() === 'end'
+                            ? 'text-red-300'
+                            : 'text-gray-300'
+                      }`}>
+                        {k.kpi_status || 'Inactive'}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <div className="flex space-x-2">
+                        {String(k.kpi_status || '').toLowerCase() == 'end' && (
+                            <>
+                        <button 
+                          className="px-3 py-1 rounded border border-red-600 bg-red-400 hover:bg-red-600 text-white text-sm transition-colors"
+                          onClick={() => removeKpi(k.id)}
+                          title="Request KPI Deletion"
+                        >
+                          <Trash2 className='w-6 h-6' />
+                        </button>
+                        </>
+                        )}
+                        {String(k.kpi_status || '').toLowerCase() !== 'end' && (
+                            <>
+                        <button 
+                          className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition-colors"
+                          onClick={() => openChange(k)}
+                          title="Edit KPI"
+                        >
+                          <SquarePen className='w-6 h-6' />
+                        </button>
+                        <button 
+                          className="px-3 py-1 rounded border border-red-600 bg-red-400 hover:bg-red-600 text-white text-sm transition-colors"
+                          onClick={() => removeKpi(k.id)}
+                          title="Request KPI Deletion"
+                        >
+                          <Trash2 className='w-6 h-6' />
+                        </button>
+                        </>
+                         )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Create KPI Modal */}

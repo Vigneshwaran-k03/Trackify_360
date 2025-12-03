@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getToken, getRole, getUserName } from '../../utils/authStorage';
-// Import the background image
-import backgroundImage from '../../assets/background.png';
+import { SquarePen,Trash2 } from 'lucide-react';
 
 export default function ManagerKracreation() {
   const [formData, setFormData] = useState({
@@ -277,7 +276,7 @@ export default function ManagerKracreation() {
                   {(selectedEmployee ? myKras.filter(k => String(k.employee_name||'') === selectedEmployee) : myKras).map(k => (
                     <tr key={k.kra_id} className="border-t border-white/20 bg-black/20 transition-colors">
                       <td className="p-3 text-white">{k.name}</td>
-                      <td className="p-3 max-w-xs text-white" title={k.definition}>{k.definition}</td>
+                      <td className="p-3 max-w-xs text-white" >{k.definition}</td>
                       <td className="p-3 text-white">{typeof k.target === 'number' ? k.target : '-'}</td>
                       <td className="p-3 text-white">{k.employee_name || '-'}</td>
                       <td className="p-3 text-white">
@@ -287,7 +286,7 @@ export default function ManagerKracreation() {
                             className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white"
                             onClick={()=> openEdit(k)}
                           >
-                            Change
+                            <SquarePen className='w-6 h-6' />
                           </button>
                           {/* Faded red button style from image */}
                           <button
@@ -295,7 +294,7 @@ export default function ManagerKracreation() {
                             className="px-3 py-1 rounded border border-red-600 bg-red-400 text-white hover:bg-red-600 hover:text-white"
                             onClick={()=> requestRemove(k)}
                           >
-                            Remove
+                            <Trash2 className='w-6 h-6' />
                           </button>
                         </div>
                       </td>

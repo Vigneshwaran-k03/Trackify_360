@@ -14,10 +14,6 @@ import female3 from '../../assets/profile_image/female3.png';
 import female4 from '../../assets/profile_image/female4.png';
 import female5 from '../../assets/profile_image/female5.png';
 
-// --- IMPORTANT ---
-// Import your background image like this
-import backgroundImage from '../../assets/background.png';
-
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function ManagerProfile() {
@@ -174,11 +170,11 @@ export default function ManagerProfile() {
       <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-xl max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-3xl font-semibold text-white">My Profile</h3>
-          <button onClick={()=>setCpOpen(true)} className="px-3 py-2 rounded bg-sky-400 hover:bg-sky-500 text-white text-sm">Change Password</button>
+          <button onClick={()=>setCpOpen(true)} className="px-3 py-2 rounded bg-sky-400 cursor-pointer hover:bg-sky-500 text-white text-sm">Change Password</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h4 className="font-medium mb-3 text-gray-100">Personal Information</h4>
+            <h4 className="font-medium text-lg mb-3 text-white">Personal Information</h4>
             <div className="space-y-2 text-white">
               <p><span className="font-medium  text-white">Name:</span> {userName}</p>
               <p><span className="font-medium text-white">Department:</span> {userDept}</p>
@@ -187,7 +183,7 @@ export default function ManagerProfile() {
             </div>
           </div>
           <div>
-            <h4 className="font-medium mb-3 text-gray-100">Profile Picture</h4>
+            <h4 className="font-medium text-lg mb-3 text-white">Profile Picture</h4>
             <div className="flex flex-col lg:flex-row items-start gap-4">
               <img
                 src={pendingFile ? pendingAvatar : resolveAvatar(pendingAvatar || avatar)}
@@ -197,13 +193,13 @@ export default function ManagerProfile() {
               <div className="flex-1 space-y-3 w-full">
                 <div className="grid grid-cols-5 gap-3">
                   {['male1','male2','male3','male4','male5','female1','female2','female3','female4','female5'].map(key=> (
-                    <button type="button" key={key} onClick={()=>selectDefault(key)} className={`border border-white/30 rounded overflow-hidden focus:outline-none ${(pendingAvatar===`default:${key}`) || (!pendingAvatar && avatar===`default:${key}`) ? 'ring-2 ring-indigo-400' : ''}`}>
-                      <img src={resolveAvatar(`default:${key}`)} alt={key} className="w-16 h-16 object-cover" />
+                    <button type="button" key={key} onClick={()=>selectDefault(key)} className={`border border-white/30 cursor-pointer rounded overflow-hidden focus:outline-none ${(pendingAvatar===`default:${key}`) || (!pendingAvatar && avatar===`default:${key}`) ? 'ring-2 ring-indigo-400' : ''}`}>
+                      <img src={resolveAvatar(`default:${key}`)} alt={key} className="w-20 h-20 object-cover" />
                     </button>
                   ))}
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-1 block text-gray-100">Upload from device</label>
+                  <label className="text-sm font-medium mb-1 block text-white">Upload from device</label>
                   <input ref={fileRef} type="file" accept="image/*" onChange={onUpload} className="hidden" />
                   <button type="button" onClick={()=>fileRef.current?.click()} className="px-3 py-2 rounded border border-white/30 text-sm text-white hover:bg-white/10">Choose from local</button>
                 </div>
@@ -219,12 +215,12 @@ export default function ManagerProfile() {
         </div>
 
         <div className="mt-8">
-          <h4 className="font-medium mb-4 text-white">My Performance</h4>
+          <h4 className="font-medium mb-4 text-lg text-white">My Performance</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Gauge 1 Card */}
-            <div className="border border-white/30 rounded p-4 bg-white/10">
+            <div className="border border-white/30 rounded p-4 bg-white/5">
               <div className="flex items-center justify-between mb-3">
-                <div className="font-medium">{new Date(gauge1Filter.year, gauge1Filter.month - 1).toLocaleString('default', { month: 'long' })}</div>
+                <div className="font-medium text-white text-md">{new Date(gauge1Filter.year, gauge1Filter.month - 1).toLocaleString('default', { month: 'long' })}</div>
                 <div className="flex items-center gap-2">
                   <input type="number" className="p-2 border border-white/30 rounded w-24 text-white" value={gauge1Filter.year} onChange={(e)=>setGauge1Filter(prev=>({ ...prev, year: Number(e.target.value) }))} />
                   <select className="p-2 border border-white/30 rounded text-white" value={gauge1Filter.month} onChange={(e)=>setGauge1Filter(prev=>({ ...prev, month: Number(e.target.value) }))}>
@@ -241,7 +237,7 @@ export default function ManagerProfile() {
               </div>
             </div>
             {/* Gauge 2 Card */}
-            <div className="border border-white/30 rounded p-4 bg-white/10">
+            <div className="border border-white/30 rounded p-4 bg-white/5">
               <div className="flex items-center justify-between mb-3">
                 <div className="font-medium"> {new Date(gauge2Filter.year, gauge2Filter.month - 1).toLocaleString('default', { month: 'long' })}</div>
                 <div className="flex items-center gap-2">
@@ -268,13 +264,14 @@ export default function ManagerProfile() {
             <div className="bg-gray-800 backdrop-blur-md border border-white/30 w-full max-w-md rounded-lg shadow-xl p-6 text-white">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="text-lg font-semibold text-white">Change Password</h4>
-                <button onClick={()=>setCpOpen(false)} className="text-gray-100 hover:text-white">✕</button>
+                <button onClick={()=>setCpOpen(false)} className="text-white hover:text-gray-200">✕</button>
               </div>
               <div className="space-y-3">
                 <div>
                   <label className="block text-sm mb-1 text-white">Email</label>
-                  <input disabled value={userEmail} className="w-full p-2 border border-white/30 rounded bg-white/30 text-white" />
+                  <input disabled value={userEmail} className="w-full p-2 border border-white/30 rounded bg-white/20 text-white" />
                 </div>
+                <div className="flex items-center justify-end">
                 <button
                   onClick={async()=>{
                     try {
@@ -289,6 +286,7 @@ export default function ManagerProfile() {
                   disabled={cpLoading}
                 >{cpLoading? 'Sending...' : 'Send verification'}</button>
                 {cpMsg && <div className="text-sm text-emerald-300">{cpMsg}</div>}
+              </div>
               </div>
             </div>
           </div>
