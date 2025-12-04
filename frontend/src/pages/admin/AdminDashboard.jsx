@@ -20,11 +20,6 @@ import { getToken, getRole, getUserName } from '../../utils/authStorage';
 import { exportSectionById, exportTableToCSV, exportTableToExcel } from '../../utils/exportUtils';
 import { Download, FunnelPlus,CircleFadingPlus } from 'lucide-react';
 
-// --- IMPORTANT ---
-// Import your background image.
-// You may need to change this path depending on your folder structure.
-import bgImage from '../../assets/background.png';
-
 export default function AdminDashboard() {
   const [userName, setUserName] = useState('');
   const [selectedDept, setSelectedDept] = useState('');
@@ -1755,7 +1750,7 @@ export default function AdminDashboard() {
             <div className="space-y-2">
               <label className="block text-sm font-medium mb-1 text-gray-200">Rating Band</label>
               <select
-                className="w-full p-2 border border-white/30 rounded bg-white/5 text-white"
+                className="w-full p-2 border border-white/30 rounded bg-white/5 text-white max-w-full whitespace-nowrap overflow-hidden text-ellipsis"
                 value={revRatingBand}
                 onChange={(e)=>{
                   setRevRatingBand(e.target.value);

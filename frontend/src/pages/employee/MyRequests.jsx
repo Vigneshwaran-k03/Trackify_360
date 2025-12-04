@@ -125,7 +125,7 @@ export default function EmployeeMyRequests() {
               </div>
               <div className="flex items-center justify-end gap-2 mt-4">
                 <button 
-                  className="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 transition-colors" 
+                  className="px-4 py-2 rounded border border-white/50 text-white hover:bg-white/20 transition-colors" 
                   onClick={()=>setDetail(null)}
                 >
                   Close

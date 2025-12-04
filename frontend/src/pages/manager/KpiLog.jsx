@@ -227,7 +227,7 @@ export default function ManagerKpiLog() {
         {!loading && !groupedFiltered.length && <div className="text-white text-lg p-4 font-semibold text-center">No logs found</div>}
         
         {/* Log Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 py-7 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 py-7 gap-4 mx-auto">
           {groupedFiltered.map(({ kpi_id, latest }) => (
             <div key={`card-${kpi_id}`} className="bg-white/2 mt-3  backdrop-blur-sm border border-white/20 rounded-lg p-4 shadow-lg flex flex-col justify-between">
               <div>

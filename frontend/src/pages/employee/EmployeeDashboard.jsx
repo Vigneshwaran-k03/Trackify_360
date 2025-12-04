@@ -23,6 +23,7 @@ import { Download, FunnelPlus,CircleFadingPlus,PencilRuler, Eye, Trash2 } from '
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend);
 
 export default function EmployeeDashboard() {
+  const [showExportMenu, setShowExportMenu] = useState(false);
   const [userName, setUserName] = useState('');
   const [userDept, setUserDept] = useState('');
   const [userEmail, setUserEmail] = useState('');
@@ -926,8 +927,16 @@ export default function EmployeeDashboard() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
           <h3 className="text-xl font-semibold text-white mb-2 sm:mb-0">Overview</h3>
           <div className="relative">
-            <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}><Download className='w-4 h-4'/></button>
-            <div className="absolute right-0 mt-1 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
+            <button 
+              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" 
+              onClick={() => setShowExportMenu(!showExportMenu)}
+            >
+              <Download className='w-4 h-4'/>
+            </button>
+            <div 
+              className={`absolute right-0 mt-1 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20 ${!showExportMenu ? 'hidden' : ''}`}
+              onMouseLeave={() => setShowExportMenu(false)}
+            >
               <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>exportSectionById('employee-overview-section','employee-overview','pdf')}>PDF</button>
               <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>exportSectionById('employee-overview-section','employee-overview','png')}>PNG</button>
               <button className="block w-full text-left px-3 py-2 text-black hover:bg-gray-50" onClick={()=>exportSectionById('employee-overview-section','employee-overview','jpg')}>JPG</button>

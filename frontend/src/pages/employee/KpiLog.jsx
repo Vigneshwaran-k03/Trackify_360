@@ -128,7 +128,7 @@ export default function EmployeeKpiLog() {
         )}
 
         {/* Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 py-7 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 py-7 gap-4 max-w-7xl mx-auto">
           {groupedFiltered.map(({ kpi_id, latest }) => (
             <div key={`card-${kpi_id}`} className="bg-white/2 mt-3 backdrop-blur-sm border border-white/20 rounded-lg p-4 shadow-lg">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">

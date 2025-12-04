@@ -151,9 +151,9 @@ export default function ManagerKraLog() {
     <div
       className="min-h-screen w-full"
     >
-     <div className='p-4 sm:p-6'>
+     <div className='p-4 md:p-6'>
       {/* Content container with padding */}
-       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 mb-4">
+       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl border border-white/20 p-4 md:p-8 max-w-7xl mx-auto">
         {/* Header/Filter bar with glassmorphism */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
