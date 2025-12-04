@@ -26,7 +26,7 @@ export default function ManagerProfile() {
   const [pendingFile, setPendingFile] = useState(null);
   const [cpOpen, setCpOpen] = useState(false);
   const [cpLoading, setCpLoading] = useState(false);
-  const [cpMsg, setCpMsg] = useState('');
+  const [toast, setToast] = useState({ show: false, message: '', isError: false });
   const fileRef = useRef(null);
 
   // Two gauges with independent filters (match ManagerDashboard profile UX)
@@ -168,9 +168,26 @@ export default function ManagerProfile() {
     >
       {/* Main Frosted Glass Card */}
       <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg shadow-xl max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-3xl font-semibold text-white">My Profile</h3>
-          <button onClick={()=>setCpOpen(true)} className="px-3 py-2 rounded bg-sky-400 cursor-pointer hover:bg-sky-500 text-white text-sm">Change Password</button>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
+          <h3 className="text-3xl font-semibold text-white mb-2 sm:mb-0">My Profile</h3>
+          <div className="relative">
+            <button 
+              onClick={()=>setCpOpen(true)} 
+              className="px-3 py-2 rounded bg-sky-400 hover:bg-sky-500 text-white text-sm transition-colors"
+            >
+              Change Password
+            </button>
+            {toast.show && (
+              <div 
+                className={`absolute -top-12 right-0 px-4 py-2 rounded-md shadow-lg ${
+                  toast.isError ? 'bg-red-500' : 'bg-green-500'
+                } text-white text-sm whitespace-nowrap`}
+                style={{ zIndex: 1000 }}
+              >
+                {toast.message}
+              </div>
+            )}
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -204,7 +221,10 @@ export default function ManagerProfile() {
                   <button type="button" onClick={()=>fileRef.current?.click()} className="px-3 py-2 rounded border border-white/30 text-sm text-white hover:bg-white/10">Choose from local</button>
                 </div>
                 <div className="pt-1 flex justify-end">
-                  <button type="button" onClick={saveAvatar} disabled={!pendingAvatar}
+                  <button type="button" onClick={async () => {
+                            await saveAvatar();
+                            await window.location.reload();
+                       }} disabled={!pendingAvatar}
                     className="px-3 py-2 rounded bg-indigo-600 text-white text-sm hover:bg-indigo-700">
                     Change Profile
                   </button>
@@ -275,17 +295,34 @@ export default function ManagerProfile() {
                 <button
                   onClick={async()=>{
                     try {
-                      setCpLoading(true); setCpMsg('');
+                      setCpLoading(true);
                       await fetch('http://localhost:3000/auth/change-init', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization: `Bearer ${getToken()}` }});
-                      setCpMsg('You may login your account');
-                      setTimeout(()=> setCpOpen(false), 1500);
-                    } catch { setCpMsg('Failed to send verification'); }
-                    finally { setCpLoading(false); }
+                      setToast({ 
+                        show: true, 
+                        message: 'Verification email sent successfully!', 
+                        isError: false 
+                      });
+                      setCpOpen(false);
+                      setTimeout(() => {
+                        setToast(prev => ({ ...prev, show: false }));
+                      }, 1500);
+                    } catch { 
+                      setToast({ 
+                        show: true, 
+                        message: 'Failed to send verification email', 
+                        isError: true 
+                      });
+                      setTimeout(() => {
+                        setToast(prev => ({ ...prev, show: false }));
+                      }, 1500);
+                    }
+                    finally { 
+                      setCpLoading(false); 
+                    }
                   }}
                   className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-60"
                   disabled={cpLoading}
                 >{cpLoading? 'Sending...' : 'Send verification'}</button>
-                {cpMsg && <div className="text-sm text-emerald-300">{cpMsg}</div>}
               </div>
               </div>
             </div>

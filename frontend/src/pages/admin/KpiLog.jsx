@@ -28,7 +28,7 @@ export default function AdminKpiLog() {
         const res = await fetch('http://localhost:3000/users/departments', { headers: { Authorization: `Bearer ${getToken()}` } });
         const data = await res.json();
         setDepartments(Array.isArray(data) ? data : (data?.data || []));
-      } catch (_) {}
+      } catch (_) { }
     };
     loadDepts();
   }, []);
@@ -39,7 +39,7 @@ export default function AdminKpiLog() {
       if (!byKpi.has(l.kpi_id)) byKpi.set(l.kpi_id, []);
       byKpi.get(l.kpi_id).push(l);
     }
-    for (const arr of byKpi.values()) arr.sort((a,b)=> (b.version||0) - (a.version||0));
+    for (const arr of byKpi.values()) arr.sort((a, b) => (b.version || 0) - (a.version || 0));
     return Array.from(byKpi.entries()).map(([kpi_id, arr]) => ({ kpi_id, entries: arr, latest: arr[0] }));
   }, [logs]);
 
@@ -155,11 +155,11 @@ export default function AdminKpiLog() {
 
   // --- STYLING CHANGES START HERE ---
   return (
-    <div 
+    <div
       className="min-h-screen w-full"
     >
       <div className="min-h-screen p-4 md:p-8">
-        
+
         {/* Filter Bar Card */}
         <div className="bg-white/10 border border-white/20 backdrop-blur-md rounded-lg shadow-xl p-4 md:p-8 max-w-7xl mx-auto">
           <div className="flex flex-col gap-4">
@@ -168,39 +168,39 @@ export default function AdminKpiLog() {
             </div>
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2">
-                <button 
-                  className={`px-3 py-1 rounded-md border border-white/50 text-white/90 transition-colors ${mode==='manager'?'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`} 
-                  onClick={()=>{ setMode('manager'); setEmployee(''); }}>Manager
+                <button
+                  className={`px-3 py-1 rounded-md border border-white/50 text-white/90 transition-colors ${mode === 'manager' ? 'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`}
+                  onClick={() => { setMode('manager'); setEmployee(''); }}>Manager
                 </button>
-                <button 
-                  className={`px-3 py-1 rounded border border-white/50 text-white/90 transition-colors ${mode==='employee'?'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`} 
-                  onClick={()=> setMode('employee')}>Employee
+                <button
+                  className={`px-3 py-1 rounded border border-white/50 text-white/90 transition-colors ${mode === 'employee' ? 'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`}
+                  onClick={() => setMode('employee')}>Employee
                 </button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                <select 
-                  className="border border-white/30 text-white rounded-md px-3 py-2 w-full min-w-0" 
-                  value={dept} 
-                  onChange={(e)=>{ setDept(e.target.value); setManager(''); setEmployee(''); }}>
+                <select
+                  className="border border-white/30 text-white rounded-md px-3 py-2 w-full min-w-0"
+                  value={dept}
+                  onChange={(e) => { setDept(e.target.value); setManager(''); setEmployee(''); }}>
                   <option value="" className="text-black">Select dept</option>
                   {departments.map(d => (
                     <option key={d.id || d.name} value={d.name || d} className="text-black">{d.name || d}</option>
                   ))}
                 </select>
-                <select 
-                  className="border border-white/50 rounded px-3 py-2 text-white w-full min-w-0" 
-                  value={manager} 
-                  onChange={(e)=>{ setManager(e.target.value); if (mode==='manager') setEmployee(''); }}>
+                <select
+                  className="border border-white/50 rounded px-3 py-2 text-white w-full min-w-0"
+                  value={manager}
+                  onChange={(e) => { setManager(e.target.value); if (mode === 'manager') setEmployee(''); }}>
                   <option value="" className="text-black">Select manager (optional)</option>
                   {managers.map(m => (
                     <option key={m.user_id || m.id || m.email} value={m.name} className="text-black">{m.name}</option>
                   ))}
                 </select>
                 {mode === 'employee' && (
-                  <select 
-                    className="border border-white/50 rounded px-3 py-2 text-white w-full min-w-0" 
-                    value={employee} 
-                    onChange={(e)=>setEmployee(e.target.value)}>
+                  <select
+                    className="border border-white/50 rounded px-3 py-2 text-white w-full min-w-0"
+                    value={employee}
+                    onChange={(e) => setEmployee(e.target.value)}>
                     <option value="" className="text-black">Select employee (required)</option>
                     {employees.map(emp => (
                       <option key={emp.user_id || emp.id || emp.email} value={emp.name} className="text-black">{emp.name}</option>
@@ -209,10 +209,10 @@ export default function AdminKpiLog() {
                 )}
                 <div className="flex items-center gap-2">
                   <label className="text-white/90 whitespace-nowrap">KRA</label>
-                  <select 
-                    className=" border border-white/30 text-white rounded-md px-3 py-2 w-full min-w-0" 
-                    value={kraFilter} 
-                    onChange={(e)=>setKraFilter(e.target.value)}>
+                  <select
+                    className=" border border-white/30 text-white rounded-md px-3 py-2 w-full min-w-0"
+                    value={kraFilter}
+                    onChange={(e) => setKraFilter(e.target.value)}>
                     <option value="" className="text-black">All</option>
                     {kraOptions.map(name => (<option key={name} value={name} className="text-black">{name}</option>))}
                   </select>
@@ -220,75 +220,75 @@ export default function AdminKpiLog() {
               </div>
             </div>
           </div>
-                      
 
-        {/* Status Messages */}
-        {loading && <div className="text-center text-white p-4">Loading...</div>}
-        {error && <div className="bg-red-500/30 text-red-100 border border-red-400 p-3 rounded-lg mb-3">{error}</div>}
-        {!loading && !groupedFiltered.length && <div className="text-white text-lg p-4 font-semibold text-center">No logs found</div>}
-        
-        {/* Log Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 py-7 gap-4">
-          {groupedFiltered.map(({ kpi_id, latest }) => (
-            <div key={`card-${kpi_id}`} className="bg-white/2 mt-3  backdrop-blur-sm border border-white/20 rounded-lg p-4 shadow-lg flex flex-col justify-between">
-              <div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                  <div className="text-lg font-semibold text-white">{latest.kpi_name}</div>
-                  <div className="text-sm text-white text-left sm:text-right flex-shrink-0">
-                    <div>Due: {latest.due_date ? new Date(latest.due_date).toLocaleDateString() : '-'}</div>
+
+          {/* Status Messages */}
+          {loading && <div className="text-center text-white p-4">Loading...</div>}
+          {error && <div className="bg-red-500/30 text-red-100 border border-red-400 p-3 rounded-lg mb-3">{error}</div>}
+          {!loading && !groupedFiltered.length && <div className="text-white text-lg p-4 font-semibold text-center">No logs found</div>}
+
+          {/* Log Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 py-7 gap-4">
+            {groupedFiltered.map(({ kpi_id, latest }) => (
+              <div key={`card-${kpi_id}`} className="bg-white/2 mt-3  backdrop-blur-sm border border-white/20 rounded-lg p-4 shadow-lg flex flex-col justify-between">
+                <div>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                    <div className="text-lg font-semibold text-white">{latest.kpi_name}</div>
+                    <div className="text-sm text-white text-left sm:text-right flex-shrink-0">
+                      <div>Due: {latest.due_date ? new Date(latest.due_date).toLocaleDateString() : '-'}</div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-white mb-3">KRA: {latest.kra_name} • Dept: {latest.dept || '-'}</div>
+                  <div className="text-sm text-white">
+                    <div>Last Update By: {latest.updated_by}</div>
+                    <div>At: {new Date(latest.updated_at).toLocaleString()}</div>
                   </div>
                 </div>
-                <div className="text-sm text-white mb-3">KRA: {latest.kra_name} • Dept: {latest.dept || '-'}</div>
-                <div className="text-sm text-white">
-                  <div>Last Update By: {latest.updated_by}</div>
-                  <div>At: {new Date(latest.updated_at).toLocaleString()}</div>
+                <div className="mt-3 flex justify-end">
+                  <button
+                    className="px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                    onClick={() => { setModalKpiId(kpi_id); setModalOpen(true); }}>
+                    See Changes
+                  </button>
                 </div>
               </div>
-              <div className="mt-3 flex justify-end">
-                <button 
-                  className="px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition" 
-                  onClick={()=>{ setModalKpiId(kpi_id); setModalOpen(true); }}>
-                  See Changes
+            ))}
+          </div>
+        </div>
+
+        {/* Modal Popup */}
+        {modalOpen && modalKpiId !== null && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 backdrop-blur-2xl border border-white/20 w-full max-w-2xl rounded-lg shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
+                <h3 className="text-lg font-semibold text-white">KPI Change History</h3>
+                <button
+                  className="text-white hover:text-white text-2xl font-bold"
+                  onClick={() => { setModalOpen(false); setModalKpiId(null); }}>
+                  ✕
                 </button>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Modal Popup */}
-      {modalOpen && modalKpiId !== null && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 backdrop-blur-2xl border border-white/20 w-full max-w-2xl rounded-lg shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
-              <h3 className="text-lg font-semibold text-white">KPI Change History</h3>
-              <button 
-                className="text-white hover:text-white text-2xl font-bold" 
-                onClick={()=>{ setModalOpen(false); setModalKpiId(null); }}>
-                ✕
-              </button>
-            </div>
-            <div className="p-4 sm:p-6 space-y-3 overflow-y-auto flex-1 text-white">
-              {(grouped.find(g=> g.kpi_id===modalKpiId)?.entries || []).map((log) => (
-                <div key={`log-${log.kpi_id}-${log.version}-${log.updated_at}`} className="bg-white/10 border border-white/20 rounded-lg p-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div className="text-sm text-white font-medium">Version v{log.version}</div>
-                    <div className="text-sm text-white">By {log.updated_by} • {new Date(log.updated_at).toLocaleString()}</div>
+              <div className="p-4 sm:p-6 space-y-3 overflow-y-auto flex-1 text-white">
+                {(grouped.find(g => g.kpi_id === modalKpiId)?.entries || []).map((log) => (
+                  <div key={`log-${log.kpi_id}-${log.version}-${log.updated_at}`} className="bg-white/10 border border-white/20 rounded-lg p-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                      <div className="text-sm text-white font-medium">Version v{log.version}</div>
+                      <div className="text-sm text-white">By {log.updated_by} • {new Date(log.updated_at).toLocaleString()}</div>
+                    </div>
+                    <div className="mt-2">{renderChanges(log.changes)}</div>
                   </div>
-                  <div className="mt-2">{renderChanges(log.changes)}</div>
+                ))}
+                <div className='flex justify-end'>
+                  <div className='text-lg px-4 py-2 w-fit rounded bg-gray-600 hover:bg-gray-700' onClick={() => { setModalOpen(false); setModalKpiId(null); }}><button>Close</button></div>
                 </div>
-              ))}
-              <div className='flex justify-end'>
-                <div className='text-lg px-4 py-2 w-fit rounded bg-gray-600 hover:bg-gray-700'  onClick={()=>{ setModalOpen(false); setModalKpiId(null); }}><button>Close</button></div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-         
-        </div>
+        )}
 
-            
+      </div>
+
+
 
     </div>
   );

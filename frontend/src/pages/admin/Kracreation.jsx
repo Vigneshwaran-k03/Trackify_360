@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { getToken, getRole, getUserName, getEmail } from '../../utils/authStorage';
-import { SquarePen,Trash2 } from 'lucide-react';
+import { SquarePen, Trash2 } from 'lucide-react';
 
 export default function Kracreation() {
   const [formData, setFormData] = useState({
@@ -77,8 +77,8 @@ export default function Kracreation() {
       await axios.delete(`http://localhost:3000/kra/${kra.kra_id}`, { headers: { Authorization: `Bearer ${getToken()}` } });
       await fetchMyKras();
       setToast('KRA deleted');
-      setTimeout(()=> setToast(''), 2500);
-    } catch (e) {}
+      setTimeout(() => setToast(''), 2500);
+    } catch (e) { }
   };
 
   const fetchMyKras = async () => {
@@ -240,15 +240,14 @@ export default function Kracreation() {
       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-4 md:p-8 max-w-7xl mx-auto">
         <div className="mb-8 flex items-start justify-between">
           <h2 className="text-3xl font-bold text-white mb-2">Create New KRA (Admin)</h2>
-          <button type="button" onClick={()=> setCreateOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 shadow-lg">Create KRA</button>
+          <button type="button" onClick={() => setCreateOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 shadow-lg">Create KRA</button>
         </div>
 
         {message && (
-          <div className={`mb-6 p-4 rounded ${
-            message.toLowerCase().includes('success')
+          <div className={`mb-6 p-4 rounded ${message.toLowerCase().includes('success')
               ? 'bg-green-100 text-green-800'
               : 'bg-red-100 text-red-800'
-          }`}>
+            }`}>
             {message}
           </div>
         )}
@@ -258,14 +257,14 @@ export default function Kracreation() {
             <h3 className="text-2xl font-semibold text-white">My Created KRAs</h3>
             <div className="flex items-center gap-2">
               <label className="text-sm text-gray-200">Dept</label>
-              <select className="p-2 border border-white/50 rounded text-sm text-white  bg-white/20" value={deptFilter} onChange={(e)=> { setDeptFilter(e.target.value); setManagerFilter(''); }}>
+              <select className="p-2 border border-white/50 rounded text-sm text-white  bg-white/20" value={deptFilter} onChange={(e) => { setDeptFilter(e.target.value); setManagerFilter(''); }}>
                 <option className="text-black" value="">All</option>
                 {departments.map(d => (
                   <option className="text-black" key={d.id || d.name} value={d.name || d}>{d.name || d}</option>
                 ))}
               </select>
               <label className="text-sm text-gray-200">Manager</label>
-              <select className="p-2 border border-white/50 rounded text-sm px-4 py-2 text-white bg-white/20" value={managerFilter} onChange={(e)=> setManagerFilter(e.target.value)}>
+              <select className="p-2 border border-white/50 rounded text-sm px-4 py-2 text-white bg-white/20" value={managerFilter} onChange={(e) => setManagerFilter(e.target.value)}>
                 <option className="text-black" value="">All</option>
                 {managers.map(m => (
                   <option className="text-black" key={m.user_id || m.id || m.email} value={m.name}>{m.name}</option>
@@ -298,8 +297,8 @@ export default function Kracreation() {
                     <td className="p-2 text-white">{typeof k.target === 'number' ? k.target : '-'}</td>
                     <td className="p-2">
                       <div className="flex gap-2">
-                        <button type="button" className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white" onClick={()=> openEdit(k)}><SquarePen className="w-6 h-6"/></button>
-                        <button type="button" className="px-3 py-1 rounded border border-red-600 bg-red-400 text-white hover:bg-red-600 hover:text-white" onClick={()=> removeDirect(k)}><Trash2 className="w-6 h-6"/></button>
+                        <button type="button" className="px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-700 text-white" onClick={() => openEdit(k)}><SquarePen className="w-6 h-6" /></button>
+                        <button type="button" className="px-3 py-1 rounded border border-red-600 bg-red-400 text-white hover:bg-red-600 hover:text-white" onClick={() => removeDirect(k)}><Trash2 className="w-6 h-6" /></button>
                       </div>
                     </td>
                   </tr>
@@ -321,7 +320,7 @@ export default function Kracreation() {
           <div className="bg-gray-800 backdrop-blur-md w-full max-w-md rounded-lg shadow-xl p-6 max-h-auto overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-white">Create KRA</h3>
-              <button className="text-gray-100 hover:text-white" onClick={()=> setCreateOpen(false)}>✕</button>
+              <button className="text-gray-100 hover:text-white" onClick={() => setCreateOpen(false)}>✕</button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -360,7 +359,7 @@ export default function Kracreation() {
                 <input type="text" name="scoring_method" value={formData.scoring_method} readOnly className="w-full p-3 border border-white/50 rounded-md bg-white/20 text-white" />
               </div>
               <div className="flex justify-end gap-2">
-                <button type="button" className="px-4 py-2 rounded border border-white/50 text-white hover:bg-white/10" onClick={()=> setCreateOpen(false)}>Cancel</button>
+                <button type="button" className="px-4 py-2 rounded border border-white/50 text-white hover:bg-white/10" onClick={() => setCreateOpen(false)}>Cancel</button>
                 <button type="submit" disabled={loading} className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50">{loading ? 'Creating...' : 'Create'}</button>
               </div>
             </form>
@@ -374,31 +373,31 @@ export default function Kracreation() {
           <div className="bg-gray-800 backdrop-blur-md w-full max-w-lg rounded-lg shadow-xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-white">Update KRA: {editForm.name}</h3>
-              <button className="text-gray-100 hover:text-white" onClick={()=> setEditOpen(false)}>✕</button>
+              <button className="text-gray-100 hover:text-white" onClick={() => setEditOpen(false)}>✕</button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-100 mb-1">KRA Name</label>
-                <input className="w-full p-2 border border-white/50 rounded text-white bg-white/20 placeholder-gray-500" value={editForm.name} onChange={(e)=> setEditForm(prev=>({ ...prev, name: e.target.value }))} />
+                <input className="w-full p-2 border border-white/50 rounded text-white bg-white/20 placeholder-gray-500" value={editForm.name} onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))} />
               </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-100 mb-1">Definition</label>
-                <textarea className="w-full p-2 border border-white/50 rounded text-white bg-white/20 placeholder-gray-500" rows={3} value={editForm.definition} onChange={(e)=> setEditForm(prev=>({ ...prev, definition: e.target.value }))} />
+                <textarea className="w-full p-2 border border-white/50 rounded text-white bg-white/20 placeholder-gray-500" rows={3} value={editForm.definition} onChange={(e) => setEditForm(prev => ({ ...prev, definition: e.target.value }))} />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-100 mb-1">Target</label>
-                <input type="number" min="0" max="100" className="w-full p-2 border border-white/50 rounded text-white bg-white/20 placeholder-gray-500" value={editForm.target} onChange={(e)=> setEditForm(prev=>({ ...prev, target: e.target.value }))} />
+                <input type="number" min="0" max="100" className="w-full p-2 border border-white/50 rounded text-white bg-white/20 placeholder-gray-500" value={editForm.target} onChange={(e) => setEditForm(prev => ({ ...prev, target: e.target.value }))} />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-100 mb-1">Manager</label>
-                <select className="w-full p-2 border border-white/50 rounded text-white bg-white/20" value={editForm.manager_name} onChange={(e)=> setEditForm(prev=>({ ...prev, manager_name: e.target.value }))}>
+                <select className="w-full p-2 border border-white/50 rounded text-white bg-white/20" value={editForm.manager_name} onChange={(e) => setEditForm(prev => ({ ...prev, manager_name: e.target.value }))}>
                   <option className='text-black' value="">Unassigned</option>
                   {managers.map(m => (<option className='text-black' key={m.user_id || m.name} value={m.name}>{m.name}</option>))}
                 </select>
-              </div>              
+              </div>
             </div>
             <div className="flex justify-end gap-2 mt-4">
-              <button className="px-4 py-2 rounded border border-white/50 text-white hover:bg-white/10" onClick={()=> setEditOpen(false)}>Cancel</button>
+              <button className="px-4 py-2 rounded border border-white/50 text-white hover:bg-white/10" onClick={() => setEditOpen(false)}>Cancel</button>
               <button className="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700" onClick={submitDirectUpdate}>Update</button>
             </div>
           </div>

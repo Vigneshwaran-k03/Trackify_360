@@ -22,7 +22,7 @@ export default function AdminKraLog() {
         const res = await fetch('http://localhost:3000/users/departments', { headers: { Authorization: `Bearer ${getToken()}` } });
         const data = await res.json();
         setDepartments(Array.isArray(data) ? data : (data?.data || []));
-      } catch (_) {}
+      } catch (_) { }
     };
     loadDepts();
   }, []);
@@ -77,7 +77,7 @@ export default function AdminKraLog() {
       if (!byKra.has(l.kra_id)) byKra.set(l.kra_id, []);
       byKra.get(l.kra_id).push(l);
     }
-    for (const arr of byKra.values()) arr.sort((a,b)=> (b.version||0) - (a.version||0));
+    for (const arr of byKra.values()) arr.sort((a, b) => (b.version || 0) - (a.version || 0));
     return Array.from(byKra.entries()).map(([kra_id, arr]) => ({ kra_id, entries: arr, latest: arr[0] }));
   }, [logs]);
 
@@ -146,137 +146,137 @@ export default function AdminKraLog() {
   return (
     // Wrapper div for background image
     <div
-      
+
     >
-     <div className='min-h-screen p-4 md:p-8'>
-      {/* Content container with padding */}
-       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-4 md:p-8 max-w-7xl mx-auto">
-        {/* Header/Filter bar with glassmorphism */}
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <h1 className="text-3xl text-white font-semibold">KRA Log</h1>
-          </div>
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                className={`px-3 py-1 rounded border border-white/50 text-white/90 transition-colors ${tab==='mine' ? 'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`}
-                onClick={()=> { setTab('mine'); setManager(''); setEmployee(''); }}
-              >
-                My Changes
-              </button>
-              <button
-                className={`px-3 py-1 rounded border border-white/50 text-white/90 transition-colors ${tab==='manager' ? 'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`}
-                onClick={()=> { setTab('manager'); }}
-              >
-                Manager Changes
-              </button>
+      <div className='min-h-screen p-4 md:p-8'>
+        {/* Content container with padding */}
+        <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-xl p-4 md:p-8 max-w-7xl mx-auto">
+          {/* Header/Filter bar with glassmorphism */}
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <h1 className="text-3xl text-white font-semibold">KRA Log</h1>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-              <select
-                className="border border-white/50 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white w-full min-w-0"
-                value={dept}
-                onChange={(e)=>{ setDept(e.target.value); setManager(''); setEmployee(''); }}
-              >
-                <option className="text-black border border-black" value="">Select dept</option>
-                {departments.map(d => (
-                  <option className="text-black border border-black" key={d.id || d.name} value={d.name || d}>{d.name || d}</option>
-                ))}
-              </select>
-              {(tab === 'mine' || tab === 'manager') && (
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  className={`px-3 py-1 rounded border border-white/50 text-white/90 transition-colors ${tab === 'mine' ? 'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`}
+                  onClick={() => { setTab('mine'); setManager(''); setEmployee(''); }}
+                >
+                  My Changes
+                </button>
+                <button
+                  className={`px-3 py-1 rounded border border-white/50 text-white/90 transition-colors ${tab === 'manager' ? 'bg-blue-600 text-white font-semibold border-blue-700' : 'hover:bg-white/20'}`}
+                  onClick={() => { setTab('manager'); }}
+                >
+                  Manager Changes
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                 <select
                   className="border border-white/50 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white w-full min-w-0"
-                  value={manager}
-                  onChange={(e)=>{ setManager(e.target.value); if (tab==='mine') setEmployee(''); }}
+                  value={dept}
+                  onChange={(e) => { setDept(e.target.value); setManager(''); setEmployee(''); }}
                 >
-                  <option className="text-black border border-black" value="">Select manager {tab==='mine' ? '(optional)' : ''}</option>
-                  {managers.map(m => (
-                    <option className="text-black border border-black" key={m.user_id || m.id || m.email} value={m.name}>{m.name}</option>
+                  <option className="text-black border border-black" value="">Select dept</option>
+                  {departments.map(d => (
+                    <option className="text-black border border-black" key={d.id || d.name} value={d.name || d}>{d.name || d}</option>
                   ))}
                 </select>
-              )}
-              {tab === 'manager' && (
-                <select
-                  className="border border-white/50 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white w-full md:w-auto min-w-0"
-                  value={employee}
-                  onChange={(e)=> setEmployee(e.target.value)}
-                >
-                  <option className="text-black" value="">Select employee (optional)</option>
-                  {employees.map(emp => (
-                    <option className="text-black"key={emp.user_id || emp.id || emp.email} value={emp.name}>{emp.name}</option>
-                  ))}
-                </select>
-              )}
+                {(tab === 'mine' || tab === 'manager') && (
+                  <select
+                    className="border border-white/50 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white w-full min-w-0"
+                    value={manager}
+                    onChange={(e) => { setManager(e.target.value); if (tab === 'mine') setEmployee(''); }}
+                  >
+                    <option className="text-black border border-black" value="">Select manager {tab === 'mine' ? '(optional)' : ''}</option>
+                    {managers.map(m => (
+                      <option className="text-black border border-black" key={m.user_id || m.id || m.email} value={m.name}>{m.name}</option>
+                    ))}
+                  </select>
+                )}
+                {tab === 'manager' && (
+                  <select
+                    className="border border-white/50 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white w-full md:w-auto min-w-0"
+                    value={employee}
+                    onChange={(e) => setEmployee(e.target.value)}
+                  >
+                    <option className="text-black" value="">Select employee (optional)</option>
+                    {employees.map(emp => (
+                      <option className="text-black" key={emp.user_id || emp.id || emp.email} value={emp.name}>{emp.name}</option>
+                    ))}
+                  </select>
+                )}
+              </div>
             </div>
           </div>
-         </div>
 
-        {/* Loading / Error / Empty States */}
-        {loading && <div className="text-white text-lg p-4 font-semibold text-center">No logs found</div>}
-        {error && <div className="bg-red-500/80 text-white font-semibold rounded-lg p-3 mb-3 shadow-lg">{error}</div>}
-        {!loading && !error && !groupedFiltered.length && (
-          <div className="text-white/90 text-lg p-4 rounded-lg text-center backdrop-blur-sm">
-            No logs found matching your criteria.
-          </div>
-        )}
+          {/* Loading / Error / Empty States */}
+          {loading && <div className="text-white text-lg p-4 font-semibold text-center">No logs found</div>}
+          {error && <div className="bg-red-500/80 text-white font-semibold rounded-lg p-3 mb-3 shadow-lg">{error}</div>}
+          {!loading && !error && !groupedFiltered.length && (
+            <div className="text-white/90 text-lg p-4 rounded-lg text-center backdrop-blur-sm">
+              No logs found matching your criteria.
+            </div>
+          )}
 
-        {/* Card Grid */}
-        <div className="grid grid-cols-1 px-1 p-4 md:grid-cols-2 gap-4">
-          {groupedFiltered.map(({ kra_id, latest }) => (
-            // Card with glassmorphism
-            <div key={`card-${kra_id}`} className="bg-white/10  backdrop-blur-sm border border-white/30 rounded-lg p-4 shadow-lg text-white">
-              <div className="flex flex-col sm:flex-row items-start justify-between gap-2">
-                <div>
-                  <div className="text-xl font-bold text-white">{latest.kra_name}</div>
-                  <div className="text-sm text-gray-100">Dept: {latest.dept || '-'} • Version: v{latest.version}</div>
-                  <div className="text-sm text-gray-100">Manager: {latest.manager_name || '-'}</div>
-                  <div className="text-sm text-gray-100">Employee: {latest.employee_name || '-'}</div>
+          {/* Card Grid */}
+          <div className="grid grid-cols-1 px-1 p-4 md:grid-cols-2 gap-4">
+            {groupedFiltered.map(({ kra_id, latest }) => (
+              // Card with glassmorphism
+              <div key={`card-${kra_id}`} className="bg-white/10  backdrop-blur-sm border border-white/30 rounded-lg p-4 shadow-lg text-white">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-2">
+                  <div>
+                    <div className="text-xl font-bold text-white">{latest.kra_name}</div>
+                    <div className="text-sm text-gray-100">Dept: {latest.dept || '-'} • Version: v{latest.version}</div>
+                    <div className="text-sm text-gray-100">Manager: {latest.manager_name || '-'}</div>
+                    <div className="text-sm text-gray-100">Employee: {latest.employee_name || '-'}</div>
+                  </div>
+                  <div className="text-sm text-gray-100 text-left sm:text-right flex-shrink-0">
+                    <div>Updated By: {latest.updated_by}</div>
+                    <div>At: {new Date(latest.updated_at).toLocaleString()}</div>
+                  </div>
                 </div>
-                <div className="text-sm text-gray-100 text-left sm:text-right flex-shrink-0">
-                  <div>Updated By: {latest.updated_by}</div>
-                  <div>At: {new Date(latest.updated_at).toLocaleString()}</div>
+                <div className="mt-3 flex justify-end">
+                  <button
+                    className="px-3 py-2 rounded-md border border-white/50 text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+                    onClick={() => { setModalLog(latest); setShowModal(true); }}
+                  >
+                    See Changes
+                  </button>
                 </div>
               </div>
-              <div className="mt-3 flex justify-end">
-                <button
-                  className="px-3 py-2 rounded-md border border-white/50 text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
-                  onClick={()=> { setModalLog(latest); setShowModal(true); }}
-                >
-                  See Changes
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Modal with glassmorphism */}
-        {showModal && (
-          // Modal overlay with padding for responsiveness
-          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-            {/* Modal content */}
-            <div className="bg-gray-800 backdrop-blur-md border border-white/30 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col p-6 text-white">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-white">Changes: {modalLog?.kra_name}</h3>
-                <button className="text-white/80 hover:text-white text-2xl font-bold" onClick={()=> setShowModal(false)}>✕</button>
-              </div>
-              <div className="text-sm text-gray-100 space-y-2">
-                <div>Dept: {modalLog?.dept || '-'}</div>
-                <div>Manager: {modalLog?.manager_name || '-'}</div>
-                <div>Employee: {modalLog?.employee_name || '-'}</div>
-              </div>
-              <div className="mt-3 max-h-60 overflow-y-auto flex-1">
-                {renderChanges(modalLog?.changes)}
-              </div>
-              <div className="mt-4 flex justify-end">
-                <button
-                  className="px-4 py-2 rounded border border-white/50 text-white hover:bg-white/20 transition-colors"
-                  onClick={()=> setShowModal(false)}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
-        )}
+
+          {/* Modal with glassmorphism */}
+          {showModal && (
+            // Modal overlay with padding for responsiveness
+            <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+              {/* Modal content */}
+              <div className="bg-gray-800 backdrop-blur-md border border-white/30 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col p-6 text-white">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold text-white">Changes: {modalLog?.kra_name}</h3>
+                  <button className="text-white/80 hover:text-white text-2xl font-bold" onClick={() => setShowModal(false)}>✕</button>
+                </div>
+                <div className="text-sm text-gray-100 space-y-2">
+                  <div>Dept: {modalLog?.dept || '-'}</div>
+                  <div>Manager: {modalLog?.manager_name || '-'}</div>
+                  <div>Employee: {modalLog?.employee_name || '-'}</div>
+                </div>
+                <div className="mt-3 max-h-60 overflow-y-auto flex-1">
+                  {renderChanges(modalLog?.changes)}
+                </div>
+                <div className="mt-4 flex justify-end">
+                  <button
+                    className="px-4 py-2 rounded border border-white/50 text-white hover:bg-white/20 transition-colors"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
       </div>

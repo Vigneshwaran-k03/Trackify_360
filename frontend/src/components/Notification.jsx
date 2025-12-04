@@ -256,17 +256,17 @@ export default function Notification() {
       {open && createPortal(
         <div className={`fixed right-4 top-16 w-80 ${
           getRole()?.toLowerCase() === 'manager'
-            ? 'bg-slate-900/95 border-indigo-500/30 text-slate-100'
+            ? 'bg-[#002C33] border-[#005F77] text-white'
             : getRole()?.toLowerCase() === 'employee'
-              ? 'bg-[#2C003E]/95 border-fuchsia-400/30 text-white'
-              : 'bg-teal-900/95 border-teal-400/30 text-white'
+              ? 'bg-[#3E1524] border-[#8A3A5A] text-white'
+              : 'bg-[#2F2F2C] border-[#6A6248] text-white'
         } border rounded-lg shadow-2xl z-50 backdrop-blur-lg`} style={{ transform: 'translateZ(0)' }}>
           <div className={`p-3 border-b ${
             getRole()?.toLowerCase() === 'manager'
-              ? 'bg-slate-800/80 border-indigo-500/20 text-slate-200'
+              ? 'bg-[#005F77] border-[#0088AA] text-white'
               : getRole()?.toLowerCase() === 'employee'
-                ? 'bg-purple-900/80 border-fuchsia-400/20 text-fuchsia-100'
-                : 'bg-teal-800/80 border-teal-400/20 text-white'
+                ? 'bg-[#8A3A5A] border-[#C45B84] text-white'
+                : 'bg-[#6A6248] border-[#9E916B] text-white'
           } text-sm flex justify-between items-center`}>
             <span>Notifications</span>
             <button className={`p-1 hover:bg-gray-100 rounded ${
@@ -275,20 +275,20 @@ export default function Notification() {
           </div>
           <div className={`max-h-96 overflow-y-auto ${
             getRole()?.toLowerCase() === 'manager' 
-              ? 'divide-y divide-indigo-500/20' 
+              ? 'divide-y divide-[#0088AA]/30' 
               : getRole()?.toLowerCase() === 'employee'
-                ? 'divide-y divide-fuchsia-400/20'
-                : 'divide-y divide-gray-200'
+                ? 'divide-y divide-[#C45B84]/30'
+                : 'divide-y divide-[#9E916B]/30'
           }`}>
             {loading && <div className="p-3 text-sm text-gray-600">Loading...</div>}
             {!loading && items.length === 0 && <div className="p-4 text-sm text-white/80 text-center">📭 No notifications yet</div>}
             {!loading && items.map(it => (
-              <div key={it.id} className={`p-3 flex gap-2 items-start hover:bg-white/5 transition-colors ${
+              <div key={it.id} className={`p-3 flex gap-2 items-start hover:bg-white/10 transition-colors ${
                 getRole()?.toLowerCase() === 'manager' 
-                  ? 'border-b border-indigo-500/20' 
+                  ? 'border-b border-[#0088AA]/30' 
                   : getRole()?.toLowerCase() === 'employee'
-                    ? 'border-b border-fuchsia-500/20'
-                    : 'border-b border-teal-500/20'
+                    ? 'border-b border-[#C45B84]/30'
+                    : 'border-b border-[#9E916B]/30'
               }`}>
                 <div className="flex-1">
                   <div className="text-sm font-medium text-white">{it.name}</div>
@@ -309,11 +309,11 @@ export default function Notification() {
                   <button 
                     className={`p-1.5 rounded-full ${
                       getRole()?.toLowerCase() === 'manager'
-                        ? 'hover:bg-indigo-500/30 text-indigo-300'
+                        ? 'hover:bg-[#0088AA]/30 text-[#8BC7D8]'
                         : getRole()?.toLowerCase() === 'employee'
-                          ? 'hover:bg-fuchsia-500/30 text-fuchsia-300'
-                          : 'hover:bg-teal-500/30 text-teal-300'
-                    } ${pinnedIds.includes(it.id) ? 'text-yellow-400' : ''}`} 
+                          ? 'hover:bg-[#C45B84]/30 text-[#F4A5C8]'
+                          : 'hover:bg-[#9E916B]/30 text-[#D4C9A9]'
+                    } ${pinnedIds.includes(it.id) ? 'text-yellow-300' : ''}`} 
                     title={pinnedIds.includes(it.id) ? 'Unpin' : 'Pin'}
                     onClick={() => togglePin(it.id)}
                   >
@@ -322,11 +322,11 @@ export default function Notification() {
                   <button 
                     className={`p-1.5 rounded-full ${
                       getRole()?.toLowerCase() === 'manager'
-                        ? 'hover:bg-indigo-500/30 text-indigo-300'
+                        ? 'hover:bg-[#0088AA]/30 text-[#8BC7D8]'
                         : getRole()?.toLowerCase() === 'employee'
-                          ? 'hover:bg-fuchsia-500/30 text-fuchsia-300'
-                          : 'hover:bg-teal-500/30 text-teal-300'
-                    } ${readIds.includes(it.id) ? 'opacity-50' : ''}`}
+                          ? 'hover:bg-[#C45B84]/30 text-[#F4A5C8]'
+                          : 'hover:bg-[#9E916B]/30 text-[#D4C9A9]'
+                    } ${readIds.includes(it.id) ? 'opacity-60' : ''}`}
                     title="Mark as read" 
                     onClick={() => markAsRead(it.id)}
                   >
@@ -335,10 +335,10 @@ export default function Notification() {
                   <button 
                     className={`p-1.5 rounded-full ${
                       getRole()?.toLowerCase() === 'manager'
-                        ? 'hover:bg-red-500/30 text-red-300'
+                        ? 'hover:bg-[#FF6B6B]/30 text-[#FF9E9E]'
                         : getRole()?.toLowerCase() === 'employee'
-                          ? 'hover:bg-red-500/30 text-red-300'
-                          : 'hover:bg-red-500/30 text-red-300'
+                          ? 'hover:bg-[#FF6B6B]/30 text-[#FF9E9E]'
+                          : 'hover:bg-[#FF6B6B]/30 text-[#FF9E9E]'
                     }`}
                     title="Delete" 
                     onClick={() => deleteItem(it)}
@@ -351,12 +351,12 @@ export default function Notification() {
           </div>
           <div className="p-2 text-right border-t border-white/10">
             <button 
-              className={`inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-md ${
+              className={`inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-md transition-colors ${
                 getRole()?.toLowerCase() === 'manager'
-                  ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                  ? 'bg-[#0088AA] hover:bg-[#00AACC] text-white'
                   : getRole()?.toLowerCase() === 'employee'
-                    ? 'bg-fuchsia-600 hover:bg-fuchsia-700 text-white'
-                    : 'bg-teal-600 hover:bg-teal-700 text-white'
+                    ? 'bg-[#C45B84] hover:bg-[#E67BA3] text-white'
+                    : 'bg-[#9E916B] hover:bg-[#B8AD8A] text-white'
               }`} 
               onClick={() => setOpen(false)}
             >

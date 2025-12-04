@@ -109,7 +109,7 @@ export default function Layout() {
         .then((data) => {
           if (data) setAvatar(data?.avatar || "default:male1");
         })
-        .catch(() => {});
+        .catch(() => { });
     }
 
     const handleResize = () => {
@@ -129,7 +129,7 @@ export default function Layout() {
   const handleLogout = () => {
     try {
       localStorage.removeItem("notif_popup_shown");
-    } catch (error) {}
+    } catch (error) { }
     clearAuth();
     window.location.href = "/login";
   };
@@ -239,23 +239,23 @@ export default function Layout() {
   const headerToggleButtonClass = isManager
     ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-700 hover:bg-[linear-gradient(135deg,#005F77_0%,#002C33_100%)] shadow-md "
     : isEmployee
-    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-rose-800 hover:bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]"
-    : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-[#C19A6B] hover:bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]";
+      ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-rose-800 hover:bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]"
+      : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-[#C19A6B] hover:bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]";
 
   const headerHomeButtonClass = isManager
     ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-teal-700 hover:bg-[linear-gradient(135deg,#005F77_0%,#002C33_100%)]"
     : isEmployee
-    ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-rose-800 hover:bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]"
-    : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-[#C19A6B] hover:bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]";
+      ? "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-rose-800 hover:bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]"
+      : "inline-flex items-center justify-center w-10 h-10 rounded-xl border border-[#C19A6B] hover:bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]";
 
   const rootBgClass = isManager
     ? "bg-[linear-gradient(135deg,#005F77_0%,#002C33_100%)]"
     : isEmployee
-    ? "bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]"
-    : "bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]";
+      ? "bg-[linear-gradient(135deg,#8A3A5A_0%,#3E1524_100%)]"
+      : "bg-[linear-gradient(135deg,#6A6248_0%,#2F2F2C_100%)]";
 
   const sidebarBaseClass = "bg-black/40 backdrop-blur-xl border border-black"
-    
+
 
   const desktopSidebarWidth = isCollapsed ? "w-20" : "w-64";
 
@@ -277,12 +277,10 @@ export default function Layout() {
       {/* SIDEBAR */}
       <div
         className={`${sidebarBaseClass} flex flex-col h-full shrink-0 transition-all duration-300 
-          ${
-            isMobile
-              ? `fixed top-0 left-0 h-full w-64 z-[999] transform ${
-                  showSidebar ? "translate-x-0" : "-translate-x-full"
-                }`
-              : `relative ${desktopSidebarWidth}`
+          ${isMobile
+            ? `fixed top-0 left-0 h-full w-64 z-[999] transform ${showSidebar ? "translate-x-0" : "-translate-x-full"
+            }`
+            : `relative ${desktopSidebarWidth}`
           }
         `}
       >
@@ -294,9 +292,8 @@ export default function Layout() {
                 ? "./src/assets/logo.png"
                 : "./src/assets/logo1.png"
             }
-            className={`${
-              isMobile || !isCollapsed ? "w-44 h-20" : "w-10 h-10"
-            } transition-all duration-300`}
+            className={`${isMobile || !isCollapsed ? "w-44 h-20" : "w-10 h-10"
+              } transition-all duration-300`}
           />
         </div>
 
@@ -313,11 +310,10 @@ export default function Layout() {
               >
                 <Link
                   to={item.path}
-                  className={`flex items-center gap-3 py-3 px-4 rounded-xl transition ${
-                    isActive
+                  className={`flex items-center gap-3 py-3 px-4 rounded-xl transition ${isActive
                       ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
                       : "bg-white/10 text-white hover:bg-white/20"
-                  }`}
+                    }`}
                   onClick={() => isMobile && setShowSidebar(false)}
                 >
                   <item.Icon className="w-5 h-5" />

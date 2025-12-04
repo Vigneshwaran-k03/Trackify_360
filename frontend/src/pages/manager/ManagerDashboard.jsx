@@ -1164,10 +1164,10 @@ export default function ManagerDashboard() {
                  <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setOvB3FilterOpen(true)}><FunnelPlus className='w-4 h-4'/></button>
                 <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>setExp3Open(v=>!v)}><Download className='w-4 h-4'/></button>
                 {exp3Open && (
-                  <div className="absolute right-0 top-10 bg-gray-800/90 backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp3Open(false); exportChartFromRef(ovB3Ref,'kra_frequency','png'); }}>PNG</button>
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp3Open(false); exportChartFromRef(ovB3Ref,'kra_frequency','jpg'); }}>JPG</button>
-                    <button className="block px-3 py-2 text-white hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp3Open(false); exportChartFromRef(ovB3Ref,'kra_frequency','pdf'); }}>PDF</button>
+                  <div className="absolute right-0 top-10 bg-white backdrop-blur-md border border-white/30 rounded shadow text-sm z-20">
+                    <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp3Open(false); exportChartFromRef(ovB3Ref,'kra_frequency','png'); }}>PNG</button>
+                    <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp3Open(false); exportChartFromRef(ovB3Ref,'kra_frequency','jpg'); }}>JPG</button>
+                    <button className="block px-3 py-2 text-black hover:bg-gray-700 w-full text-left" onClick={()=>{ setExp3Open(false); exportChartFromRef(ovB3Ref,'kra_frequency','pdf'); }}>PDF</button>
                   </div>
                 )}
               </div>

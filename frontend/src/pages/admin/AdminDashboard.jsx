@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Doughnut, PolarArea, Bar, Line } from 'react-chartjs-2';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,7 +19,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 import axios from 'axios';
 import { getToken, getRole, getUserName } from '../../utils/authStorage';
 import { exportSectionById, exportTableToCSV, exportTableToExcel } from '../../utils/exportUtils';
-import { Download, FunnelPlus,CircleFadingPlus } from 'lucide-react';
+import { Download, FunnelPlus, CircleFadingPlus } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [userName, setUserName] = useState('');
@@ -45,14 +46,14 @@ export default function AdminDashboard() {
   const [revRatingValue, setRevRatingValue] = useState('');
   const [activeSection, setActiveSection] = useState('overview');
   // Overview section filter and aggregates
-  const [ovFilter, setOvFilter] = useState({ mode: 'monthly', year: new Date().getFullYear(), month: new Date().getMonth()+1 });
+  const [ovFilter, setOvFilter] = useState({ mode: 'monthly', year: new Date().getFullYear(), month: new Date().getMonth() + 1 });
   const [ovDeptAverages, setOvDeptAverages] = useState({});
   const [ovCompanyAverage, setOvCompanyAverage] = useState(0);
   // Company trend (monthly over selected year)
   const [companyTrend, setCompanyTrend] = useState({ labels: [], values: [] });
   const [companyTrendDelta, setCompanyTrendDelta] = useState(0);
   // Departments section filter and aggregates
-  const [depFilter, setDepFilter] = useState({ mode: 'monthly', year: new Date().getFullYear(), month: new Date().getMonth()+1 });
+  const [depFilter, setDepFilter] = useState({ mode: 'monthly', year: new Date().getFullYear(), month: new Date().getMonth() + 1 });
   const [depDeptAverages, setDepDeptAverages] = useState({});
   const [deptCounts, setDeptCounts] = useState({ managers: 0, employees: 0, kras: 0, kpis: 0 });
   // Horizontal bar chart dedicated state and filter
@@ -61,7 +62,7 @@ export default function AdminDashboard() {
   const [hbManagerId, setHbManagerId] = useState('');
   const [hbSeries, setHbSeries] = useState({ labels: [], values: [] });
   const [hbLoading, setHbLoading] = useState(false);
-  const [hbFilter, setHbFilter] = useState({ mode: 'monthly', year: new Date().getFullYear(), month: new Date().getMonth()+1 });
+  const [hbFilter, setHbFilter] = useState({ mode: 'monthly', year: new Date().getFullYear(), month: new Date().getMonth() + 1 });
   // KRA filters (dept -> manager -> employee)
   const [kraDept, setKraDept] = useState('');
   const [kraManagers, setKraManagers] = useState([]); // options for manager select (by dept)
@@ -116,7 +117,7 @@ export default function AdminDashboard() {
         openKraModal(kraModalState.kra);
       }
       alert('KRA updated');
-    } catch (_) {}
+    } catch (_) { }
   };
 
   // Performance section state
@@ -125,13 +126,13 @@ export default function AdminDashboard() {
   const [perfEmployees, setPerfEmployees] = useState([]);
   const [perfManagerId, setPerfManagerId] = useState('');
   const [perfEmployeeId, setPerfEmployeeId] = useState('');
-  const [perfFilter, setPerfFilter] = useState({ mode: 'monthly', year: new Date().getFullYear(), month: new Date().getMonth()+1 });
+  const [perfFilter, setPerfFilter] = useState({ mode: 'monthly', year: new Date().getFullYear(), month: new Date().getMonth() + 1 });
   const [perfDeptAvg, setPerfDeptAvg] = useState(0);
   const [perfManagerAvg, setPerfManagerAvg] = useState(0);
   const [perfEmployeeAvg, setPerfEmployeeAvg] = useState(0);
   const [perfMgrKraBars, setPerfMgrKraBars] = useState({ labels: [], values: [] });
   const [perfEmpKraBars, setPerfEmpKraBars] = useState({ labels: [], values: [] });
-  const [perfLoading, setPerfLoading] = useState({ dept:false, manager:false, employee:false });
+  const [perfLoading, setPerfLoading] = useState({ dept: false, manager: false, employee: false });
   const [filterModal, setFilterModal] = useState({ open: false, section: null });
 
   const openKraModal = async (kra) => {
@@ -169,7 +170,7 @@ export default function AdminDashboard() {
     run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [revDept]);
-//summary
+  //summary
   // Review: when KRA changes, load its active KPIs
   useEffect(() => {
     const run = async () => {
@@ -177,7 +178,7 @@ export default function AdminDashboard() {
         if (!revKraId) { setRevActiveKpis([]); return; }
         const res = await axios.get(`http://localhost:3000/scoring/kra/${revKraId}`, { headers: { Authorization: `Bearer ${getToken()}` } });
         const items = res.data?.data || [];
-        const today = new Date(); today.setHours(0,0,0,0);
+        const today = new Date(); today.setHours(0, 0, 0, 0);
         const active = items.filter(i => {
           if (i.kpi_status) return String(i.kpi_status).toLowerCase() === 'active';
           return !i.due_date || new Date(i.due_date) >= today;
@@ -195,14 +196,14 @@ export default function AdminDashboard() {
         const list = await fetchUserMonthlyReviews(userId, filter.year, filter.month);
         const scores = (list || []).map(r => (typeof r.score === 'number' ? r.score : Number(r.score || 0))).filter(v => !Number.isNaN(v));
         if (!scores.length) return 0;
-        return Math.round((scores.reduce((a,b)=>a+b,0) / scores.length) * 100) / 100;
+        return Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 100) / 100;
       }
       const months = Array.from({ length: 12 }, (_, i) => i + 1);
       const arrs = await Promise.all(months.map(mm => fetchUserMonthlyReviews(userId, filter.year, mm)));
       const list = arrs.flat();
       const scores = (list || []).map(r => (typeof r.score === 'number' ? r.score : Number(r.score || 0))).filter(v => !Number.isNaN(v));
       if (!scores.length) return 0;
-      return Math.round((scores.reduce((a,b)=>a+b,0) / scores.length) * 100) / 100;
+      return Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 100) / 100;
     } catch (_) { return 0; }
   };
 
@@ -306,7 +307,7 @@ export default function AdminDashboard() {
     }
     const scores = allReviews.map(r => (typeof r.score === 'number' ? r.score : Number(r.score || 0))).filter(v => !Number.isNaN(v));
     if (!scores.length) return 0;
-    return Math.round((scores.reduce((a,b)=>a+b,0) / scores.length) * 100) / 100;
+    return Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 100) / 100;
   };
 
   const refreshDeptAndCompanyAveragesWithFilter = async (filter, setMap, setAvg) => {
@@ -401,7 +402,7 @@ export default function AdminDashboard() {
         for (const m of months) {
           const entries = await Promise.all((depts || []).map(async d => await computeDeptAverage(d.name, { mode: 'monthly', year: ovFilter.year, month: m })));
           const nums = entries.filter(v => typeof v === 'number' && !Number.isNaN(v));
-          const avg = nums.length ? Math.round((nums.reduce((a,b)=>a+b,0) / nums.length) * 100) / 100 : 0;
+          const avg = nums.length ? Math.round((nums.reduce((a, b) => a + b, 0) / nums.length) * 100) / 100 : 0;
           values.push(avg);
         }
         setCompanyTrend({ labels, values });
@@ -422,7 +423,7 @@ export default function AdminDashboard() {
   // Departments section averages
   useEffect(() => {
     if (!depts || !depts.length) return;
-    refreshDeptAndCompanyAveragesWithFilter(depFilter, setDepDeptAverages, () => {});
+    refreshDeptAndCompanyAveragesWithFilter(depFilter, setDepDeptAverages, () => { });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [depts, depFilter.mode, depFilter.year, depFilter.month]);
 
@@ -497,10 +498,10 @@ export default function AdminDashboard() {
   useEffect(() => {
     const run = async () => {
       if (!perfDept) { setPerfDeptAvg(0); return; }
-      setPerfLoading(prev=>({ ...prev, dept:true }));
+      setPerfLoading(prev => ({ ...prev, dept: true }));
       const avg = await computeDeptAverage(perfDept, perfFilter);
       setPerfDeptAvg(avg || 0);
-      setPerfLoading(prev=>({ ...prev, dept:false }));
+      setPerfLoading(prev => ({ ...prev, dept: false }));
     };
     run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -516,7 +517,7 @@ export default function AdminDashboard() {
           return [k.name, typeof pct === 'number' ? pct : (typeof k.overall_score === 'number' ? k.overall_score : 0)];
         } catch { return [k.name, typeof k.overall_score === 'number' ? k.overall_score : 0]; }
       }));
-      return { labels: pairs.map(p=>p[0]), values: pairs.map(p=>p[1]) };
+      return { labels: pairs.map(p => p[0]), values: pairs.map(p => p[1]) };
     } catch (_) { return { labels: [], values: [] }; }
   };
 
@@ -524,11 +525,11 @@ export default function AdminDashboard() {
   useEffect(() => {
     const run = async () => {
       try {
-        setPerfLoading(prev=>({ ...prev, manager:true }));
+        setPerfLoading(prev => ({ ...prev, manager: true }));
         setPerfManagerAvg(0); setPerfMgrKraBars({ labels: [], values: [] });
         const mgr = (perfManagers || []).find(m => String(m.user_id) === String(perfManagerId));
         const mgrId = mgr?.user_id; const mgrName = mgr?.name || '';
-        if (!perfDept || !mgrId) { setPerfLoading(prev=>({ ...prev, manager:false })); return; }
+        if (!perfDept || !mgrId) { setPerfLoading(prev => ({ ...prev, manager: false })); return; }
         const [avg, bars] = await Promise.all([
           computeUserAverage(mgrId, perfFilter),
           (async () => {
@@ -538,10 +539,10 @@ export default function AdminDashboard() {
         ]);
         setPerfManagerAvg(avg || 0);
         setPerfMgrKraBars(bars);
-      } catch(_) {
+      } catch (_) {
         setPerfManagerAvg(0); setPerfMgrKraBars({ labels: [], values: [] });
       } finally {
-        setPerfLoading(prev=>({ ...prev, manager:false }));
+        setPerfLoading(prev => ({ ...prev, manager: false }));
       }
     };
     run();
@@ -552,11 +553,11 @@ export default function AdminDashboard() {
   useEffect(() => {
     const run = async () => {
       try {
-        setPerfLoading(prev=>({ ...prev, employee:true }));
+        setPerfLoading(prev => ({ ...prev, employee: true }));
         setPerfEmployeeAvg(0); setPerfEmpKraBars({ labels: [], values: [] });
         const emp = (perfEmployees || []).find(e => String(e.user_id) === String(perfEmployeeId));
         const empId = emp?.user_id; const empName = emp?.name || '';
-        if (!perfDept || !empId) { setPerfLoading(prev=>({ ...prev, employee:false })); return; }
+        if (!perfDept || !empId) { setPerfLoading(prev => ({ ...prev, employee: false })); return; }
         const [avg, bars] = await Promise.all([
           computeUserAverage(empId, perfFilter),
           (async () => {
@@ -566,10 +567,10 @@ export default function AdminDashboard() {
         ]);
         setPerfEmployeeAvg(avg || 0);
         setPerfEmpKraBars(bars);
-      } catch(_) {
+      } catch (_) {
         setPerfEmployeeAvg(0); setPerfEmpKraBars({ labels: [], values: [] });
       } finally {
-        setPerfLoading(prev=>({ ...prev, employee:false }));
+        setPerfLoading(prev => ({ ...prev, employee: false }));
       }
     };
     run();
@@ -621,7 +622,7 @@ export default function AdminDashboard() {
       } else if (format === 'pdf') {
         exportSectionById('kras-section', 'kras', 'pdf');
       }
-    } catch (_) {}
+    } catch (_) { }
   };
 
   const submitReview = async () => {
@@ -644,11 +645,11 @@ export default function AdminDashboard() {
       setRevScore('');
       setRevComment('');
       fetchMyReviews();
-    } catch (_) {}
+    } catch (_) { }
   };
 
   const openEditReview = (r) => {
-    setRevEditForm({ id: r.id, score: String(r.score ?? ''), comment: r.comment || '', review_at: r.review_at ? String(r.review_at).substring(0,10) : '' });
+    setRevEditForm({ id: r.id, score: String(r.score ?? ''), comment: r.comment || '', review_at: r.review_at ? String(r.review_at).substring(0, 10) : '' });
     setRevEditOpen(true);
   };
 
@@ -661,7 +662,7 @@ export default function AdminDashboard() {
       }, { headers: { Authorization: `Bearer ${getToken()}` } });
       setRevEditOpen(false);
       fetchMyReviews();
-    } catch (_) {}
+    } catch (_) { }
   };
 
   useEffect(() => {
@@ -746,7 +747,7 @@ export default function AdminDashboard() {
             <button
               type="button"
               className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
-              onClick={(e)=>{
+              onClick={(e) => {
                 const menu = e.currentTarget.nextSibling; if (menu) menu.classList.toggle('hidden');
               }}
             >
@@ -755,13 +756,13 @@ export default function AdminDashboard() {
             <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
               <button
                 className="block w-full text-left px-3 py-2 hover:bg-gray-50"
-                onClick={()=>{ exportSectionById('overview-section','overview','png'); }}
+                onClick={() => { exportSectionById('overview-section', 'overview', 'png'); }}
               >
                 PNG
               </button>
               <button
                 className="block w-full text-left px-3 py-2 hover:bg-gray-50"
-                onClick={()=>{ exportSectionById('overview-section','overview','pdf'); }}
+                onClick={() => { exportSectionById('overview-section', 'overview', 'pdf'); }}
               >
                 PDF
               </button>
@@ -770,7 +771,7 @@ export default function AdminDashboard() {
         </div>
         {/* Company Trend Analysis (first in overview) */}
         <div id="company-trend-analysis" className="bg-white/10 backdrop-blur-md rounded-lg p-4 md:p-5 shadow-lg border border-white/20 relative overflow-visible">
-          <div className="absolute inset-0 pointer-events-none"/>
+          <div className="absolute inset-0 pointer-events-none" />
           <div className="relative flex items-center justify-between mb-3">
             <div>
               <div className="text-sm text-cyan-200">Trend Analysis</div>
@@ -782,7 +783,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
-                  onClick={()=> setFilterModal({ open: true, section: 'trend' })}
+                  onClick={() => setFilterModal({ open: true, section: 'trend' })}
                 >
                   <FunnelPlus className="w-4 h-4" />
                 </button>
@@ -791,20 +792,20 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
-                  onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
+                  onClick={(e) => { const m = e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
                 >
                   <Download className="w-4 h-4" />
                 </button>
                 <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
                   <button
                     className="block w-full text-left px-3 py-1 hover:bg-gray-50"
-                    onClick={()=>{ exportSectionById('company-trend-analysis','company-trend-analysis','png'); }}
+                    onClick={() => { exportSectionById('company-trend-analysis', 'company-trend-analysis', 'png'); }}
                   >
                     PNG
                   </button>
                   <button
                     className="block w-full text-left px-3 py-1 hover:bg-gray-50"
-                    onClick={()=>{ exportSectionById('company-trend-analysis','company-trend-analysis','pdf'); }}
+                    onClick={() => { exportSectionById('company-trend-analysis', 'company-trend-analysis', 'pdf'); }}
                   >
                     PDF
                   </button>
@@ -859,266 +860,268 @@ export default function AdminDashboard() {
             <h3 className="text-xl font-semibold text-white">Company Performance</h3>
             <div className="flex items-center gap-2 flex-wrap">
               <div className='relative group'>
-              <button
-                type="button"
-                className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
-                onClick={()=> setFilterModal({ open: true, section: 'companyPerformance' })}
-              >
-                <FunnelPlus className="w-4 h-4" />
-              </button>
-             </div> 
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
+                  onClick={() => setFilterModal({ open: true, section: 'companyPerformance' })}
+                >
+                  <FunnelPlus className="w-4 h-4" />
+                </button>
+              </div>
               <div className="relative group">
                 <button
                   type="button"
                   className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
-                  onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
+                  onClick={(e) => { const m = e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
                 >
                   <Download className="w-4 h-4" />
                 </button>
                 <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
                   <button
                     className="block w-full text-left px-3 py-1 hover:bg-gray-50"
-                    onClick={()=>{ exportSectionById('company-performance','company-performance','png'); }}
+                    onClick={() => { exportSectionById('company-performance', 'company-performance', 'png'); }}
                   >
                     PNG
                   </button>
                   <button
                     className="block w-full text-left px-3 py-1 hover:bg-gray-50"
-                    onClick={()=>{ exportSectionById('company-performance','company-performance','pdf'); }}
+                    onClick={() => { exportSectionById('company-performance', 'company-performance', 'pdf'); }}
                   >
                     PDF
                   </button>
                 </div>
               </div>
             </div>
-            
+
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div id="dept-performance-chart" className="w-full">
               <div className="relative w-full h-[320px] md:h-[380px] lg:h-[420px]">
-              {(() => {
-                const centerText = {
-                  id: 'centerText',
-                  beforeDraw(chart) {
-                    const { ctx, chartArea } = chart;
-                    if (!chartArea) return;
-                    const { left, right, top, bottom } = chartArea;
-                    const x = (left + right) / 2;
-                    const y = (top + bottom) / 2;
-                    ctx.save();
-                    ctx.fillStyle = '#ffffff'; // Changed text color
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.font = '600 14px sans-serif';
-                    ctx.fillText('Dept Performance', x, y);
-                    ctx.restore();
-                  },
-                };
-                return (
-                  <PolarArea
-                    data={{
-                      labels: (depts||[]).map(d=> d.name),
-                      datasets: [{
-                        label: 'Avg Score',
-                        data: (depts||[]).map(d=> ovDeptAverages[d.name]||0),
-                        backgroundColor: (depts||[]).map((_,i)=> {
-                          const colors = ['#6366f1','#ff4502ff','#f59e0b','#06b6d4','#ef4444','#8b5cf6','#0b533b6a','#3b82f6','#84cc16','#14b8a6'];
-                          return colors[i % colors.length] + '33'; // translucent fill
-                        }),
-                        borderColor: (depts||[]).map((_,i)=> {
-                          const colors = ['#6366f1','#22c55e','#f59e0b','#06b6d4','#ef4444','#8b5cf6','#10b981','#3b82f6','#84cc16','#14b8a6'];
-                          return colors[i % colors.length];
-                        }),
-                        borderWidth: 1,
-                      }]
-                    }}
-                    options={{
-                      responsive:true,
-                      maintainAspectRatio:false,
-                      plugins:{ legend:{ display:true, position:'bottom', align:'center', labels: { color: '#ffffff' } } }, // Added label color
-                      scales:{ r:{ 
-                        suggestedMin:0, 
-                        suggestedMax:100, 
-                        grid: { color:'rgba(255,255,255,0.2)' }, // Changed grid color
-                        angleLines:{ color:'rgba(255,255,255,0.2)' }, // Changed angle line color
-                        ticks: { backdropColor: 'rgba(0,0,0,0.5)', color: '#ffffff' }, // Added tick color
-                        pointLabels: { color: '#ffffff' } // Added point label color
+                {(() => {
+                  const centerText = {
+                    id: 'centerText',
+                    beforeDraw(chart) {
+                      const { ctx, chartArea } = chart;
+                      if (!chartArea) return;
+                      const { left, right, top, bottom } = chartArea;
+                      const x = (left + right) / 2;
+                      const y = (top + bottom) / 2;
+                      ctx.save();
+                      ctx.fillStyle = '#ffffff'; // Changed text color
+                      ctx.textAlign = 'center';
+                      ctx.textBaseline = 'middle';
+                      ctx.font = '600 14px sans-serif';
+                      ctx.fillText('Dept Performance', x, y);
+                      ctx.restore();
+                    },
+                  };
+                  return (
+                    <PolarArea
+                      data={{
+                        labels: (depts || []).map(d => d.name),
+                        datasets: [{
+                          label: 'Avg Score',
+                          data: (depts || []).map(d => ovDeptAverages[d.name] || 0),
+                          backgroundColor: (depts || []).map((_, i) => {
+                            const colors = ['#6366f1', '#ff4502ff', '#f59e0b', '#06b6d4', '#ef4444', '#8b5cf6', '#0b533b6a', '#3b82f6', '#84cc16', '#14b8a6'];
+                            return colors[i % colors.length] + '33'; // translucent fill
+                          }),
+                          borderColor: (depts || []).map((_, i) => {
+                            const colors = ['#6366f1', '#22c55e', '#f59e0b', '#06b6d4', '#ef4444', '#8b5cf6', '#10b981', '#3b82f6', '#84cc16', '#14b8a6'];
+                            return colors[i % colors.length];
+                          }),
+                          borderWidth: 1,
+                        }]
                       }}
-                    }}
-                    plugins={[centerText]}
-                  />
-                  
-                );
-              
-              })()}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true, position: 'bottom', align: 'center', labels: { color: '#ffffff' } } }, // Added label color
+                        scales: {
+                          r: {
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            grid: { color: 'rgba(255,255,255,0.2)' }, // Changed grid color
+                            angleLines: { color: 'rgba(255,255,255,0.2)' }, // Changed angle line color
+                            ticks: { backdropColor: 'rgba(0,0,0,0.5)', color: '#ffffff' }, // Added tick color
+                            pointLabels: { color: '#ffffff' } // Added point label color
+                          }
+                        }
+                      }}
+                      plugins={[centerText]}
+                    />
+
+                  );
+
+                })()}
               </div>
               <div className="mt-3 text-center text-base md:text-lg font-semibold text-white">Department Performance</div>
             </div>
             <div id="overview-company-chart" className="w-full">
               <div className="relative w-full h-[320px] md:h-[380px] lg:h-[420px]">
-              {(() => {
-                const liquidFill = {
-                  id: 'liquidFill',
-                  afterInit(chart) {
-                    chart.$liquid = chart.$liquid || { phase: 0, raf: null };
-                    const step = () => {
-                      if (!chart.$liquid) return;
-                      chart.$liquid.phase += 0.06; // speed
-                      // keep phase bounded
-                      if (chart.$liquid.phase > Math.PI * 2) chart.$liquid.phase -= Math.PI * 2;
-                      chart.draw();
-                      chart.$liquid.raf = requestAnimationFrame(step);
-                    };
-                    if (!chart.$liquid.raf) chart.$liquid.raf = requestAnimationFrame(step);
-                  },
-                  afterDestroy(chart) {
-                    try { if (chart.$liquid?.raf) cancelAnimationFrame(chart.$liquid.raf); } catch(_) {}
-                    chart.$liquid = null;
-                  },
-                  beforeDatasetsDraw(chart) {
-                    try {
-                      const ds = chart.data?.datasets?.[0];
-                      if (!ds) return;
-                      const sum = (Number(ds.data?.[0]||0) + Number(ds.data?.[1]||0)) || 0;
-                      const pct = sum > 0 ? Number(ds.data?.[0]||0) / sum : 0;
-                      const meta = chart.getDatasetMeta(0);
-                      const arc0 = meta?.data?.[0]; if (!arc0) return;
-                      const cx = arc0.x, cy = arc0.y;
-                      const inner = arc0.innerRadius;
-                      const ctx = chart.ctx; if (!ctx || !inner) return;
-                      const phase = chart.$liquid?.phase || 0;
-                      // Clip to inner circle
-                      ctx.save();
-                      ctx.beginPath();
-                      ctx.arc(cx, cy, inner * 0.98, 0, Math.PI * 2);
-                      ctx.clip();
-                      // Compute water level
-                      const yTop = cy - inner, yBot = cy + inner;
-                      const yLevel = yBot - (yBot - yTop) * pct;
-                      // Draw base water
-                      const grad = ctx.createLinearGradient(0, yTop, 0, yBot);
-                      grad.addColorStop(0, 'rgba(59,130,246,0.6)');
-                      grad.addColorStop(1, 'rgba(59,130,246,0.9)');
-                      ctx.fillStyle = grad;
-                      // Build sine wave path with phase
-                      const amp = Math.max(3, inner * 0.06);
-                      const waveLen = inner * 1.6;
-                      const startX = cx - inner - 2;
-                      const endX = cx + inner + 2;
-                      ctx.beginPath();
-                      ctx.moveTo(startX, yBot + 2);
-                      ctx.lineTo(startX, yLevel);
-                      for (let x = startX; x <= endX; x += 3) {
-                        const t = ((x - startX) / waveLen) * Math.PI * 2 + phase;
-                        const y = yLevel + Math.sin(t) * amp;
-                        ctx.lineTo(x, y);
-                      }
-                      ctx.lineTo(endX, yBot + 2);
-                      ctx.closePath();
-                      ctx.fill();
-                      // Inner gloss
-                      const gloss = ctx.createRadialGradient(cx, cy - inner * 0.4, inner * 0.1, cx, cy, inner);
-                      gloss.addColorStop(0, 'rgba(255,255,255,0.15)');
-                      gloss.addColorStop(1, 'rgba(255,255,255,0)');
-                      ctx.fillStyle = gloss;
-                      ctx.beginPath();
-                      ctx.arc(cx, cy, inner * 0.95, 0, Math.PI * 2);
-                      ctx.fill();
-                      ctx.restore();
-                      // Center percentage text
-                      ctx.save();
-                      ctx.fillStyle = '#FFFFFF'; // Changed text color
-                      ctx.font = '600 50px sans-serif';
-                      ctx.textAlign = 'center';
-                      ctx.textBaseline = 'middle';
-                      ctx.fillText(`${Math.round(pct*100)}%`, cx, cy);
-                      ctx.restore();
-                    } catch (_) { /* noop */ }
-                  }
-                };
-                return (
-                  <Doughnut
-                    data={{ labels:['Avg','Remaining'], datasets:[{ data:[Math.max(0, Math.min(100, ovCompanyAverage||0)), Math.max(0, 100 - Math.max(0, Math.min(100, ovCompanyAverage||0)))], backgroundColor:['#d16a0fff','rgba(255,255,255,0.2)'], borderWidth:0, cutout:'70%' }] }} // Changed remaining color
-                    options={{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:true, position:'bottom', align:'center', labels: { color: '#ffffff' } } } }} // Added label color
-                    plugins={[liquidFill]}
-                  />
-                );
-              })()}
+                {(() => {
+                  const liquidFill = {
+                    id: 'liquidFill',
+                    afterInit(chart) {
+                      chart.$liquid = chart.$liquid || { phase: 0, raf: null };
+                      const step = () => {
+                        if (!chart.$liquid) return;
+                        chart.$liquid.phase += 0.06; // speed
+                        // keep phase bounded
+                        if (chart.$liquid.phase > Math.PI * 2) chart.$liquid.phase -= Math.PI * 2;
+                        chart.draw();
+                        chart.$liquid.raf = requestAnimationFrame(step);
+                      };
+                      if (!chart.$liquid.raf) chart.$liquid.raf = requestAnimationFrame(step);
+                    },
+                    afterDestroy(chart) {
+                      try { if (chart.$liquid?.raf) cancelAnimationFrame(chart.$liquid.raf); } catch (_) { }
+                      chart.$liquid = null;
+                    },
+                    beforeDatasetsDraw(chart) {
+                      try {
+                        const ds = chart.data?.datasets?.[0];
+                        if (!ds) return;
+                        const sum = (Number(ds.data?.[0] || 0) + Number(ds.data?.[1] || 0)) || 0;
+                        const pct = sum > 0 ? Number(ds.data?.[0] || 0) / sum : 0;
+                        const meta = chart.getDatasetMeta(0);
+                        const arc0 = meta?.data?.[0]; if (!arc0) return;
+                        const cx = arc0.x, cy = arc0.y;
+                        const inner = arc0.innerRadius;
+                        const ctx = chart.ctx; if (!ctx || !inner) return;
+                        const phase = chart.$liquid?.phase || 0;
+                        // Clip to inner circle
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, inner * 0.98, 0, Math.PI * 2);
+                        ctx.clip();
+                        // Compute water level
+                        const yTop = cy - inner, yBot = cy + inner;
+                        const yLevel = yBot - (yBot - yTop) * pct;
+                        // Draw base water
+                        const grad = ctx.createLinearGradient(0, yTop, 0, yBot);
+                        grad.addColorStop(0, 'rgba(59,130,246,0.6)');
+                        grad.addColorStop(1, 'rgba(59,130,246,0.9)');
+                        ctx.fillStyle = grad;
+                        // Build sine wave path with phase
+                        const amp = Math.max(3, inner * 0.06);
+                        const waveLen = inner * 1.6;
+                        const startX = cx - inner - 2;
+                        const endX = cx + inner + 2;
+                        ctx.beginPath();
+                        ctx.moveTo(startX, yBot + 2);
+                        ctx.lineTo(startX, yLevel);
+                        for (let x = startX; x <= endX; x += 3) {
+                          const t = ((x - startX) / waveLen) * Math.PI * 2 + phase;
+                          const y = yLevel + Math.sin(t) * amp;
+                          ctx.lineTo(x, y);
+                        }
+                        ctx.lineTo(endX, yBot + 2);
+                        ctx.closePath();
+                        ctx.fill();
+                        // Inner gloss
+                        const gloss = ctx.createRadialGradient(cx, cy - inner * 0.4, inner * 0.1, cx, cy, inner);
+                        gloss.addColorStop(0, 'rgba(255,255,255,0.15)');
+                        gloss.addColorStop(1, 'rgba(255,255,255,0)');
+                        ctx.fillStyle = gloss;
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, inner * 0.95, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                        // Center percentage text
+                        ctx.save();
+                        ctx.fillStyle = '#FFFFFF'; // Changed text color
+                        ctx.font = '600 50px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(`${Math.round(pct * 100)}%`, cx, cy);
+                        ctx.restore();
+                      } catch (_) { /* noop */ }
+                    }
+                  };
+                  return (
+                    <Doughnut
+                      data={{ labels: ['Avg', 'Remaining'], datasets: [{ data: [Math.max(0, Math.min(100, ovCompanyAverage || 0)), Math.max(0, 100 - Math.max(0, Math.min(100, ovCompanyAverage || 0)))], backgroundColor: ['#d16a0fff', 'rgba(255,255,255,0.2)'], borderWidth: 0, cutout: '70%' }] }} // Changed remaining color
+                      options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'bottom', align: 'center', labels: { color: '#ffffff' } } } }} // Added label color
+                      plugins={[liquidFill]}
+                    />
+                  );
+                })()}
               </div>
               <div className="mt-2 text-center text-base md:text-lg font-semibold text-white">Company Performance</div>
 
             </div>
           </div>
         </div>
-      <div id="overview-progress-chart" className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg p-6 border border-white/20 text-white">
-        <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <h3 className="text-xl font-semibold text-white">Company Progress</h3>
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="relative group">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
-              onClick={()=> setFilterModal({ open: true, section: 'companyProgress' })}
-            >
-              <FunnelPlus className="w-4 h-4" />
-            </button>
-            </div>
-
-            <div className="relative group">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
-                onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
-              >
-                <Download className="w-4 h-4" />
-              </button>
-
-              <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
+        <div id="overview-progress-chart" className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg p-6 border border-white/20 text-white">
+          <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+            <h3 className="text-xl font-semibold text-white">Company Progress</h3>
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="relative group">
                 <button
-                  className="block w-full text-left px-3 py-1 hover:bg-gray-50"
-                  onClick={()=>{ exportSectionById('overview-progress-chart','company-progress','png'); }}
+                  type="button"
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
+                  onClick={() => setFilterModal({ open: true, section: 'companyProgress' })}
                 >
-                  PNG
+                  <FunnelPlus className="w-4 h-4" />
                 </button>
+              </div>
+
+              <div className="relative group">
                 <button
-                  className="block w-full text-left px-3 py-1 hover:bg-gray-50"
-                  onClick={()=>{ exportSectionById('overview-progress-chart','company-progress','pdf'); }}
+                  type="button"
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
+                  onClick={(e) => { const m = e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
                 >
-                  PDF
+                  <Download className="w-4 h-4" />
                 </button>
+
+                <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
+                  <button
+                    className="block w-full text-left px-3 py-1 hover:bg-gray-50"
+                    onClick={() => { exportSectionById('overview-progress-chart', 'company-progress', 'png'); }}
+                  >
+                    PNG
+                  </button>
+                  <button
+                    className="block w-full text-left px-3 py-1 hover:bg-gray-50"
+                    onClick={() => { exportSectionById('overview-progress-chart', 'company-progress', 'pdf'); }}
+                  >
+                    PDF
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="flex items-center gap-2 mb-3 flex-wrap">
-          <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={hbDept} onChange={(e)=>{ setHbDept(e.target.value); setHbManagerId(''); }}>
-            <option value="__all__" className="text-black">All</option>
-            {(depts||[]).map(d=> <option key={d.id} value={d.name} className="text-black">{d.name}</option>)}
-          </select>
-          <select className="p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!hbDept || hbDept==='__all__'} value={hbManagerId} onChange={(e)=> setHbManagerId(e.target.value)}>
-            <option value="" className="text-black">Select Manager</option>
-            {(hbManagers||[]).map(m=> <option key={m.user_id} value={m.user_id} className="text-black">{m.name}</option>)}
-          </select>
-          <input type="number" className="p-2 border border-white/30 rounded bg-white/5 text-white w-28" value={hbFilter.year} onChange={(e)=> setHbFilter(prev=>({ ...prev, year: Number(e.target.value)||new Date().getFullYear() }))} />
-        </div>
-        <div className="h-72">
-          {hbSeries.labels.length ? (
-            <Bar
-              data={{ labels: hbSeries.labels, datasets:[{ label:'Avg Score', data: hbSeries.values, backgroundColor:'rgba(222, 145, 13, 0.3)', borderColor:'#d72e03ff' }] }}
-              options={{ 
-                indexAxis:'y', 
-                responsive:true, 
-                maintainAspectRatio:false, 
-                plugins:{ legend:{ display:false } }, 
-                scales:{ 
-                  x:{ suggestedMin:0, suggestedMax:100, ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } }, // Added tick and grid color
-                  y:{ ticks:{ autoSkip:false, color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } } // Added tick and grid color
-                } 
-              }}
-            />
-          ) : (
-            <div className="text-gray-300">No data.</div>
-          )}
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={hbDept} onChange={(e) => { setHbDept(e.target.value); setHbManagerId(''); }}>
+              <option value="__all__" className="text-black">All</option>
+              {(depts || []).map(d => <option key={d.id} value={d.name} className="text-black">{d.name}</option>)}
+            </select>
+            <select className="p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!hbDept || hbDept === '__all__'} value={hbManagerId} onChange={(e) => setHbManagerId(e.target.value)}>
+              <option value="" className="text-black">Select Manager</option>
+              {(hbManagers || []).map(m => <option key={m.user_id} value={m.user_id} className="text-black">{m.name}</option>)}
+            </select>
+            <input type="number" className="p-2 border border-white/30 rounded bg-white/5 text-white w-28" value={hbFilter.year} onChange={(e) => setHbFilter(prev => ({ ...prev, year: Number(e.target.value) || new Date().getFullYear() }))} />
+          </div>
+          <div className="h-72">
+            {hbSeries.labels.length ? (
+              <Bar
+                data={{ labels: hbSeries.labels, datasets: [{ label: 'Avg Score', data: hbSeries.values, backgroundColor: 'rgba(222, 145, 13, 0.3)', borderColor: '#d72e03ff' }] }}
+                options={{
+                  indexAxis: 'y',
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    x: { suggestedMin: 0, suggestedMax: 100, ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } }, // Added tick and grid color
+                    y: { ticks: { autoSkip: false, color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } } // Added tick and grid color
+                  }
+                }}
+              />
+            ) : (
+              <div className="text-gray-300">No data.</div>
+            )}
           </div>
         </div>
         {filterModal.open && filterModal.section && (
@@ -1139,7 +1142,7 @@ export default function AdminDashboard() {
                       type="number"
                       className="w-full p-2 rounded bg-white/10 border border-white/30 text-white"
                       value={ovFilter.year}
-                      onChange={(e)=>setOvFilter(prev=>({ ...prev, year: Number(e.target.value)||new Date().getFullYear() }))}
+                      onChange={(e) => setOvFilter(prev => ({ ...prev, year: Number(e.target.value) || new Date().getFullYear() }))}
                     />
                   </div>
                 </div>
@@ -1151,7 +1154,7 @@ export default function AdminDashboard() {
                     <select
                       className="w-full p-2 rounded bg-white/10 border border-white/30 text-white"
                       value={ovFilter.mode}
-                      onChange={(e)=>setOvFilter(prev=>({ ...prev, mode: e.target.value }))}
+                      onChange={(e) => setOvFilter(prev => ({ ...prev, mode: e.target.value }))}
                     >
                       <option value="monthly" className="text-black">Monthly</option>
                       <option value="yearly" className="text-black">Yearly</option>
@@ -1163,7 +1166,7 @@ export default function AdminDashboard() {
                       type="number"
                       className="w-full p-2 rounded bg-white/10 border border-white/30 text-white"
                       value={ovFilter.year}
-                      onChange={(e)=>setOvFilter(prev=>({ ...prev, year: Number(e.target.value) }))}
+                      onChange={(e) => setOvFilter(prev => ({ ...prev, year: Number(e.target.value) }))}
                     />
                   </div>
                   {ovFilter.mode === 'monthly' && (
@@ -1172,9 +1175,9 @@ export default function AdminDashboard() {
                       <select
                         className="w-full p-2 rounded bg-white/10 border border-white/30 text-white"
                         value={ovFilter.month}
-                        onChange={(e)=>setOvFilter(prev=>({ ...prev, month: Number(e.target.value) }))}
+                        onChange={(e) => setOvFilter(prev => ({ ...prev, month: Number(e.target.value) }))}
                       >
-                        {Array.from({length:12},(_,i)=>i+1).map(m=> (
+                        {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                           <option key={m} value={m} className="text-black">{m}</option>
                         ))}
                       </select>
@@ -1189,7 +1192,7 @@ export default function AdminDashboard() {
                     <select
                       className="w-full p-2 rounded bg-white/10 border border-white/30 text-white"
                       value={hbFilter.mode}
-                      onChange={(e)=>setHbFilter(prev=>({ ...prev, mode: e.target.value }))}
+                      onChange={(e) => setHbFilter(prev => ({ ...prev, mode: e.target.value }))}
                     >
                       <option value="monthly" className="text-black">Monthly</option>
                       <option value="yearly" className="text-black">Yearly</option>
@@ -1201,7 +1204,7 @@ export default function AdminDashboard() {
                       type="number"
                       className="w-full p-2 rounded bg-white/10 border border-white/30 text-white"
                       value={hbFilter.year}
-                      onChange={(e)=>setHbFilter(prev=>({ ...prev, year: Number(e.target.value) }))}
+                      onChange={(e) => setHbFilter(prev => ({ ...prev, year: Number(e.target.value) }))}
                     />
                   </div>
                   {hbFilter.mode === 'monthly' && (
@@ -1210,9 +1213,9 @@ export default function AdminDashboard() {
                       <select
                         className="w-full p-2 rounded bg-white/10 border border-white/30 text-white"
                         value={hbFilter.month}
-                        onChange={(e)=>setHbFilter(prev=>({ ...prev, month: Number(e.target.value) }))}
+                        onChange={(e) => setHbFilter(prev => ({ ...prev, month: Number(e.target.value) }))}
                       >
-                        {Array.from({length:12},(_,i)=>i+1).map(m=> (
+                        {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                           <option key={m} value={m} className="text-black">{m}</option>
                         ))}
                       </select>
@@ -1224,7 +1227,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className="text-sm px-3 py-2 rounded bg-white/10 hover:bg-white/20"
-                  onClick={()=> setFilterModal({ open: false, section: null })}
+                  onClick={() => setFilterModal({ open: false, section: null })}
                 >
                   Close
                 </button>
@@ -1240,35 +1243,35 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
             <h3 className="text-xl font-semibold text-white">Performance</h3>
             <div className="flex items-center gap-2 flex-wrap">
-              <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={perfFilter.mode} onChange={(e)=>setPerfFilter(prev=>({ ...prev, mode: e.target.value }))}>
+              <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={perfFilter.mode} onChange={(e) => setPerfFilter(prev => ({ ...prev, mode: e.target.value }))}>
                 <option value="monthly" className="text-black">Monthly</option>
                 <option value="yearly" className="text-black">Yearly</option>
               </select>
-              <input type="number" className="p-2 border border-white/30 rounded bg-white/5 text-white w-24" value={perfFilter.year} onChange={(e)=>setPerfFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
-              {perfFilter.mode==='monthly' && (
-                <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={perfFilter.month} onChange={(e)=>setPerfFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-                  {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m} className="text-black">{m}</option>)}
+              <input type="number" className="p-2 border border-white/30 rounded bg-white/5 text-white w-24" value={perfFilter.year} onChange={(e) => setPerfFilter(prev => ({ ...prev, year: Number(e.target.value) }))} />
+              {perfFilter.mode === 'monthly' && (
+                <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={perfFilter.month} onChange={(e) => setPerfFilter(prev => ({ ...prev, month: Number(e.target.value) }))}>
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map(m => <option key={m} value={m} className="text-black">{m}</option>)}
                 </select>
               )}
               <div className="relative group">
-              <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={()=>exportSectionById('performance-section','performance','pdf')}>
-              <Download className="w-4 h-4" /></button>
+                <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={() => exportSectionById('performance-section', 'performance', 'pdf')}>
+                  <Download className="w-4 h-4" /></button>
 
               </div>
-            </div>   
+            </div>
           </div>
           <div className="flex items-center gap-2 mb-4 flex-wrap">
-            <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={perfDept} onChange={(e)=> setPerfDept(e.target.value)}>
+            <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={perfDept} onChange={(e) => setPerfDept(e.target.value)}>
               <option value="" className="text-black">Select Department</option>
-              {(depts||[]).map(d=> <option key={d.id} value={d.name} className="text-black">{d.name}</option>)}
+              {(depts || []).map(d => <option key={d.id} value={d.name} className="text-black">{d.name}</option>)}
             </select>
-            <select className="p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!perfDept} value={perfManagerId} onChange={(e)=> setPerfManagerId(e.target.value)}>
+            <select className="p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!perfDept} value={perfManagerId} onChange={(e) => setPerfManagerId(e.target.value)}>
               <option value="" className="text-black">Select Manager</option>
-              {(perfManagers||[]).map(m=> <option key={m.user_id} value={m.user_id} className="text-black">{m.name}</option>)}
+              {(perfManagers || []).map(m => <option key={m.user_id} value={m.user_id} className="text-black">{m.name}</option>)}
             </select>
-            <select className="p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!perfDept} value={perfEmployeeId} onChange={(e)=> setPerfEmployeeId(e.target.value)}>
+            <select className="p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!perfDept} value={perfEmployeeId} onChange={(e) => setPerfEmployeeId(e.target.value)}>
               <option value="" className="text-black">Select Employee</option>
-              {(perfEmployees||[]).map(e=> <option key={e.user_id} value={e.user_id} className="text-black">{e.name}</option>)}
+              {(perfEmployees || []).map(e => <option key={e.user_id} value={e.user_id} className="text-black">{e.name}</option>)}
             </select>
           </div>
 
@@ -1285,17 +1288,17 @@ export default function AdminDashboard() {
                     const center = {
                       id: 'deptDoughnutCenter',
                       afterDatasetsDraw(chart) {
-                        const { ctx, chartArea, data } = chart; if (!chartArea) return; const { left,right,top,bottom }=chartArea; const x=(left+right)/2; const y=(top+bottom)/2;
-                        const ds = data?.datasets?.[0]; const v = Array.isArray(ds?.data) ? Number(ds.data[0]||0) : 0; const pct = Math.round(Math.max(0, Math.min(100, v)));
-                        ctx.save(); ctx.fillStyle='#FFFFFF'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font='600 20px sans-serif'; ctx.fillText(`${pct}%`, x, y); ctx.restore();
+                        const { ctx, chartArea, data } = chart; if (!chartArea) return; const { left, right, top, bottom } = chartArea; const x = (left + right) / 2; const y = (top + bottom) / 2;
+                        const ds = data?.datasets?.[0]; const v = Array.isArray(ds?.data) ? Number(ds.data[0] || 0) : 0; const pct = Math.round(Math.max(0, Math.min(100, v)));
+                        ctx.save(); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '600 20px sans-serif'; ctx.fillText(`${pct}%`, x, y); ctx.restore();
                       }
                     };
-                    const val = Math.max(0, Math.min(100, perfDeptAvg||0));
+                    const val = Math.max(0, Math.min(100, perfDeptAvg || 0));
                     return (
                       <Doughnut
                         key={`dept-${perfDept}-${perfFilter.mode}-${perfFilter.year}-${perfFilter.month}-${val}`}
-                        data={{ labels:['Avg','Remaining'], datasets:[{ data:[val, 100-val], backgroundColor:['#3b82f6','rgba(255,255,255,0.1)'], borderWidth:0, cutout:'70%' }] }}
-                        options={{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }}
+                        data={{ labels: ['Avg', 'Remaining'], datasets: [{ data: [val, 100 - val], backgroundColor: ['#3b82f6', 'rgba(255,255,255,0.1)'], borderWidth: 0, cutout: '70%' }] }}
+                        options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }}
                         redraw
                         plugins={[center]}
                       />
@@ -1318,17 +1321,17 @@ export default function AdminDashboard() {
                     const center = {
                       id: 'mgrDoughnutCenter',
                       afterDatasetsDraw(chart) {
-                        const { ctx, chartArea, data } = chart; if (!chartArea) return; const { left,right,top,bottom }=chartArea; const x=(left+right)/2; const y=(top+bottom)/2;
-                        const ds = data?.datasets?.[0]; const v = Array.isArray(ds?.data) ? Number(ds.data[0]||0) : 0; const pct = Math.round(Math.max(0, Math.min(100, v)));
-                        ctx.save(); ctx.fillStyle='#FFFFFF'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font='600 20px sans-serif'; ctx.fillText(`${pct}%`, x, y); ctx.restore();
+                        const { ctx, chartArea, data } = chart; if (!chartArea) return; const { left, right, top, bottom } = chartArea; const x = (left + right) / 2; const y = (top + bottom) / 2;
+                        const ds = data?.datasets?.[0]; const v = Array.isArray(ds?.data) ? Number(ds.data[0] || 0) : 0; const pct = Math.round(Math.max(0, Math.min(100, v)));
+                        ctx.save(); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '600 20px sans-serif'; ctx.fillText(`${pct}%`, x, y); ctx.restore();
                       }
                     };
-                    const val = Math.max(0, Math.min(100, perfManagerAvg||0));
+                    const val = Math.max(0, Math.min(100, perfManagerAvg || 0));
                     return (
                       <Doughnut
                         key={`mgr-${perfManagerId}-${perfDept}-${perfFilter.mode}-${perfFilter.year}-${perfFilter.month}-${val}`}
-                        data={{ labels:['Avg','Remaining'], datasets:[{ data:[val, 100-val], backgroundColor:['#6366f1','rgba(255,255,255,0.1)'], borderWidth:0, cutout:'70%' }] }}
-                        options={{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }}
+                        data={{ labels: ['Avg', 'Remaining'], datasets: [{ data: [val, 100 - val], backgroundColor: ['#6366f1', 'rgba(255,255,255,0.1)'], borderWidth: 0, cutout: '70%' }] }}
+                        options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }}
                         redraw
                         plugins={[center]}
                       />
@@ -1339,18 +1342,18 @@ export default function AdminDashboard() {
                 <div className="h-64">
                   {perfMgrKraBars.labels.length ? (
                     <Bar
-                      data={{ labels: perfMgrKraBars.labels, datasets:[{ label:'KRA %', data: perfMgrKraBars.values, backgroundColor:'rgba(99,102,241,0.35)', borderColor:'#6366f1' }] }}
+                      data={{ labels: perfMgrKraBars.labels, datasets: [{ label: 'KRA %', data: perfMgrKraBars.values, backgroundColor: 'rgba(99,102,241,0.35)', borderColor: '#6366f1' }] }}
                       options={{
-                        responsive:true,
-                        maintainAspectRatio:false,
-                        plugins:{ legend:{ display:false } },
-                        scales:{ 
-                          y:{ suggestedMin:0, suggestedMax:100, ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } },
-                          x:{ ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } }
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                          y: { suggestedMin: 0, suggestedMax: 100, ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } },
+                          x: { ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } }
                         },
-                        animation:{
-                          duration:800,
-                          easing:'easeOutCubic',
+                        animation: {
+                          duration: 800,
+                          easing: 'easeOutCubic',
                           delay: (ctx) => ctx?.type === 'data' && ctx?.mode === 'default' ? ctx.dataIndex * 120 : 0,
                           y: { from: 0 }
                         }
@@ -1373,17 +1376,17 @@ export default function AdminDashboard() {
                     const center = {
                       id: 'empDoughnutCenter',
                       afterDatasetsDraw(chart) {
-                        const { ctx, chartArea, data } = chart; if (!chartArea) return; const { left,right,top,bottom }=chartArea; const x=(left+right)/2; const y=(top+bottom)/2;
-                        const ds = data?.datasets?.[0]; const v = Array.isArray(ds?.data) ? Number(ds.data[0]||0) : 0; const pct = Math.round(Math.max(0, Math.min(100, v)));
-                        ctx.save(); ctx.fillStyle='#FFFFFF'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font='600 20px sans-serif'; ctx.fillText(`${pct}%`, x, y); ctx.restore();
+                        const { ctx, chartArea, data } = chart; if (!chartArea) return; const { left, right, top, bottom } = chartArea; const x = (left + right) / 2; const y = (top + bottom) / 2;
+                        const ds = data?.datasets?.[0]; const v = Array.isArray(ds?.data) ? Number(ds.data[0] || 0) : 0; const pct = Math.round(Math.max(0, Math.min(100, v)));
+                        ctx.save(); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '600 20px sans-serif'; ctx.fillText(`${pct}%`, x, y); ctx.restore();
                       }
                     };
-                    const val = Math.max(0, Math.min(100, perfEmployeeAvg||0));
+                    const val = Math.max(0, Math.min(100, perfEmployeeAvg || 0));
                     return (
                       <Doughnut
                         key={`emp-${perfEmployeeId}-${perfDept}-${perfFilter.mode}-${perfFilter.year}-${perfFilter.month}-${val}`}
-                        data={{ labels:['Avg','Remaining'], datasets:[{ data:[val, 100-val], backgroundColor:['#10b981','rgba(255,255,255,0.1)'], borderWidth:0, cutout:'70%' }] }}
-                        options={{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }}
+                        data={{ labels: ['Avg', 'Remaining'], datasets: [{ data: [val, 100 - val], backgroundColor: ['#10b981', 'rgba(255,255,255,0.1)'], borderWidth: 0, cutout: '70%' }] }}
+                        options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }}
                         redraw
                         plugins={[center]}
                       />
@@ -1394,18 +1397,18 @@ export default function AdminDashboard() {
                 <div className="h-64">
                   {perfEmpKraBars.labels.length ? (
                     <Bar
-                      data={{ labels: perfEmpKraBars.labels, datasets:[{ label:'KRA %', data: perfEmpKraBars.values, backgroundColor:'rgba(16,185,129,0.35)', borderColor:'#10b981' }] }}
+                      data={{ labels: perfEmpKraBars.labels, datasets: [{ label: 'KRA %', data: perfEmpKraBars.values, backgroundColor: 'rgba(16,185,129,0.35)', borderColor: '#10b981' }] }}
                       options={{
-                        responsive:true,
-                        maintainAspectRatio:false,
-                        plugins:{ legend:{ display:false } },
-                        scales:{ 
-                          y:{ suggestedMin:0, suggestedMax:100, ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } },
-                          x:{ ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } }
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                          y: { suggestedMin: 0, suggestedMax: 100, ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } },
+                          x: { ticks: { color: '#ffffff' }, grid: { color: 'rgba(255,255,255,0.2)' } }
                         },
-                        animation:{
-                          duration:800,
-                          easing:'easeOutCubic',
+                        animation: {
+                          duration: 800,
+                          easing: 'easeOutCubic',
                           delay: (ctx) => ctx?.type === 'data' && ctx?.mode === 'default' ? ctx.dataIndex * 120 : 0,
                           y: { from: 0 }
                         }
@@ -1428,21 +1431,21 @@ export default function AdminDashboard() {
             <h3 className="text-xl font-semibold text-white">Department Performance</h3>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={depFilter.mode} onChange={(e)=>setDepFilter(prev=>({ ...prev, mode: e.target.value }))}>
+            <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={depFilter.mode} onChange={(e) => setDepFilter(prev => ({ ...prev, mode: e.target.value }))}>
               <option value="monthly" className="text-black">Monthly</option>
               <option value="yearly" className="text-black">Yearly</option>
             </select>
-            <input type="number" className="p-2 border border-white/30 rounded bg-white/5 text-white w-24" value={depFilter.year} onChange={(e)=>setDepFilter(prev=>({ ...prev, year: Number(e.target.value) }))} />
-            {depFilter.mode==='monthly' && (
-              <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={depFilter.month} onChange={(e)=>setDepFilter(prev=>({ ...prev, month: Number(e.target.value) }))}>
-                {Array.from({length:12},(_,i)=>i+1).map(m=> <option key={m} value={m} className="text-black">{m}</option>)}
+            <input type="number" className="p-2 border border-white/30 rounded bg-white/5 text-white w-24" value={depFilter.year} onChange={(e) => setDepFilter(prev => ({ ...prev, year: Number(e.target.value) }))} />
+            {depFilter.mode === 'monthly' && (
+              <select className="p-2 border border-white/30 rounded bg-white/5 text-white" value={depFilter.month} onChange={(e) => setDepFilter(prev => ({ ...prev, month: Number(e.target.value) }))}>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map(m => <option key={m} value={m} className="text-black">{m}</option>)}
               </select>
             )}
             <div className="relative group">
               <button
                 type="button"
                 className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
-                onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
+                onClick={(e) => { const m = e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}
               >
                 <Download className="w-4 h-4 group" />
               </button>
@@ -1450,13 +1453,13 @@ export default function AdminDashboard() {
               <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 text-black text-xs">
                 <button
                   className="block w-full text-left px-3 py-1 hover:bg-gray-50"
-                  onClick={()=>{ exportSectionById('departments-section','departments','png'); }}
+                  onClick={() => { exportSectionById('departments-section', 'departments', 'png'); }}
                 >
                   PNG
                 </button>
                 <button
                   className="block w-full text-left px-3 py-1 hover:bg-gray-50"
-                  onClick={()=>{ exportSectionById('departments-section','departments','pdf'); }}
+                  onClick={() => { exportSectionById('departments-section', 'departments', 'pdf'); }}
                 >
                   PDF
                 </button>
@@ -1465,17 +1468,17 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="p-2">
-           <select
-              value={selectedDept}
-              onChange={handleDeptChange}
-              className="p-2 border border-white/30 rounded bg-white/5 text-white"
-            >
-              <option value="" className="text-black">Select Department</option>
-              <option value="__all__" className="text-black">All</option>
-              {depts.map((dept) => (
-                <option key={dept.id} value={dept.name} className="text-black">{dept.name}</option>
-              ))}
-            </select>
+          <select
+            value={selectedDept}
+            onChange={handleDeptChange}
+            className="p-2 border border-white/30 rounded bg-white/5 text-white"
+          >
+            <option value="" className="text-black">Select Department</option>
+            <option value="__all__" className="text-black">All</option>
+            {depts.map((dept) => (
+              <option key={dept.id} value={dept.name} className="text-black">{dept.name}</option>
+            ))}
+          </select>
         </div>
         {selectedDept && selectedDept !== '__all__' ? (
           <div className="grid grid-cols-1 items-center justify-center lg:grid-cols-4 gap-6">
@@ -1498,25 +1501,25 @@ export default function AdminDashboard() {
             <div className="lg:col-span-5 flex flex-col items-center justify-center">
               <div className="max-w-sm">
                 <Doughnut
-                  data={{ labels:['Avg','Remaining'], datasets:[{ data:[Math.max(0, Math.min(100, depDeptAverages[selectedDept]||0)), Math.max(0, 100 - Math.max(0, Math.min(100, depDeptAverages[selectedDept]||0)))], backgroundColor:['#10b981','rgba(255,255,255,0.1)'], borderWidth:0, cutout:'70%' }] }}
-                  options={{ responsive:true, plugins:{ legend:{ display:false } } }}
+                  data={{ labels: ['Avg', 'Remaining'], datasets: [{ data: [Math.max(0, Math.min(100, depDeptAverages[selectedDept] || 0)), Math.max(0, 100 - Math.max(0, Math.min(100, depDeptAverages[selectedDept] || 0)))], backgroundColor: ['#10b981', 'rgba(255,255,255,0.1)'], borderWidth: 0, cutout: '70%' }] }}
+                  options={{ responsive: true, plugins: { legend: { display: false } } }}
                 />
               </div>
-              <div className="text-center mt-2 text-xl font-semibold text-white">{selectedDept} - {depDeptAverages[selectedDept]||0}%</div>
+              <div className="text-center mt-2 text-xl font-semibold text-white">{selectedDept} - {depDeptAverages[selectedDept] || 0}%</div>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(depts||[]).map(d => (
+            {(depts || []).map(d => (
               <div key={d.id} className="border border-white/20 rounded p-4 bg-white/5">
-                <div className="font-medium mb-2 text-white">{d.name} - {depDeptAverages[d.name]||0}%</div>
+                <div className="font-medium mb-2 text-white">{d.name} - {depDeptAverages[d.name] || 0}%</div>
                 <div className="max-w-xs">
                   <Doughnut
-                    data={{ labels:['Avg','Remaining'], datasets:[{ data:[Math.max(0, Math.min(100, depDeptAverages[d.name]||0)), Math.max(0, 100 - Math.max(0, Math.min(100, depDeptAverages[d.name]||0)))], backgroundColor:['#60a5fa','rgba(255,255,255,0.1)'], borderWidth:0, cutout:'70%' }] }}
-                    options={{ responsive:true, plugins:{ legend:{ display:false } } }}
+                    data={{ labels: ['Avg', 'Remaining'], datasets: [{ data: [Math.max(0, Math.min(100, depDeptAverages[d.name] || 0)), Math.max(0, 100 - Math.max(0, Math.min(100, depDeptAverages[d.name] || 0)))], backgroundColor: ['#60a5fa', 'rgba(255,255,255,0.1)'], borderWidth: 0, cutout: '70%' }] }}
+                    options={{ responsive: true, plugins: { legend: { display: false } } }}
                   />
                 </div>
-                <div className="text-center mt-2 text-lg text-white">{depDeptAverages[d.name]||0}%</div>
+                <div className="text-center mt-2 text-lg text-white">{depDeptAverages[d.name] || 0}%</div>
               </div>
             ))}
           </div>
@@ -1532,23 +1535,23 @@ export default function AdminDashboard() {
               <button
                 onClick={handleCreateKRA}
                 className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
-              > 
-                <CircleFadingPlus className="w-4 h-4"/>
+              >
+                <CircleFadingPlus className="w-4 h-4" />
               </button>
               <span className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded py-1 px-2 absolute z-10 -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
                 Add KRA
               </span>
             </div>
             <div className="relative group">
-              <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" 
-                onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}>
+              <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20"
+                onClick={(e) => { const m = e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}>
                 <Download className="w-4 h-4" />
               </button>
 
               <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10 w-32">
-                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>handleExportReport('csv')}>CSV</button>
-                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>handleExportReport('excel')}>Excel</button>
-                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>handleExportReport('pdf')}>PDF</button>
+                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={() => handleExportReport('csv')}>CSV</button>
+                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={() => handleExportReport('excel')}>Excel</button>
+                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={() => handleExportReport('pdf')}>PDF</button>
               </div>
             </div>
           </div>
@@ -1556,23 +1559,23 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
           <div>
             <label className="block text-sm font-medium mb-1 text-gray-200">Department</label>
-            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white" value={kraDept} onChange={(e)=> setKraDept(e.target.value)}>
+            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white" value={kraDept} onChange={(e) => setKraDept(e.target.value)}>
               <option value="" className="text-black">Select Department</option>
-              {(depts||[]).map(d=> <option key={d.id} value={d.name} className="text-black">{d.name}</option>)}
+              {(depts || []).map(d => <option key={d.id} value={d.name} className="text-black">{d.name}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium mb-1 text-gray-200">Manager</label>
-            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!kraDept} value={kraManagerId} onChange={(e)=> setKraManagerId(e.target.value)}>
+            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!kraDept} value={kraManagerId} onChange={(e) => setKraManagerId(e.target.value)}>
               <option value="" className="text-black">Select Manager</option>
-              {(kraManagers||[]).map(m=> <option key={m.user_id} value={m.user_id} className="text-black">{m.name}</option>)}
+              {(kraManagers || []).map(m => <option key={m.user_id} value={m.user_id} className="text-black">{m.name}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium mb-1 text-gray-200">Employee</label>
-            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!kraDept} value={kraEmployeeName} onChange={(e)=> setKraEmployeeName(e.target.value)}>
+            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!kraDept} value={kraEmployeeName} onChange={(e) => setKraEmployeeName(e.target.value)}>
               <option value="" className="text-black">Select Employee</option>
-              {(kraEmployees||[]).map(e=> <option key={e.name} value={e.name} className="text-black">{e.name}</option>)}
+              {(kraEmployees || []).map(e => <option key={e.name} value={e.name} className="text-black">{e.name}</option>)}
             </select>
           </div>
 
@@ -1604,7 +1607,7 @@ export default function AdminDashboard() {
                   {filtered.map((kra) => (
                     <tr key={kra.kra_id} className="border-b border-white/20">
                       <td className="p-2 font-medium">{kra.name}</td>
-                      <td className="p-2 font-medium">{(typeof kra.overall_score === 'number' ? `${kra.overall_score}%` : '-') }</td>
+                      <td className="p-2 font-medium">{(typeof kra.overall_score === 'number' ? `${kra.overall_score}%` : '-')}</td>
                       <td className="p-2 font-medium">{kra.manager_name || '-'}</td>
                       <td className="p-2 font-medium">{kra.employee_name || '-'}</td>
                       <td className="p-2 font-medium">
@@ -1670,13 +1673,13 @@ export default function AdminDashboard() {
                     </table>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <button className="px-3 py-2 rounded border border-white/30 text-white" onClick={()=> closeKraModal()}>Close</button>
+                    <button className="px-3 py-2 rounded border border-white/30 text-white" onClick={() => closeKraModal()}>Close</button>
                   </div>
                 </div>
               )}
             </div>
           </div>
-          
+
         )}
       </div>
     ),
@@ -1686,26 +1689,26 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium mb-1 text-gray-200">Department</label>
-            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white" value={revDept} onChange={(e)=>{ setRevDept(e.target.value); }}>
+            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white" value={revDept} onChange={(e) => { setRevDept(e.target.value); }}>
               <option value="" className="text-black">-- Select --</option>
-              {(depts||[]).map(d=> <option key={d.id} value={d.name} className="text-black">{d.name}</option>)}
+              {(depts || []).map(d => <option key={d.id} value={d.name} className="text-black">{d.name}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium mb-1 text-gray-200">Select Manager</label>
-            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!revDept} value={revManagerId} onChange={(e)=>{ setRevManagerId(e.target.value); setRevKraId(''); }}>
+            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!revDept} value={revManagerId} onChange={(e) => { setRevManagerId(e.target.value); setRevKraId(''); }}>
               <option value="" className="text-black">-- Select --</option>
-              {(revDeptManagers||[]).map(m=> <option key={m.user_id} value={m.user_id} className="text-black">{m.name}</option>)}
+              {(revDeptManagers || []).map(m => <option key={m.user_id} value={m.user_id} className="text-black">{m.name}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium mb-1 text-gray-200">Select KRA (Assigned to manager)</label>
-            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!revDept || !revManagerId} value={revKraId} onChange={(e)=> setRevKraId(e.target.value)}>
+            <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white disabled:bg-gray-800/50" disabled={!revDept || !revManagerId} value={revKraId} onChange={(e) => setRevKraId(e.target.value)}>
               <option value="" className="text-black">-- Select --</option>
-              {(function(){
-                const manager = (revDeptManagers||[]).find(m=> String(m.user_id)===String(revManagerId));
+              {(function () {
+                const manager = (revDeptManagers || []).find(m => String(m.user_id) === String(revManagerId));
                 const managerName = manager?.name || '';
-                return (kras||[])
+                return (kras || [])
                   .filter(k => String(k.dept || '') === String(revDept))
                   .filter(k => managerName ? String(k.manager_name || '').toLowerCase() === String(managerName).toLowerCase() : true)
                   .map(k => (
@@ -1719,7 +1722,7 @@ export default function AdminDashboard() {
             <select
               className="w-full p-2 border border-white/30 rounded bg-white/5 text-white"
               value={revMode}
-              onChange={(e)=>{
+              onChange={(e) => {
                 const mode = e.target.value;
                 setRevMode(mode);
                 setRevScore('');
@@ -1740,7 +1743,7 @@ export default function AdminDashboard() {
                   min="0"
                   max="100"
                   value={revScore === '' ? 0 : Number(revScore)}
-                  onChange={(e)=>setRevScore(e.target.value)}
+                  onChange={(e) => setRevScore(e.target.value)}
                 />
                 <span className="w-12 text-right text-sm text-white">{revScore || 0}%</span>
               </div>
@@ -1752,7 +1755,7 @@ export default function AdminDashboard() {
               <select
                 className="w-full p-2 border border-white/30 rounded bg-white/5 text-white max-w-full whitespace-nowrap overflow-hidden text-ellipsis"
                 value={revRatingBand}
-                onChange={(e)=>{
+                onChange={(e) => {
                   setRevRatingBand(e.target.value);
                   setRevRatingValue('');
                 }}
@@ -1771,7 +1774,7 @@ export default function AdminDashboard() {
                 type="button"
                 className="px-3 py-2 rounded bg-indigo-600 text-white disabled:opacity-50 text-sm"
                 disabled={!revRatingBand}
-                onClick={()=>{
+                onClick={() => {
                   setRevRatingModalOpen(true);
                   setRevRatingValue('');
                 }}
@@ -1785,12 +1788,12 @@ export default function AdminDashboard() {
           )}
           <div className="md:col-span-2">
             <label className="block text-sm font-medium mb-1 text-gray-200">Comments</label>
-            <textarea className="w-full p-2 border border-white/30 rounded bg-white/5 text-white placeholder-gray-400" rows={2} value={revComment} onChange={(e)=>setRevComment(e.target.value)} />
+            <textarea className="w-full p-2 border border-white/30 rounded bg-white/5 text-white placeholder-gray-400" rows={2} value={revComment} onChange={(e) => setRevComment(e.target.value)} />
           </div>
         </div>
         <div className="flex justify-end mb-6">
           <button
-            onClick={()=>{
+            onClick={() => {
               if (revMode === 'rating' && revRatingValue) {
                 setRevScore(String(revRatingValue));
               }
@@ -1812,7 +1815,7 @@ export default function AdminDashboard() {
           <div className="mb-8">
             <h4 className="text-lg font-semibold mb-2 text-white">Active KPIs for selected KRA</h4>
             <div className="space-y-3">
-              {(revActiveKpis||[]).map(k => (
+              {(revActiveKpis || []).map(k => (
                 <div key={k.id} className="border border-white/20 rounded p-3 bg-white/5">
                   <div className="font-medium text-white">{k.name}</div>
                   <div className="text-sm text-gray-300">Target: {k.target != null ? `${k.target}%` : '-'}</div>
@@ -1831,11 +1834,11 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-xl font-semibold text-white">My Reviews</h3>
             <div className="relative group">
-              <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={(e)=>{ const m=e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}><Download className="w-4 h-4" /></button>
+              <button className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20" onClick={(e) => { const m = e.currentTarget.nextSibling; if (m) m.classList.toggle('hidden'); }}><Download className="w-4 h-4" /></button>
               <div className="absolute right-0 mt-1 bg-white border rounded shadow hidden z-10">
-                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>exportTableToCSV('#admin-myreviews-table','my-reviews.csv')}>CSV</button>
-                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>exportTableToExcel('#admin-myreviews-table','my-reviews.xls')}>Excel</button>
-                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={()=>exportSectionById('admin-myreviews-section','my-reviews','pdf')}>PDF</button>
+                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={() => exportTableToCSV('#admin-myreviews-table', 'my-reviews.csv')}>CSV</button>
+                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={() => exportTableToExcel('#admin-myreviews-table', 'my-reviews.xls')}>Excel</button>
+                <button className="block w-full text-left px-3 py-2 hover:bg-gray-50 text-black" onClick={() => exportSectionById('admin-myreviews-section', 'my-reviews', 'pdf')}>PDF</button>
               </div>
             </div>
           </div>
@@ -1859,10 +1862,10 @@ export default function AdminDashboard() {
                     <td className="p-3">{r.score}</td>
                     <td className="p-3"><span dangerouslySetInnerHTML={{ __html: r.comment ? renderCommentHtml(r.comment) : '-' }} /></td>
                     <td className="p-3">{r.review_at ? new Date(r.review_at).toLocaleDateString() : '-'}</td>
-                    <td className="p-3"><button className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1" onClick={()=>openEditReview(r)}>Update</button></td>
+                    <td className="p-3"><button className="text-white border border-indigo-600 rounded bg-indigo-400 hover:bg-indigo-600 px-1" onClick={() => openEditReview(r)}>Update</button></td>
                   </tr>
                 ))}
-                {myReviews.length===0 && (
+                {myReviews.length === 0 && (
                   <tr><td className="p-4 text-gray-300" colSpan="6">No reviews yet.</td></tr>
                 )}
               </tbody>
@@ -1875,7 +1878,7 @@ export default function AdminDashboard() {
             <div className="bg-gray-800 backdrop-blur-lg border border-white/20 text-white w-full max-w-md rounded shadow-lg p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">Update Review</h3>
-                <button onClick={()=>setRevEditOpen(false)} className="text-gray-300 hover:text-white">✕</button>
+                <button onClick={() => setRevEditOpen(false)} className="text-gray-300 hover:text-white">✕</button>
               </div>
               <div className="grid grid-cols-1 gap-4">
                 <div>
@@ -1891,11 +1894,11 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1 text-gray-200">Comment</label>
-                  <textarea className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" rows={3} value={revEditForm.comment} onChange={(e)=>setRevEditForm(prev=>({ ...prev, comment: e.target.value }))} />
+                  <textarea className="w-full p-2 border border-white/30 rounded bg-white/10 text-white" rows={3} value={revEditForm.comment} onChange={(e) => setRevEditForm(prev => ({ ...prev, comment: e.target.value }))} />
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-4">
-                <button onClick={()=>setRevEditOpen(false)} className="px-4 py-2 rounded border border-white/30 text-white">Cancel</button>
+                <button onClick={() => setRevEditOpen(false)} className="px-4 py-2 rounded border border-white/30 text-white">Cancel</button>
                 <button onClick={submitEditReview} className="px-4 py-2 rounded bg-indigo-600 text-white">Update</button>
               </div>
             </div>
@@ -1907,7 +1910,7 @@ export default function AdminDashboard() {
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-white">Set Score in Rating Range</h3>
                 <button
-                  onClick={()=>{
+                  onClick={() => {
                     setRevRatingModalOpen(false);
                   }}
                   className="text-gray-300 hover:text-white"
@@ -1919,14 +1922,14 @@ export default function AdminDashboard() {
                 <div className="text-sm text-gray-200">
                   Selected band: {
                     revRatingBand === '95-100' ? 'Outstanding – 95-100' :
-                    revRatingBand === '90-95' ? 'Excellent – 90-95' :
-                    revRatingBand === '85-90' ? 'Very Good – 85-90' :
-                    revRatingBand === '80-85' ? 'Good – 80-85' :
-                    revRatingBand === '75-80' ? 'Fair – 75-80' :
-                    revRatingBand === '70-75' ? 'Needs Improvement – 70-75' :
-                    revRatingBand === '65-70' ? 'Poor – 65-70' :
-                    revRatingBand === '0-65' ? 'Unacceptable – below 65' :
-                    '-'
+                      revRatingBand === '90-95' ? 'Excellent – 90-95' :
+                        revRatingBand === '85-90' ? 'Very Good – 85-90' :
+                          revRatingBand === '80-85' ? 'Good – 80-85' :
+                            revRatingBand === '75-80' ? 'Fair – 75-80' :
+                              revRatingBand === '70-75' ? 'Needs Improvement – 70-75' :
+                                revRatingBand === '65-70' ? 'Poor – 65-70' :
+                                  revRatingBand === '0-65' ? 'Unacceptable – below 65' :
+                                    '-'
                   }
                 </div>
                 <div>
@@ -1935,7 +1938,7 @@ export default function AdminDashboard() {
                     type="number"
                     className="w-full p-2 border border-white/30 rounded bg-white/5 text-white"
                     value={revRatingValue}
-                    onChange={(e)=>{
+                    onChange={(e) => {
                       const v = e.target.value;
                       setRevRatingValue(v);
                     }}
@@ -1945,13 +1948,13 @@ export default function AdminDashboard() {
               </div>
               <div className="flex justify-end gap-2 mt-4">
                 <button
-                  onClick={()=>setRevRatingModalOpen(false)}
+                  onClick={() => setRevRatingModalOpen(false)}
                   className="px-4 py-2 rounded border border-white/30 text-white"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={()=>{
+                  onClick={() => {
                     const [minStr, maxStr] = revRatingBand === '0-65' ? ['0', '65'] : (revRatingBand || '0-100').split('-');
                     const min = Number(minStr);
                     const max = Number(maxStr);
@@ -1985,11 +1988,10 @@ export default function AdminDashboard() {
             <button
               key={section}
               onClick={() => setActiveSection(section)}
-              className={`px-2 sm:px-3 md:px-4 py-2 rounded font-medium text-xs sm:text-sm md:text-base transition-colors flex-shrink-0 ${
-                activeSection === section
+              className={`px-2 sm:px-3 md:px-4 py-2 rounded font-medium text-xs sm:text-sm md:text-base transition-colors flex-shrink-0 ${activeSection === section
                   ? 'bg-white text-indigo-700'
                   : 'bg-white/10 text-white/80 hover:bg-white/20'
-              }`}
+                }`}
             >
               {section.charAt(0).toUpperCase() + section.slice(1)}
             </button>

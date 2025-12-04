@@ -102,15 +102,14 @@ export default function Create_Profile() {
       className="h-screen w-full flex items-center justify-center overflow-y-auto"
     >
       <div className="w-full max-w-md mt-[-80px] mx-auto bg-white/10 backdrop-blur-md p-8 rounded-lg shadow-xl border border-white/20">
-        
+
         <h2 className="text-3xl text-white font-bold mb-6 text-center">Create User</h2>
-        
+
         {message && (
-          <div className={`mb-4 p-3 rounded-md border ${
-            messageType === 'success'
+          <div className={`mb-4 p-3 rounded-md border ${messageType === 'success'
               ? 'bg-green-500/20 border-green-400'
               : 'bg-red-500/20 border-red-400'
-          }`}>
+            }`}>
             <div className="flex">
               <div className="flex-shrink-0">
                 {messageType === 'success' ? (
@@ -135,54 +134,54 @@ export default function Create_Profile() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-white/90 mb-1">Name</label>
-            <input 
-              type="text" 
-              placeholder="Enter Name" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition" 
-              required 
+            <input
+              type="text"
+              placeholder="Enter Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition"
+              required
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-white/90 mb-1">Email</label>
-            <input 
-              type="email" 
-              placeholder="Enter Email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition" 
-              required 
+            <input
+              type="email"
+              placeholder="Enter Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition"
+              required
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-white/90 mb-1">Password</label>
-            <input 
-              type="password" 
-              placeholder="Enter Password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition" 
-              required 
+            <input
+              type="password"
+              placeholder="Enter Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition"
+              required
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-white/90 mb-1">Confirm Password</label>
-            <input 
-              type="password" 
-              placeholder="Enter Confirm Password" 
-              value={confirmPassword} 
-              onChange={(e) => setConfirmPassword(e.target.value)} 
-              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition" 
-              required 
+            <input
+              type="password"
+              placeholder="Enter Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition"
+              required
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-white/90 mb-1">Role</label>
-            <select 
-              value={role} 
-              onChange={(e) => setRole(e.target.value)} 
-              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-white/50 transition" 
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-white/50 transition"
               required
             >
               <option value="" className="text-black">Select Role</option>
@@ -193,10 +192,10 @@ export default function Create_Profile() {
           </div>
           <div>
             <label className="block text-sm font-medium text-white/90 mb-1">Department</label>
-            <select 
-              value={dept} 
-              onChange={(e) => setDept(e.target.value)} 
-              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-white/50 transition" 
+            <select
+              value={dept}
+              onChange={(e) => setDept(e.target.value)}
+              className="w-full text-white bg-white/10 border border-white/30 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-white/50 transition"
               required
             >
               <option value="" className="text-black">Select Department</option>
@@ -206,9 +205,9 @@ export default function Create_Profile() {
               ))}
             </select>
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             className="w-full bg-green-600 text-white font-bold py-2.5 rounded-lg hover:bg-green-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
           >
             Create User
