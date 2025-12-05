@@ -110,7 +110,7 @@ export default function Login() {
           muted 
           className="absolute top-0 left-0 w-full h-full object-cover z-0 brightness-125"
           style={{
-            filter: 'brightness(1.4) contrast(1.1) saturate(1.1)'
+            filter: 'brightness(1) contrast(1.1) saturate(1.1)'
           }}
         >
           <source src={bgVideo} type="video/mp4" />
@@ -132,16 +132,16 @@ export default function Login() {
             placeholder="Enter Your Login Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 mb-4 rounded-full border font-semibold text-md  border-black/60 bg-white/5 text-black placeholder-gray-600 caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+            className="w-full p-3 mb-4 rounded-full border font-semibold text-md  border-black/60 bg-white/5 text-black placeholder-gray-800 caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
           />
 
           <label className="block text-black text-md font-bold mb-1">Password</label>
           <input
             type="password"
-            placeholder="********"
+            placeholder="Enter Your Password."
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 mb-4 rounded-full border border-black/60 bg-white/5 text-semibold text-md  text-black placeholder-gray-600 caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+            className="w-full p-3 mb-4 rounded-full border font-semibold text-md  border-black/60 bg-white/5 text-black placeholder-gray-800 caret-white focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
           />
 
           <div className="mb-4 text-right">
