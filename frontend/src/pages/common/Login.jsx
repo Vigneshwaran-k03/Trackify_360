@@ -33,9 +33,10 @@ export default function Login() {
       });
 
       if (response.ok) {
+
         const data = await response.json();
         const userRole = (data.user.role || '').toLowerCase();
-        
+
         // Set auth data in storage
         setAuth({
           token: data.access_token,
@@ -46,13 +47,13 @@ export default function Login() {
 
         // Force a full page reload to ensure all components re-render with new auth state
         setShowSuccess(true);
-        
+
         setTimeout(() => {
           setIsFlipping(true);
           setTimeout(() => {
             // Force a full page reload to ensure all components re-render with new auth state
             window.location.href = '/dashboard';
-          }, 800); 
+          }, 800);
         }, 1500);
       } else {
         const errorData = await response.json().catch(() => ({}));
@@ -101,13 +102,13 @@ export default function Login() {
           <p className="text-sm text-gray-600">Redirecting you to the dashboard...</p>
         </div>
       )}
-      
+
       <div className="relative min-h-screen w-full flex items-center justify-center px-4 pt-4 pb-0 overflow-hidden">
         {/* Video Background */}
-        <video 
-          autoPlay 
-          loop 
-          muted 
+        <video
+          autoPlay
+          loop
+          muted
           className="absolute top-0 left-0 w-full h-full object-cover z-0 brightness-125"
           style={{
             filter: 'brightness(1) contrast(1.1) saturate(1.1)'
@@ -116,7 +117,7 @@ export default function Login() {
           <source src={bgVideo} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        
+
         {/* Lighter overlay for better text visibility */}
         <div className="absolute top-0 left-0 w-full h-full bg-white/5 z-1"></div>
         <img src={logoImg} alt="Logo" className="absolute top-4 left-4 w-36  md:w-44 h-auto" />
@@ -156,7 +157,7 @@ export default function Login() {
           </button>
         </form>
       </div>
-      
+
       {/* Main content with gradient background */}
       <div className="w-full bg-gradient-to-t from-orange-300 via-rose-100 to-amber-100">
         {/* Slideshow of info sections */}
@@ -167,47 +168,47 @@ export default function Login() {
         </section>
 
         <section className="w-full py-12 flex justify-center items-center px-6">
-        <div className="max-w-5xl w-full bg-gradient-to-r from-indigo-600/10 to-purple-600/10 rounded-2xl shadow-xl p-10 grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Trackify 360?</h2>
-            <p className="text-gray-700 mb-6">
-              Trackify 360 helps teams stay aligned, focused, and productive with a simple yet powerful
-              performance management experience.
-            </p>
+          <div className="max-w-5xl w-full bg-gradient-to-r from-indigo-600/10 to-purple-600/10 rounded-2xl shadow-xl p-10 grid md:grid-cols-2 gap-10 items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Trackify 360?</h2>
+              <p className="text-gray-700 mb-6">
+                Trackify 360 helps teams stay aligned, focused, and productive with a simple yet powerful
+                performance management experience.
+              </p>
 
-            <ul className="space-y-3 text-gray-800">
-              <li className="flex items-start gap-3">
-                <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
-                <p><strong>Smart Goal Tracking:</strong> Set, update, and monitor KRA & KPI progress with clarity and accuracy.</p>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
-                <p><strong>Real-Time Insights:</strong> Visual dashboards and analytics provide instant visibility.</p>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
-                <p><strong>Role-Based Access:</strong> Secure access ensures each user only sees what they need.</p>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
-                <p><strong>Automated Reports:</strong> Auto-generated summaries and logs save time.</p>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
-                <p><strong>Team-Friendly Design:</strong> Built for smooth collaboration and transparency.</p>
-              </li>
-            </ul>
-          </div>
+              <ul className="space-y-3 text-gray-800">
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
+                  <p><strong>Smart Goal Tracking:</strong> Set, update, and monitor KRA & KPI progress with clarity and accuracy.</p>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
+                  <p><strong>Real-Time Insights:</strong> Visual dashboards and analytics provide instant visibility.</p>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
+                  <p><strong>Role-Based Access:</strong> Secure access ensures each user only sees what they need.</p>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
+                  <p><strong>Automated Reports:</strong> Auto-generated summaries and logs save time.</p>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="text-indigo-600 mt-0.5" size={20} />
+                  <p><strong>Team-Friendly Design:</strong> Built for smooth collaboration and transparency.</p>
+                </li>
+              </ul>
+            </div>
 
-          <div className="flex justify-center">
-            <div className="w-72 h-72 rounded-2xl flex items-center justify-center drop-shadow-lg overflow-hidden">
-              <img src={whychoseImg} alt="Trackify Illustration" className="w-56 h-56 object-contain animate-spin" />
+            <div className="flex justify-center">
+              <div className="w-72 h-72 rounded-2xl flex items-center justify-center drop-shadow-lg overflow-hidden">
+                <img src={whychoseImg} alt="Trackify Illustration" className="w-56 h-56 object-contain animate-spin" />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       </div>
-      
+
       {/* Footer */}
       <footer className="w-full py-4 px-8 bg-white border-t border-gray-200">
         <div className="w-full flex flex-col md:flex-row justify-between items-center">

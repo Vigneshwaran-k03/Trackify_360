@@ -3,47 +3,47 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 @Entity('reviews')
 export class ReviewEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ type: 'int' })
   @Index()
-  employee_id: number;
+  employee_id!: number;
 
   @Column({ type: 'varchar', length: 255 })
-  employee_name: string;
+  employee_name!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  dept: string | null;
+  dept!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  role: string | null;
+  role!: string | null;
 
   @Column({ type: 'varchar', length: 255 })
-  kra_name: string;
+  kra_name!: string;
 
   @Column({ type: 'int' })
   @Index()
-  kra_id: number;
+  kra_id!: number;
 
   @Column({ type: 'float' })
-  score: number; // manager rating score for the employee
+  score!: number; // manager rating score for the employee
 
   @Column({ type: 'text', nullable: true })
-  comment: string | null;
+  comment!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  updated_by: string | null;
+  updated_by!: string | null;
 
   @Column({ type: 'varchar', length: 255 })
-  created_by: string;
+  created_by!: string;
 
   @Column({ type: 'datetime' })
   @Index()
-  review_at: Date; // when the review was made (business date)
+  review_at!: Date; // when the review was made (business date)
 
   @CreateDateColumn({ type: 'datetime' })
-  created_at: Date;
+  created_at!: Date;
 
   @UpdateDateColumn({ type: 'datetime' })
-  updated_at: Date;
+  updated_at!: Date;
 }

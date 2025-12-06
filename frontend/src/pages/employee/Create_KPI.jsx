@@ -314,8 +314,8 @@ export default function Create_KPI_Employee() {
 
         {/* Create KPI Modal */}
         {showModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="w-full max-w-2xl bg-white/20 backdrop-blur-md text-white rounded-lg shadow-xl p-6 max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-2xl bg-gray-800 backdrop-blur-md text-white rounded-lg shadow-xl p-6 max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-white">Create KPI (Employee)</h3>
                 <button className="text-gray-100 hover:text-white text-2xl" onClick={()=>setShowModal(false)}>✕</button>

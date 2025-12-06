@@ -32,8 +32,8 @@ export class MaintenanceService implements OnModuleInit {
   async weeklyReports() {
     try {
       await this.generateAndSendWeeklyReports();
-    } catch (e) {
-      this.logger.error(`Weekly reports failed: ${e?.message || e}`);
+    } catch (e: unknown) {
+      this.logger.error(`Weekly reports failed: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
@@ -59,8 +59,8 @@ export class MaintenanceService implements OnModuleInit {
         try {
           const { percentage } = await this.scoringService.aggregateKraPercentage(id);
           await this.kraRepo.update({ kra_id: id }, { overall_score: percentage });
-        } catch (e) {
-          this.logger.warn(`Failed to update KRA ${id} overall: ${e?.message || e}`);
+        } catch (e: unknown) {
+          this.logger.warn(`Failed to update KRA ${id} overall: ${e instanceof Error ? e.message : String(e)}`);
         }
       }
 
@@ -92,14 +92,14 @@ export class MaintenanceService implements OnModuleInit {
             : `KPI due in ${delta} day${delta>1?'s':''}: ${kpi.name}`;
           const body = `Hello ${targetName},\n\nThis is a reminder that the KPI "${kpi.name}" under KRA "${kpi.kra_name}" is due on ${due.toLocaleDateString()}.\n\nDefinition: ${kpi.def}\nScoring Method: ${kpi.scoring_method}\nTarget: ${typeof (kpi as any).target === 'number' ? (kpi as any).target + '%' : 'N/A'}\n\nPlease ensure it is completed on time.`;
           await this.mail.sendMail({ to, subject, text: body });
-        } catch (e) {
-          this.logger.warn(`Failed to send KPI reminder for KPI ${kpi.id}: ${e?.message || e}`);
+        } catch (e: unknown) {
+          this.logger.warn(`Failed to send KPI reminder for KPI ${kpi.id}: ${e instanceof Error ? e.message : String(e)}`);
         }
       }
 
       this.logger.log(`Maintenance (${source}) completed for ${kraIds.length} KRAs.`);
-    } catch (e) {
-      this.logger.error(`Maintenance (${source}) failed: ${e?.message || e}`);
+    } catch (e: unknown) {
+      this.logger.error(`Maintenance (${source}) failed: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
 

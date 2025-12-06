@@ -3,8 +3,8 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity('role')
 export class Role {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ unique: true })
-  role_name: string;
+  role_name!: string;
 }

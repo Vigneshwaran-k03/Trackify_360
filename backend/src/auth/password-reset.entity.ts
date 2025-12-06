@@ -3,21 +3,21 @@ import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 @Entity('password_reset')
 export class PasswordReset {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Index()
   @Column()
-  email: string;
+  email!: string;
 
   @Column({ unique: true })
-  token: string;
+  token!: string;
 
   @Column({ type: 'timestamp' })
-  expires_at: Date;
+  expires_at!: Date;
 
   @Column({ type: 'boolean', default: false })
-  used: boolean;
+  used!: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  created_at!: Date;
 }

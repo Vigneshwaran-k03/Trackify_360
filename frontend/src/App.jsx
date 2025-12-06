@@ -16,11 +16,11 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
 import Layout from './components/Layout';
 import { useState, useEffect } from 'react';
-import { getToken, getRole } from './utils/authStorage';
+import { getToken, getRole, clearAuth} from './utils/authStorage';
 import KpiLogRouter from './pages/common/KpiLogRouter'; 
 import KraLogRouter from './pages/common/KraLogRouter';
+import SimpleChat from './components/Simplechatbot';
 import RequestsRouter from './pages/common/RequestsRouter';
-import backgroundImage from './assets/background.png';
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -92,10 +92,10 @@ function App() {
       // Add a small delay to ensure auth state is properly set
       const timer = setTimeout(() => {
         setIsReady(true);
-      }, 100);
+      }, 1000);
       
       return () => clearTimeout(timer);
-    }, [location.pathname]); // Re-run when path changes
+    }, []); // Re-run when path changes
     
     // Show loading state while checking auth
     if (!isReady) {

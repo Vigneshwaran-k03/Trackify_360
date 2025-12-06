@@ -105,8 +105,8 @@ export class RequestsService {
         targetName: null, // broadcast to all admins
         meta: { requestId: saved.id, kra_id: kra.kra_id },
       });
-    } catch (e) {
-      this.logger.warn('Failed to create KRA change notification', e?.message || e);
+    } catch (e: unknown) {
+      this.logger.warn('Failed to create KRA change notification', e instanceof Error ? e.message : String(e));
     }
 
     return saved;
@@ -370,8 +370,8 @@ export class RequestsService {
           text: `A KPI change request was created by ${u.name} for KPI ${kpi.name}. Request ID: ${saved.id}.`,
         });
       }
-    } catch (e) {
-      this.logger.warn('Failed to create KPI change notification/email', e?.message || e);
+    } catch (e: unknown) {
+      this.logger.warn('Failed to create KPI change notification/email', e instanceof Error ? e.message : String(e));
     }
 
     return saved;

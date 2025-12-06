@@ -314,7 +314,7 @@ export default function EmployeeProfile() {
             </div>
             <div className="border border-white/30 rounded p-4 bg-white/5">
               <div className="flex items-center justify-between mb-3">
-                <div className="font-medium text-white text-md">{new Date(gauge1Filter.year, gauge1Filter.month - 1).toLocaleString('default', { month: 'long' })}</div>
+                <div className="font-medium"> {new Date(gauge2Filter.year, gauge2Filter.month - 1).toLocaleString('default', { month: 'long' })}</div>
                 <div className="flex items-center gap-2">
                   <input type="number" className="p-2 border border-white/30 rounded w-24 text-white" value={gauge2Filter.year} onChange={(e)=>setGauge2Filter(prev=>({ ...prev, year: Number(e.target.value) }))} />
                   <select className="p-2 border border-white/30 rounded text-white" value={gauge2Filter.month} onChange={(e)=>setGauge2Filter(prev=>({ ...prev, month: Number(e.target.value) }))}>

@@ -4,32 +4,32 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  user_id: number;
+  user_id!: number;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  password: string;
+  password!: string;
 
   @Column({ nullable: true })
-  dept_id: number;
+  dept_id!: number;
 
   @Column({ nullable: true })
-  dept: string;
+  dept!: string;
 
   @Column({ nullable: true })
-  role_id: number;
+  role_id!: number;
 
   @Column({ nullable: true })
-  role: string;
+  role!: string;
 
   @Column({ nullable: true })
-  avatar: string;
+  avatar!: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  created_at!: Date;
 }

@@ -4,49 +4,49 @@ import { Kra } from './kra.entity';
 @Entity('kra_log')
 export class KraLog {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  kra_id: number;
+  kra_id!: number;
 
   @ManyToOne(() => Kra, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'kra_id', referencedColumnName: 'kra_id' })
-  kra: Kra;
+  kra!: Kra;
 
   @Column({ type: 'int' })
-  version: number; // 0 for initial snapshot, then increments per change
+  version!: number; // 0 for initial snapshot, then increments per change
 
   @Column({ type: 'varchar', length: 255 })
-  kra_name: string;
+  kra_name!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  dept: string | null;
+  dept!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  manager_name: string | null;
+  manager_name!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  employee_name: string | null;
+  employee_name!: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  created_by: string | null;
+  created_by!: string | null;
 
   @Column({ type: 'varchar', length: 255 })
-  updated_by: string;
+  updated_by!: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated_at: Date;
+  updated_at!: Date;
 
   @Column({ type: 'varchar', length: 255 })
-  scoring_method: string;
+  scoring_method!: string;
 
   @Column({ type: 'float', nullable: true })
-  target: number | null;
+  target!: number | null;
 
   @Column({ type: 'float', nullable: true, default: 0 })
-  overall_score: number | null;
+  overall_score!: number | null;
 
   // JSON string with { field: { from, to } }
   @Column({ type: 'text', nullable: true })
-  changes: string | null;
+  changes!: string | null;
 }

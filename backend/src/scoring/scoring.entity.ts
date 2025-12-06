@@ -3,32 +3,32 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 @Entity('scoring')
 export class Scoring {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  kra_id: number;
+  kra_id!: number;
 
   @Column()
-  kpi_id: number;
+  kpi_id!: number;
 
   @Column()
-  kra_name: string;
+  kra_name!: string;
 
   @Column()
-  kpi_name: string;
+  kpi_name!: string;
 
   @Column()
-  kpi_createdby: string;
+  kpi_createdby!: string;
 
   @Column({ type: 'text', nullable: true })
-  comments: string | null;
+  comments!: string | null;
 
   @Column({ type: 'float' })
-  score: number;
+  score!: number;
 
   @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date;
+  created_at!: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  updated_at!: Date;
 }

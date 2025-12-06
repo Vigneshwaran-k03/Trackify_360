@@ -25,7 +25,6 @@ export default function AdminDashboard() {
   const [userName, setUserName] = useState('');
   const [selectedDept, setSelectedDept] = useState('');
   const [depts, setDepts] = useState([]);
-  const [companyStats, setCompanyStats] = useState({});
   const [managerPerformance, setManagerPerformance] = useState([]);
   const [kras, setKras] = useState([]);
   // Review state (Admin reviewing Managers)
@@ -224,23 +223,11 @@ export default function AdminDashboard() {
     setUserName(name);
 
     // Fetch all admin-specific data
-    fetchCompanyStats();
     fetchDepts();
     fetchManagerPerformance();
     fetchAllKRAs();
     fetchManagers();
   }, []);
-
-  const fetchCompanyStats = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/users/company/stats', {
-        headers: { Authorization: `Bearer ${getToken()}` }
-      });
-      setCompanyStats(response.data);
-    } catch (error) {
-      console.error('Error fetching company stats:', error);
-    }
-  };
 
   const uniqueFromKras = (arr, key) => {
     const set = new Set();
@@ -1687,7 +1674,7 @@ export default function AdminDashboard() {
       <div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg p-6 border border-white/20 text-white mb-8">
         <h3 className="text-xl font-semibold mb-4 text-white">Add Review to Manager</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
+          <div className=' w-full! overflow-hidden'>
             <label className="block text-sm font-medium mb-1 text-gray-200">Department</label>
             <select className="w-full p-2 border border-white/30 rounded bg-white/5 text-white" value={revDept} onChange={(e) => { setRevDept(e.target.value); }}>
               <option value="" className="text-black">-- Select --</option>
@@ -1989,8 +1976,8 @@ export default function AdminDashboard() {
               key={section}
               onClick={() => setActiveSection(section)}
               className={`px-2 sm:px-3 md:px-4 py-2 rounded font-medium text-xs sm:text-sm md:text-base transition-colors flex-shrink-0 ${activeSection === section
-                  ? 'bg-white text-indigo-700'
-                  : 'bg-white/10 text-white/80 hover:bg-white/20'
+                ? 'bg-white text-indigo-700'
+                : 'bg-white/10 text-white/80 hover:bg-white/20'
                 }`}
             >
               {section.charAt(0).toUpperCase() + section.slice(1)}

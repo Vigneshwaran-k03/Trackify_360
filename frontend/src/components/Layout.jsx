@@ -22,11 +22,11 @@ import female5 from "../assets/profile_image/female5.png";
 import {
   ClipboardClock,
   LayoutDashboard,
-  UserPen,
   UserPlus,
   Target,
   BarChart3,
   Power,
+  SquareUserRound,
   ClipboardCheck,
   NotebookText,
   Menu as MenuIcon,
@@ -178,7 +178,7 @@ export default function Layout() {
       return [
         { path: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
         { path: "/create_profile", label: "Create Profile", Icon: UserPlus },
-        { path: "/profile", label: "Profile", Icon: UserPen },
+        { path: "/profile", label: "Profile", Icon: SquareUserRound },
         { path: "/kracreation", label: "Create KRA", Icon: Target },
         { path: "/kpi_log", label: "KPI Log", Icon: ClipboardClock },
         { path: "/kra_log", label: "KRA Log", Icon: NotebookText },
@@ -190,7 +190,7 @@ export default function Layout() {
       return [
         { path: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
         { path: "/create_profile", label: "Create Employee", Icon: UserPlus },
-        { path: "/profile", label: "Profile", Icon: UserPen },
+        { path: "/profile", label: "Profile", Icon: SquareUserRound },
         { path: "/kracreation", label: "Create KRA", Icon: Target },
         { path: "/create_kpi", label: "Create & My KPI", Icon: BarChart3 },
         { path: "/kpi_log", label: "KPI Log", Icon: ClipboardClock },
@@ -201,7 +201,7 @@ export default function Layout() {
 
     return [
       { path: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
-      { path: "/profile", label: "Profile", Icon: UserPen },
+      { path: "/profile", label: "Profile", Icon: SquareUserRound },
       { path: "/create_kpi", label: "Create & My KPI", Icon: BarChart3 },
       { path: "/kpi_log", label: "KPI Log", Icon: ClipboardClock },
       { path: "/requests", label: "Requests & Approvals", tooltipLabel: "R&A", Icon: ClipboardCheck },
